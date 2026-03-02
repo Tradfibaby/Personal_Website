@@ -29,9 +29,11 @@ export default function Home() {
           maxWidth: '500px',
           marginBottom: '3rem',
         }}>
-          Five thousand years of market structure. Same game, different hardware.
-          Writing about AI, coordination, and what actually changes when the
-          infrastructure does.
+          Empires dissolve. The ledger persists. Five millennia of civilizations
+          rising and collapsing around the same fundamental transactions — war,
+          debt, harvest, speculation. The tools mutate; the anxieties beneath
+          them do not. Writing about what survives every reinvention, and what
+          merely dresses up in its clothes.
         </p>
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>

@@ -7,19 +7,26 @@ export default function About() {
 
       <div style={{ marginBottom: '3rem' }}>
         <p style={body}>
-          Markets are older than writing. The mechanisms moving capital today were
-          invented by people who never saw a screen — and most of the innovation
-          since has been in the packaging, not the logic.
+          Markets are older than writing. The grain contracts of Ur, the merchant
+          networks of the Silk Road, the leveraged speculation of Amsterdam's
+          exchange — these are not ancestors of modern finance. They are modern
+          finance, wearing different fabric. Each generation of infrastructure
+          believes it has invented something. None of them have.
         </p>
         <p style={body}>
-          I write about that continuity. How coordination happens, how it breaks,
-          and what survives every reinvention of the infrastructure underneath it.
-          Five thousand years of market structure. Same game, different hardware.
+          What I find interesting is the residue. When Rome collapsed, the trade
+          routes did not. When empires dissolve, the accounting survives. History
+          read carefully is not a catalogue of disruptions — it is a long
+          demonstration that human coordination is more durable than the political
+          vessels that temporarily contain it. I write about that persistence.
         </p>
         <p style={body}>
-          Also writing about AI — not the discourse, but the actual restructuring
-          happening underneath it. What gets displaced, what gets created,
-          and why most people are wrong about both.
+          AI belongs to this lineage. Not the civilizational rupture the discourse
+          insists upon, but another reinvention of infrastructure around the same
+          imperatives — control, leverage, advantage, fear. The interesting
+          question has never been what changes. It is what refuses to. Study
+          enough history and the future becomes, if not predictable, at least
+          legible. Most people have not studied enough history.
         </p>
       </div>
 
