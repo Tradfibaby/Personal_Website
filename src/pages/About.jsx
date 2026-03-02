@@ -7,25 +7,59 @@ export default function About() {
 
       <div style={{ marginBottom: '3rem' }}>
         <p style={body}>
-          I came to markets through history, which is perhaps the wrong entry
-          point and certainly the more interesting one. The recurrence is what
-          arrested me - not because human nature is immutable, but because the
-          problems are. Coordination. Trust. Who absorbs the loss. The packaging
-          changes. The problems are not the kind that get solved.
+          Investment banking. Crypto from NFTs to memecoins. Trading public and
+          private markets. The through-line was never the asset — it was watching
+          what new technology does to the people inside it: who adapts, who
+          rationalizes, who gets left holding the bag in a panic they've seen
+          before. Finance teaches the mechanics. History explains why none of it
+          is new. Dating shows do the rest.
         </p>
-        <p style={body}>
-          This has made me congenitally suspicious of rupture narratives. Banks
-          do fail, coins debase, trade routes collapse - I am not arguing for
-          stasis. I am arguing that the stories civilizations tell about their
-          disruptions are more interesting for what they conceal than what they
-          reveal.
-        </p>
-        <p style={body}>
-          Crypto and AI are receiving this treatment in full. I write about both
-          - not to adjudicate the debates, which have grown tedious, but to ask
-          what is actually displaced versus what is merely renamed. That question
-          turns out to be philosophical before it is technical.
-        </p>
+      </div>
+
+      <div style={{ marginBottom: '3rem' }}>
+        <SectionLabel>currently</SectionLabel>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
+          {[
+            {
+              text: 'AI is hollowing out white-collar work faster than anyone can retrain — and the escape route is closing',
+              href: 'https://incoherentyapping.substack.com/p/the-structural-destruction-of-white',
+            },
+            {
+              text: 'on-device face anonymization: privacy infrastructure that doesn\'t need your data to work',
+              href: 'https://github.com/Riten-Zone/Anon-Snap',
+            },
+            {
+              text: 'what happens when AI optimizes for survival — and why companies are already doing it without meaning to',
+              href: 'https://incoherentyapping.substack.com/p/what-would-you-do-to-survive',
+            },
+            {
+              text: 'human adaptation speed in the AI age',
+              href: null,
+            },
+            {
+              text: 'five thousand years of market making: from Sumerian copper conversions to HFT, the function never changes',
+              href: 'https://incoherentyapping.substack.com/p/dancing-with-volatility-abc',
+            },
+            {
+              text: 'mobile apps and the on-chain liquidity explosion',
+              href: null,
+            },
+          ].map(({ text, href }) =>
+            href ? (
+              <a
+                key={text}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}
+              >
+                {text} ↗
+              </a>
+            ) : (
+              <span key={text} style={{ color: '#555' }}>{text}</span>
+            )
+          )}
+        </div>
       </div>
 
       <div style={{ marginBottom: '3rem' }}>
