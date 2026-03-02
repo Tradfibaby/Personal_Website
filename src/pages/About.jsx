@@ -7,26 +7,24 @@ export default function About() {
 
       <div style={{ marginBottom: '3rem' }}>
         <p style={body}>
-          Markets are older than writing. The grain contracts of Ur, the merchant
-          networks of the Silk Road, the leveraged speculation of Amsterdam's
-          exchange — these are not ancestors of modern finance. They are modern
-          finance, wearing different fabric. Each generation of infrastructure
-          believes it has invented something. None of them have.
+          I came to markets through history, which is perhaps the wrong entry
+          point and certainly the more interesting one. The recurrence is what
+          arrested me - not because human nature is immutable, but because the
+          problems are. Coordination. Trust. Who absorbs the loss. The packaging
+          changes. The problems are not the kind that get solved.
         </p>
         <p style={body}>
-          What I find interesting is the residue. When Rome collapsed, the trade
-          routes did not. When empires dissolve, the accounting survives. History
-          read carefully is not a catalogue of disruptions — it is a long
-          demonstration that human coordination is more durable than the political
-          vessels that temporarily contain it. I write about that persistence.
+          This has made me congenitally suspicious of rupture narratives. Banks
+          do fail, coins debase, trade routes collapse - I am not arguing for
+          stasis. I am arguing that the stories civilizations tell about their
+          disruptions are more interesting for what they conceal than what they
+          reveal.
         </p>
         <p style={body}>
-          AI belongs to this lineage. Not the civilizational rupture the discourse
-          insists upon, but another reinvention of infrastructure around the same
-          imperatives — control, leverage, advantage, fear. The interesting
-          question has never been what changes. It is what refuses to. Study
-          enough history and the future becomes, if not predictable, at least
-          legible. Most people have not studied enough history.
+          Crypto and AI are receiving this treatment in full. I write about both
+          - not to adjudicate the debates, which have grown tedious, but to ask
+          what is actually displaced versus what is merely renamed. That question
+          turns out to be philosophical before it is technical.
         </p>
       </div>
 
