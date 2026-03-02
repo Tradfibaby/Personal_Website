@@ -7,43 +7,34 @@ export default function About() {
 
       <div style={{ marginBottom: '3rem' }}>
         <p style={body}>
-          Hey, I'm tradfibaby. I write code, build side projects, and occasionally
-          write about things I find interesting.
+          Markets are older than writing. The mechanisms moving capital today were
+          invented by people who never saw a screen — and most of the innovation
+          since has been in the packaging, not the logic.
         </p>
         <p style={body}>
-          I'm interested in open source software, distributed systems, and the
-          intersection of technology and how people actually use it.
+          I write about that continuity. How coordination happens, how it breaks,
+          and what survives every reinvention of the infrastructure underneath it.
+          Five thousand years of market structure. Same game, different hardware.
         </p>
         <p style={body}>
-          When I'm not building things I'm usually reading, or going down rabbit holes
-          on the internet.
+          Also writing about AI — not the discourse, but the actual restructuring
+          happening underneath it. What gets displaced, what gets created,
+          and why most people are wrong about both.
         </p>
       </div>
 
       <div style={{ marginBottom: '3rem' }}>
-        <SectionLabel>stack</SectionLabel>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {stack.map(([category, items]) => (
-            <div key={category} style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem' }}>
-              <span style={{ color: '#444', width: '90px', flexShrink: 0 }}>{category}</span>
-              <span style={{ color: '#888' }}>{items}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <SectionLabel>elsewhere</SectionLabel>
+        <SectionLabel>writing on</SectionLabel>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {[
+            ['substack', 'https://incoherentyapping.substack.com', 'incoherentyapping'],
             ['github', 'https://github.com/Tradfibaby', 'Tradfibaby'],
-            ['email', 'mailto:tradfibaby@proton.me', 'tradfibaby@proton.me'],
           ].map(([platform, href, label]) => (
             <div key={platform} style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem' }}>
               <span style={{ color: '#444', width: '90px', flexShrink: 0 }}>{platform}</span>
               <a
                 href={href}
-                target={href.startsWith('http') ? '_blank' : undefined}
+                target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}
               >
@@ -51,6 +42,19 @@ export default function About() {
               </a>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div>
+        <SectionLabel>contact</SectionLabel>
+        <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem' }}>
+          <span style={{ color: '#444', width: '90px', flexShrink: 0 }}>email</span>
+          <a
+            href="mailto:tradfibaby@proton.me"
+            style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}
+          >
+            tradfibaby@proton.me
+          </a>
         </div>
       </div>
     </section>
@@ -69,11 +73,5 @@ const body = {
   fontSize: '0.9rem',
   lineHeight: 1.9,
   marginBottom: '1.25rem',
-  maxWidth: '560px',
+  maxWidth: '540px',
 }
-
-const stack = [
-  ['languages', 'JavaScript, TypeScript, Python'],
-  ['frontend', 'React, Vite, Tailwind'],
-  ['tools', 'Git, VS Code, Linux'],
-]
