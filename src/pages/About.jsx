@@ -7,12 +7,19 @@ export default function About() {
 
       <div style={{ marginBottom: '3rem' }}>
         <p style={body}>
-          Investment banking. Crypto from NFTs to memecoins. Trading public and
-          private markets. The through-line was never the asset — it was watching
-          what new technology does to the people inside it: who adapts, who
-          rationalizes, who gets left holding the bag in a panic they've seen
-          before. Finance teaches the mechanics. History explains why none of it
-          is new. Dating shows do the rest.
+          I have spent the better part of the last few years exploring what I
+          can only describe as deliberate madness - investment banking, crypto
+          from NFTs to memecoins, trading public and private markets, and now
+          AI. The through-line was never the asset. It was always the question
+          of what new technology does to the people inside it: who adapts, who
+          rationalises, who convinces themselves this time is different.
+        </p>
+        <p style={body}>
+          I have been genuinely fortunate - raised and mentored by people far
+          smarter and more generous than I had any right to expect. Most of my
+          time has been in finance, tech, and AI, though the most useful inputs
+          rarely come from those fields. Disaster films, dating shows, ancient
+          history. Human nature stays legible if you know where to look.
         </p>
       </div>
 
@@ -21,15 +28,15 @@ export default function About() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
           {[
             {
-              text: 'AI is hollowing out white-collar work faster than anyone can retrain — and the escape route is closing',
+              text: 'AI displacement and the closing escape route',
               href: 'https://incoherentyapping.substack.com/p/the-structural-destruction-of-white',
             },
             {
-              text: 'on-device face anonymization: privacy infrastructure that doesn\'t need your data to work',
+              text: 'privacy infrastructure that doesn\'t ask for your data',
               href: 'https://github.com/Riten-Zone/Anon-Snap',
             },
             {
-              text: 'what happens when AI optimizes for survival — and why companies are already doing it without meaning to',
+              text: 'what happens when AI optimises for its own survival',
               href: 'https://incoherentyapping.substack.com/p/what-would-you-do-to-survive',
             },
             {
@@ -37,7 +44,7 @@ export default function About() {
               href: null,
             },
             {
-              text: 'five thousand years of market making: from Sumerian copper conversions to HFT, the function never changes',
+              text: 'five thousand years of market making - the function never changes',
               href: 'https://incoherentyapping.substack.com/p/dancing-with-volatility-abc',
             },
             {
@@ -87,12 +94,14 @@ export default function About() {
       <div>
         <SectionLabel>contact</SectionLabel>
         <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.85rem' }}>
-          <span style={{ color: '#444', width: '90px', flexShrink: 0 }}>email</span>
+          <span style={{ color: '#444', width: '90px', flexShrink: 0 }}>x</span>
           <a
-            href="mailto:tradfibaby@proton.me"
+            href="https://x.com/tradfibaby"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}
           >
-            tradfibaby@proton.me
+            @tradfibaby ↗
           </a>
         </div>
       </div>

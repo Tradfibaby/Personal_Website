@@ -30,7 +30,7 @@ export default function Home() {
           marginBottom: '3rem',
         }}>
           The question that won't leave me alone is an old one - how humans
-          organize value, trust, and power, and the remarkable consistency with
+          organise value, trust, and power, and the remarkable consistency with
           which they mismanage it. Markets, philosophy, crypto, history. The
           subject rotates. The failure mode doesn't.
         </p>
