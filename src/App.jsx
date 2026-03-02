@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './pages/Home'
-import About from './pages/About'
 import Writing from './pages/Writing'
 import Post from './pages/Post'
 import Projects from './pages/Projects'
@@ -13,7 +12,6 @@ export default function App() {
       <main style={{ maxWidth: '720px', margin: '0 auto', padding: '0 1.5rem 5rem' }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="/writing" element={<Writing />} />
           <Route path="/writing/:slug" element={<Post />} />
           <Route path="/projects" element={<Projects />} />

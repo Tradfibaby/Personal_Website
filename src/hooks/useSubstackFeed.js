@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const FEED_URL = 'https://incoherentyapping.substack.com/feed'
-const PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(FEED_URL)}`
+const PROXY_URL = `https://corsproxy.io/?url=${encodeURIComponent(FEED_URL)}`
 
 function formatDate(str) {
   const d = new Date(str)

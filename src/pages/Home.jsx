@@ -1,12 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import SectionLabel from '../components/SectionLabel'
-import { useSubstackFeed } from '../hooks/useSubstackFeed'
 import { projects } from '../data/projects'
 
 export default function Home() {
-  const { posts, loading } = useSubstackFeed(3)
-
   return (
     <div>
       {/* Hero */}
@@ -22,59 +19,90 @@ export default function Home() {
           tradfibaby
         </h1>
 
-        <p style={{
-          color: '#888',
-          fontSize: '0.9rem',
-          lineHeight: 1.9,
-          maxWidth: '500px',
-          marginBottom: '3rem',
-        }}>
-          The question that won't leave me alone is an old one - how humans
-          organise value, trust, and power, and the remarkable consistency with
-          which they mismanage it. Markets, philosophy, crypto, history. The
-          subject rotates. The failure mode doesn't.
+        <p style={heroPara}>
+          i'm a founder, operator, and writer. I love thinking about how
+          markets and technology reshape the way humans organise value and
+          power - and what it does to the people caught inside it.
+        </p>
+        <p style={heroPara}>
+          in a past life, I worked as a developer and quant at an investment
+          bank and co-founded several projects in crypto, from DeFi to privacy
+          and trading apps. I have been fortunate to surround myself with
+          people far smarter and always generous in sharing their knowledge,
+          wisdom, and perspective.
+        </p>
+        <p style={{ ...heroPara, marginBottom: '3rem' }}>
+          most of my time now goes into writing and building around AI,
+          finance, and what happens when old infrastructure meets new
+          incentives. human nature stays legible if you know where to look -
+          dramas, documentaries, and dating shows included.
         </p>
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {[
-            { label: 'github ↗', href: 'https://github.com/Tradfibaby', external: true },
-            { label: 'substack ↗', href: 'https://incoherentyapping.substack.com', external: true },
-            { label: 'about →', to: '/about', external: false },
-          ].map((link) =>
-            link.external ? (
-              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" style={linkStyle}
-                onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
-                onMouseLeave={e => (e.target.style.color = '#555')}
-              >{link.label}</a>
-            ) : (
-              <Link key={link.label} to={link.to} style={linkStyle}
-                onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
-                onMouseLeave={e => (e.target.style.color = '#555')}
-              >{link.label}</Link>
-            )
-          )}
+            { label: 'github ↗', href: 'https://github.com/Tradfibaby' },
+            { label: 'substack ↗', href: 'https://incoherentyapping.substack.com' },
+            { label: 'x ↗', href: 'https://x.com/tradfibaby' },
+          ].map((link) => (
+            <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" style={linkStyle}
+              onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
+              onMouseLeave={e => (e.target.style.color = '#555')}
+            >{link.label}</a>
+          ))}
         </div>
       </section>
 
-      {/* Writing preview */}
+      {/* Currently */}
       <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.5rem' }}>
-          <SectionLabel>writing</SectionLabel>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
+          <SectionLabel>currently</SectionLabel>
           <Link to="/writing" style={{ color: '#444', fontSize: '0.75rem', letterSpacing: '0.05em' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
-          >view all →</Link>
+          >all writing →</Link>
         </div>
-
-        {loading ? (
-          <p style={{ color: '#333', fontSize: '0.8rem' }}>loading...</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {posts.map((post, i) => (
-              <WritingRow key={i} post={post} />
-            ))}
-          </div>
-        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
+          {[
+            {
+              text: 'AI displacement and the closing escape route',
+              href: 'https://incoherentyapping.substack.com/p/the-structural-destruction-of-white',
+            },
+            {
+              text: "privacy infrastructure that doesn't ask for your data",
+              href: 'https://github.com/Riten-Zone/Anon-Snap',
+            },
+            {
+              text: 'what happens when AI optimises for its own survival',
+              href: 'https://incoherentyapping.substack.com/p/what-would-you-do-to-survive',
+            },
+            {
+              text: 'human adaptation speed in the AI age',
+              href: null,
+            },
+            {
+              text: 'five thousand years of market making - the function never changes',
+              href: 'https://incoherentyapping.substack.com/p/dancing-with-volatility-abc',
+            },
+            {
+              text: 'mobile apps and the on-chain liquidity explosion',
+              href: null,
+            },
+          ].map(({ text, href }) =>
+            href ? (
+              <a
+                key={text}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}
+              >
+                {text} ↗
+              </a>
+            ) : (
+              <span key={text} style={{ color: '#555' }}>{text}</span>
+            )
+          )}
+        </div>
       </section>
 
       {/* Projects preview */}
@@ -97,37 +125,6 @@ export default function Home() {
   )
 }
 
-function WritingRow({ post }) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <a
-      href={post.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: 'block',
-        padding: '1rem 0',
-        borderBottom: '1px solid #181818',
-        cursor: 'pointer',
-        textDecoration: 'none',
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '1rem', flexWrap: 'wrap' }}>
-        <span style={{ color: hovered ? '#f0f0f0' : '#e0e0e0', fontSize: '0.88rem', transition: 'color 0.15s' }}>
-          {post.title}
-        </span>
-        <span style={{ color: '#333', fontSize: '0.72rem', flexShrink: 0 }}>{post.date}</span>
-      </div>
-      {post.description && (
-        <p style={{ color: '#4a4a4a', fontSize: '0.78rem', marginTop: '0.35rem', lineHeight: 1.6 }}>
-          {post.description}
-        </p>
-      )}
-    </a>
-  )
-}
 
 function MiniProjectCard({ project }) {
   const [hovered, setHovered] = useState(false)
@@ -149,6 +146,14 @@ function MiniProjectCard({ project }) {
       <p style={{ color: '#4a4a4a', fontSize: '0.76rem', lineHeight: 1.6 }}>{project.description}</p>
     </div>
   )
+}
+
+const heroPara = {
+  color: '#888',
+  fontSize: '0.9rem',
+  lineHeight: 1.9,
+  maxWidth: '540px',
+  marginBottom: '1.25rem',
 }
 
 const linkStyle = {
