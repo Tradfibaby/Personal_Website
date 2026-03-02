@@ -19,16 +19,9 @@ function getText(el, tag) {
 }
 
 async function fetchFeed() {
-  // Try direct first (works if Substack allows CORS), fall back to proxy
-  try {
-    const res = await fetch(FEED_URL)
-    if (!res.ok) throw new Error('bad status')
-    return await res.text()
-  } catch {
-    const res = await fetch(PROXY_URL)
-    if (!res.ok) throw new Error('proxy failed')
-    return await res.text()
-  }
+  const res = await fetch(PROXY_URL)
+  if (!res.ok) throw new Error('proxy failed')
+  return res.text()
 }
 
 export function useSubstackFeed(limit) {
