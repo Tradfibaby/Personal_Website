@@ -29,7 +29,7 @@ export default function Home() {
           maxWidth: '500px',
           marginBottom: '3rem',
         }}>
-          The question that won't leave me alone is an old one — how humans
+          The question that won't leave me alone is an old one - how humans
           organize value, trust, and power, and the remarkable consistency with
           which they mismanage it. Markets, philosophy, crypto, history. The
           subject rotates. The failure mode doesn't.
