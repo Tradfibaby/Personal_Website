@@ -1,3 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <text x="16" y="26" font-family="Georgia, serif" font-size="26" font-style="italic" fill="#f0f0f0" text-anchor="middle">t.</text>
+  <!-- t stem -->
+  <path d="M 14 3 Q 13.5 15 12.5 27" stroke="#f0f0f0" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- t crossbar -->
+  <path d="M 6 12 Q 13 10 22 12.5" stroke="#f0f0f0" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- dot -->
+  <circle cx="21.5" cy="26.5" r="1.8" fill="#f0f0f0"/>
 </svg>
