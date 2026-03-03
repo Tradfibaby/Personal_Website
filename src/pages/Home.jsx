@@ -168,28 +168,28 @@ function MiniProjectCard({ project }) {
       <p style={{ color: '#4a4a4a', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
       {project.appStore && project.url && (
         <div style={{ marginTop: '0.75rem' }}>
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
-            onClick={e => e.stopPropagation()}
+          <span
+            role="link"
+            tabIndex={0}
+            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+            onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(project.url, '_blank', 'noopener,noreferrer') }}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(project.url, '_blank', 'noopener,noreferrer') } }}
           >
             github ↗
-          </a>
+          </span>
         </div>
       )}
       {project.pubDev && (
         <div style={{ marginTop: '0.75rem' }}>
-          <a
-            href={project.pubDev}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
-            onClick={e => e.stopPropagation()}
+          <span
+            role="link"
+            tabIndex={0}
+            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+            onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(project.pubDev, '_blank', 'noopener,noreferrer') }}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(project.pubDev, '_blank', 'noopener,noreferrer') } }}
           >
             pub.dev ↗
-          </a>
+          </span>
         </div>
       )}
     </a>
