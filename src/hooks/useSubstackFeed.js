@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const FEED_URL = 'https://incoherentyapping.substack.com/feed'
-const PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(FEED_URL)}`
+const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://incoherentyapping.substack.com/feed')}`
 
 function formatDate(str) {
   const d = new Date(str)
@@ -13,35 +12,22 @@ function stripTags(html) {
   return html?.replace(/<[^>]*>/g, '').trim() || ''
 }
 
-// getElementsByTagName is more reliable than querySelector for RSS XML
-function getText(el, tag) {
-  return el.getElementsByTagName(tag)[0]?.textContent?.trim() || ''
-}
-
-async function fetchFeed() {
-  const res = await fetch(PROXY_URL)
-  if (!res.ok) throw new Error('feed failed')
-  return res.text()
-}
-
 export function useSubstackFeed(limit) {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetchFeed()
-      .then(text => {
-        const doc = new DOMParser().parseFromString(text, 'text/xml')
-        const items = [...doc.getElementsByTagName('item')]
-        const parsed = items.slice(0, limit ?? items.length).map(item => {
-          const title = getText(item, 'title')
-          // <link> can be tricky in XML — guid is always the canonical URL on Substack
-          const link = getText(item, 'guid') || getText(item, 'link')
-          const date = formatDate(getText(item, 'pubDate'))
-          const description = stripTags(getText(item, 'description')).slice(0, 160)
-          return { title, link, date, description }
-        })
+    fetch(API_URL)
+      .then(res => { if (!res.ok) throw new Error('feed failed'); return res.json() })
+      .then(data => {
+        if (data.status !== 'ok') throw new Error('feed error')
+        const parsed = (data.items ?? []).slice(0, limit ?? data.items.length).map(item => ({
+          title: item.title,
+          link: item.guid || item.link,
+          date: formatDate(item.pubDate),
+          description: stripTags(item.description).slice(0, 160),
+        }))
         setPosts(parsed)
       })
       .catch(err => setError(err))
