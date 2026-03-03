@@ -14,6 +14,7 @@ export function EncryptedText({
   encryptedClassName = '',
   revealedClassName = '',
   className = '',
+  onComplete,
 }) {
   const [chars, setChars] = useState(
     () => text.split('').map(() => ({ char: randomChar(charset), revealed: false }))
@@ -35,6 +36,9 @@ export function EncryptedText({
         setChars(prev => prev.map((c, idx) =>
           idx === i ? { char: letter, revealed: true } : c
         ))
+        if (i === text.length - 1) {
+          onComplete?.()
+        }
       }, revealDelayMs * (i + 1))
       timeouts.current[i] = timeout
     })
