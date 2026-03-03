@@ -11,6 +11,7 @@ export const projects = [
     name: 'hyperliquid-dart-sdk',
     description: 'Dart/Flutter SDK for interacting with the Hyperliquid perps exchange.',
     url: 'https://github.com/Riten-Zone/Hyperliquid-Dart-SDK',
+    pubDev: 'https://pub.dev/packages/hyperliquid_dart',
     demo: null,
     language: 'Dart',
   },

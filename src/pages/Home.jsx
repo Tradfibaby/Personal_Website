@@ -161,6 +161,19 @@ function MiniProjectCard({ project }) {
           </a>
         </div>
       )}
+      {project.pubDev && (
+        <div style={{ marginTop: '0.75rem' }}>
+          <a
+            href={project.pubDev}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#444', fontSize: '0.7rem', letterSpacing: '0.05em' }}
+            onClick={e => e.stopPropagation()}
+          >
+            pub.dev ↗
+          </a>
+        </div>
+      )}
     </a>
   )
 }

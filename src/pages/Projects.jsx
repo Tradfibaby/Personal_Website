@@ -58,6 +58,19 @@ function ProjectCard({ project }) {
           </a>
         </div>
       )}
+      {project.pubDev && (
+        <div style={{ marginTop: '1rem' }}>
+          <a
+            href={project.pubDev}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#444', fontSize: '0.72rem', letterSpacing: '0.05em' }}
+            onClick={e => e.stopPropagation()}
+          >
+            pub.dev ↗
+          </a>
+        </div>
+      )}
     </a>
   )
 }
