@@ -22,7 +22,7 @@ function ProjectCard({ project }) {
 
   return (
     <a
-      href={project.url}
+      href={project.appStore ?? project.url}
       target="_blank"
       rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
@@ -45,16 +45,16 @@ function ProjectCard({ project }) {
         {project.description}
       </p>
 
-      {project.demo && (
-        <div style={{ marginTop: '1.25rem' }}>
+      {project.appStore && project.url && (
+        <div style={{ marginTop: '1rem' }}>
           <a
-            href={project.demo}
+            href={project.url}
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: '#444', fontSize: '0.72rem', letterSpacing: '0.05em' }}
             onClick={e => e.stopPropagation()}
           >
-            demo ↗
+            github ↗
           </a>
         </div>
       )}

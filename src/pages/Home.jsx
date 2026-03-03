@@ -130,7 +130,7 @@ function MiniProjectCard({ project }) {
   const [hovered, setHovered] = useState(false)
   return (
     <a
-      href={project.url}
+      href={project.appStore ?? project.url}
       target="_blank"
       rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
@@ -148,6 +148,19 @@ function MiniProjectCard({ project }) {
         <span style={{ color: '#444', fontSize: '0.82rem' }}>↗</span>
       </div>
       <p style={{ color: '#4a4a4a', fontSize: '0.76rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
+      {project.appStore && project.url && (
+        <div style={{ marginTop: '0.75rem' }}>
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#444', fontSize: '0.7rem', letterSpacing: '0.05em' }}
+            onClick={e => e.stopPropagation()}
+          >
+            github ↗
+          </a>
+        </div>
+      )}
     </a>
   )
 }

@@ -3,6 +3,7 @@ export const projects = [
     name: 'anon-snap',
     description: 'Privacy-first photo tool that blurs faces on-device — no data leaves your phone.',
     url: 'https://github.com/Riten-Zone/Anon-Snap',
+    appStore: 'https://apps.apple.com/us/app/anon-snap/id6758319532',
     demo: null,
     language: 'TypeScript',
   },
