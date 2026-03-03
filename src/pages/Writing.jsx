@@ -1,36 +1,17 @@
 import { useState } from 'react'
 import SectionLabel from '../components/SectionLabel'
-import { useSubstackFeed } from '../hooks/useSubstackFeed'
+import { posts } from '../data/posts'
 
 export default function Writing() {
-  const { posts, loading, error } = useSubstackFeed()
-
   return (
     <section style={{ paddingTop: '4rem' }}>
       <h1 style={heading}>writing</h1>
       <SectionLabel>all posts</SectionLabel>
-
-      {loading && (
-        <p style={{ color: '#333', fontSize: '0.8rem' }}>loading...</p>
-      )}
-
-      {error && (
-        <p style={{ color: '#444', fontSize: '0.8rem' }}>
-          couldn't load posts.{' '}
-          <a href="https://incoherentyapping.substack.com" target="_blank" rel="noopener noreferrer"
-            style={{ textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}>
-            read on substack ↗
-          </a>
-        </p>
-      )}
-
-      {!loading && !error && (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {posts.map((post, i) => (
-            <PostRow key={i} post={post} />
-          ))}
-        </div>
-      )}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {posts.map((post, i) => (
+          <PostRow key={i} post={post} />
+        ))}
+      </div>
     </section>
   )
 }
