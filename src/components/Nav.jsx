@@ -23,7 +23,7 @@ export default function Nav() {
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        <span style={{ color: '#f0f0f0', fontSize: '0.85rem' }}>tradfibaby</span>
+        <span style={{ fontFamily: "'Sacramento', cursive", fontSize: '1.9rem', color: '#f0f0f0', lineHeight: 1 }}>t.</span>
         <div style={{ display: 'flex', gap: '2rem' }}>
           {links.map(({ to, label }) => (
             <NavLink
