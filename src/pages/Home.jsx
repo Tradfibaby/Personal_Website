@@ -4,6 +4,7 @@ import { useState } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
 import { EncryptedText } from '../components/ui/encrypted-text'
+import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
 
 export default function Home() {
@@ -29,35 +30,38 @@ export default function Home() {
           />
         </h1>
 
-        <TypewriterEffect
-          text="i'm a founder, operator, and writer. I love thinking about how markets and technology reshape the way humans organise value and power - and what it does to the people caught inside it."
+        <TextGenerateEffect
+          words="i'm a founder, operator, and writer. I love thinking about how markets and technology reshape the way humans organise value and power - and what it does to the people caught inside it."
           style={heroPara}
           enabled={heroPhase >= 1}
           onComplete={() => setHeroPhase(2)}
         />
-        <TypewriterEffect
-          text="in a past life, I worked as a quant/dev at an investment bank and co-founded several projects in crypto, from DeFi to privacy and trading apps. I have been fortunate to surround myself with people far smarter and always generous in sharing their knowledge, wisdom, and perspective."
+        <TextGenerateEffect
+          words="in a past life, I worked as a quant/dev at an investment bank and co-founded several projects in crypto, from DeFi to privacy and trading apps. I have been fortunate to surround myself with people far smarter and always generous in sharing their knowledge, wisdom, and perspective."
           style={heroPara}
           enabled={heroPhase >= 2}
           onComplete={() => setHeroPhase(3)}
         />
-        <TypewriterEffect
-          text="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
+        <TextGenerateEffect
+          words="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
           style={{ ...heroPara, marginBottom: '3rem' }}
           enabled={heroPhase >= 3}
           onComplete={() => setHeroPhase(4)}
         />
 
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {[
             { label: 'github ↗', href: 'https://github.com/Tradfibaby' },
             { label: 'substack ↗', href: 'https://incoherentyapping.substack.com' },
             { label: 'x ↗', href: 'https://x.com/tradfibaby' },
           ].map((link) => (
-            <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" style={linkStyle}
-              onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
-              onMouseLeave={e => (e.target.style.color = '#555')}
-            >{link.label}</a>
+            <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
+              style={linkStyle}
+              onMouseEnter={e => (e.currentTarget.style.color = '#f0f0f0')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#555')}
+            >
+              <TypewriterEffect text={link.label} enabled={heroPhase >= 4} />
+            </a>
           ))}
         </div>
       </section>

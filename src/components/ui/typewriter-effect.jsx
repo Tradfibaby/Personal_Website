@@ -8,7 +8,7 @@ export const TypewriterEffect = ({
   cursorClassName,
   enabled = true,
   onComplete,
-  charDelay = 30,
+  charDelay = 35,
 }) => {
   const [count, setCount] = useState(0)
   const [done, setDone] = useState(false)
@@ -29,7 +29,7 @@ export const TypewriterEffect = ({
   }, [enabled])
 
   return (
-    <div style={style} className={className}>
+    <span style={style} className={className}>
       {text.slice(0, count)}
       {enabled && !done && (
         <motion.span
@@ -48,6 +48,6 @@ export const TypewriterEffect = ({
           className={cursorClassName}
         />
       )}
-    </div>
+    </span>
   )
 }
