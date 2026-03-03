@@ -14,43 +14,46 @@ export function EncryptedText({
   encryptedClassName = '',
   revealedClassName = '',
   className = '',
+  enabled = true,
   onComplete,
 }) {
   const [chars, setChars] = useState(
     () => text.split('').map(() => ({ char: randomChar(charset), revealed: false }))
   )
-  const intervals = useRef([])
-  const timeouts = useRef([])
+  const flipRef = useRef(null)
+  const timeoutsRef = useRef([])
 
   useEffect(() => {
-    text.split('').forEach((letter, i) => {
-      const interval = setInterval(() => {
-        setChars(prev => prev.map((c, idx) =>
-          idx === i && !c.revealed ? { ...c, char: randomChar(charset) } : c
-        ))
-      }, flipDelayMs)
-      intervals.current[i] = interval
+    if (!enabled) return
 
-      const timeout = setTimeout(() => {
-        clearInterval(intervals.current[i])
+    // Single shared interval for all unrevealed chars
+    flipRef.current = setInterval(() => {
+      setChars(prev => prev.map(c =>
+        c.revealed ? c : { ...c, char: randomChar(charset) }
+      ))
+    }, flipDelayMs)
+
+    // Individual reveal timeouts
+    text.split('').forEach((letter, i) => {
+      timeoutsRef.current[i] = setTimeout(() => {
         setChars(prev => prev.map((c, idx) =>
           idx === i ? { char: letter, revealed: true } : c
         ))
         if (i === text.length - 1) {
+          clearInterval(flipRef.current)
           onComplete?.()
         }
       }, revealDelayMs * (i + 1))
-      timeouts.current[i] = timeout
     })
 
     return () => {
-      intervals.current.forEach(clearInterval)
-      timeouts.current.forEach(clearTimeout)
+      clearInterval(flipRef.current)
+      timeoutsRef.current.forEach(clearTimeout)
     }
-  }, [text, revealDelayMs, flipDelayMs, charset])
+  }, [enabled])
 
   return (
-    <span className={className}>
+    <span className={className} style={{ opacity: enabled ? 1 : 0 }}>
       {chars.map((c, i) => (
         <span key={i} className={c.revealed ? revealedClassName : encryptedClassName}>
           {c.char}

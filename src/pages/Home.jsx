@@ -4,7 +4,6 @@ import { useState } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
 import { EncryptedText } from '../components/ui/encrypted-text'
-import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 
 export default function Home() {
   const [heroPhase, setHeroPhase] = useState(0)
@@ -29,24 +28,33 @@ export default function Home() {
           />
         </h1>
 
-        <TextGenerateEffect
-          style={heroPara}
-          words="i'm a founder, operator, and writer. I love thinking about how markets and technology reshape the way humans organise value and power - and what it does to the people caught inside it."
-          enabled={heroPhase >= 1}
-          onComplete={() => setHeroPhase(2)}
-        />
-        <TextGenerateEffect
-          style={heroPara}
-          words="in a past life, I worked as a quant/dev at an investment bank and co-founded several projects in crypto, from DeFi to privacy and trading apps. I have been fortunate to surround myself with people far smarter and always generous in sharing their knowledge, wisdom, and perspective."
-          enabled={heroPhase >= 2}
-          onComplete={() => setHeroPhase(3)}
-        />
-        <TextGenerateEffect
-          style={{ ...heroPara, marginBottom: '3rem' }}
-          words="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
-          enabled={heroPhase >= 3}
-          onComplete={() => setHeroPhase(4)}
-        />
+        <p style={heroPara}>
+          <EncryptedText
+            text="i'm a founder, operator, and writer. I love thinking about how markets and technology reshape the way humans organise value and power - and what it does to the people caught inside it."
+            revealDelayMs={10}
+            flipDelayMs={50}
+            enabled={heroPhase >= 1}
+            onComplete={() => setHeroPhase(2)}
+          />
+        </p>
+        <p style={heroPara}>
+          <EncryptedText
+            text="in a past life, I worked as a quant/dev at an investment bank and co-founded several projects in crypto, from DeFi to privacy and trading apps. I have been fortunate to surround myself with people far smarter and always generous in sharing their knowledge, wisdom, and perspective."
+            revealDelayMs={10}
+            flipDelayMs={50}
+            enabled={heroPhase >= 2}
+            onComplete={() => setHeroPhase(3)}
+          />
+        </p>
+        <p style={{ ...heroPara, marginBottom: '3rem' }}>
+          <EncryptedText
+            text="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
+            revealDelayMs={10}
+            flipDelayMs={50}
+            enabled={heroPhase >= 3}
+            onComplete={() => setHeroPhase(4)}
+          />
+        </p>
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease' }}>
           {[
