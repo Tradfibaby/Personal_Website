@@ -22,7 +22,7 @@ export default function Home() {
         }}>
           <EncryptedText
             text="tradfibaby"
-            revealDelayMs={80}
+            revealDelayMs={110}
             flipDelayMs={40}
             encryptedClassName="text-neutral-500"
             onComplete={() => setHeroPhase(1)}
@@ -45,9 +45,10 @@ export default function Home() {
           style={{ ...heroPara, marginBottom: '3rem' }}
           words="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
           enabled={heroPhase >= 3}
+          onComplete={() => setHeroPhase(4)}
         />
 
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease' }}>
           {[
             { label: 'github ↗', href: 'https://github.com/Tradfibaby' },
             { label: 'substack ↗', href: 'https://incoherentyapping.substack.com' },
@@ -62,7 +63,7 @@ export default function Home() {
       </section>
 
       {/* Currently */}
-      <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818' }}>
+      <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.3s' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
           <SectionLabel>currently</SectionLabel>
           <Link to="/writing" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}
@@ -115,7 +116,7 @@ export default function Home() {
       </section>
 
       {/* Projects preview */}
-      <section style={{ paddingTop: '3.5rem' }}>
+      <section style={{ paddingTop: '3.5rem', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.5s' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.5rem' }}>
           <SectionLabel>projects</SectionLabel>
           <Link to="/projects" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}

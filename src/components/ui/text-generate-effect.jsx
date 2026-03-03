@@ -6,7 +6,7 @@ export function TextGenerateEffect({
   style,
   className = "",
   filter = true,
-  duration = 0.5,
+  duration = 0.6,
   enabled = true,
   onComplete,
 }) {
@@ -23,7 +23,7 @@ export function TextGenerateEffect({
       },
       {
         duration,
-        delay: stagger(0.08),
+        delay: stagger(0.12),
       }
     ).then(() => {
       onComplete?.()
