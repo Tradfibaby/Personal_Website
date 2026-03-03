@@ -19,8 +19,9 @@ function getText(el, tag) {
 }
 
 async function fetchFeed() {
-  const res = await fetch(PROXY_URL)
-  if (!res.ok) throw new Error('proxy failed')
+  const url = import.meta.env.PROD ? '/feed.xml' : PROXY_URL
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('feed failed')
   return res.text()
 }
 
