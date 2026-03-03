@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
+import { EncryptedText } from '../components/ui/encrypted-text'
 
 export default function Home() {
   return (
@@ -16,7 +17,12 @@ export default function Home() {
           marginBottom: '1.25rem',
           lineHeight: 1.2,
         }}>
-          tradfibaby
+          <EncryptedText
+            text="tradfibaby"
+            revealDelayMs={80}
+            flipDelayMs={40}
+            encryptedClassName="text-neutral-500"
+          />
         </h1>
 
         <p style={heroPara}>
