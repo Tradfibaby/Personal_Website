@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const FEED_URL = 'https://incoherentyapping.substack.com/feed'
-const PROXY_URL = `https://corsproxy.io/?url=${encodeURIComponent(FEED_URL)}`
+const PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(FEED_URL)}`
 
 function formatDate(str) {
   const d = new Date(str)
@@ -19,8 +19,7 @@ function getText(el, tag) {
 }
 
 async function fetchFeed() {
-  const url = import.meta.env.PROD ? '/feed.xml' : PROXY_URL
-  const res = await fetch(url)
+  const res = await fetch(PROXY_URL)
   if (!res.ok) throw new Error('feed failed')
   return res.text()
 }
