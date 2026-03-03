@@ -1,12 +1,22 @@
 import { useState } from 'react'
-import SectionLabel from '../components/SectionLabel'
 import { posts } from '../data/posts'
 
 export default function Writing() {
   return (
     <section style={{ paddingTop: '4rem' }}>
-      <h1 style={heading}>writing</h1>
-      <SectionLabel>all posts</SectionLabel>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '2rem' }}>
+        <h1 style={heading}>writing</h1>
+        <a
+          href="https://incoherentyapping.substack.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}
+          onMouseEnter={e => (e.target.style.color = '#888')}
+          onMouseLeave={e => (e.target.style.color = '#444')}
+        >
+          substack ↗
+        </a>
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {posts.map((post, i) => (
           <PostRow key={i} post={post} />
@@ -52,5 +62,5 @@ const heading = {
   fontSize: '1.1rem',
   fontWeight: '400',
   color: '#f0f0f0',
-  marginBottom: '2rem',
+  marginBottom: 0,
 }
