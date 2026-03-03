@@ -1,17 +1,16 @@
 export const projects = [
   {
-    name: 'personal-website',
-    description: 'This website. Built with React + Vite, deployed on Cloudflare Pages.',
-    url: 'https://github.com/Tradfibaby/Personal_Website',
+    name: 'anon-snap',
+    description: 'Privacy-first photo tool that blurs faces on-device — no data leaves your phone.',
+    url: 'https://github.com/Riten-Zone/Anon-Snap',
     demo: null,
-    language: 'JavaScript',
+    language: 'TypeScript',
   },
-  // Add more repos here
-  // {
-  //   name: 'my-project',
-  //   description: 'Short description of what this does.',
-  //   url: 'https://github.com/Tradfibaby/my-project',
-  //   demo: 'https://myproject.com',
-  //   language: 'TypeScript',
-  // },
+  {
+    name: 'hyperliquid-dart-sdk',
+    description: 'Dart/Flutter SDK for interacting with the Hyperliquid perps exchange.',
+    url: 'https://github.com/Riten-Zone/Hyperliquid-Dart-SDK',
+    demo: null,
+    language: 'Dart',
+  },
 ]
