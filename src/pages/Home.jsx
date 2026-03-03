@@ -56,12 +56,12 @@ export default function Home() {
       <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
           <SectionLabel>currently</SectionLabel>
-          <Link to="/writing" style={{ color: '#444', fontSize: '0.75rem', letterSpacing: '0.05em' }}
+          <Link to="/writing" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
           >all writing →</Link>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.95rem' }}>
           {[
             {
               text: 'AI displacement and the closing escape route',
@@ -109,7 +109,7 @@ export default function Home() {
       <section style={{ paddingTop: '3.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.5rem' }}>
           <SectionLabel>projects</SectionLabel>
-          <Link to="/projects" style={{ color: '#444', fontSize: '0.75rem', letterSpacing: '0.05em' }}
+          <Link to="/projects" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
           >view all →</Link>
@@ -144,17 +144,17 @@ function MiniProjectCard({ project }) {
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-        <span style={{ color: '#e0e0e0', fontSize: '0.82rem' }}>{project.name}</span>
-        <span style={{ color: '#444', fontSize: '0.82rem' }}>↗</span>
+        <span style={{ color: '#e0e0e0', fontSize: '0.9rem' }}>{project.name}</span>
+        <span style={{ color: '#444', fontSize: '0.9rem' }}>↗</span>
       </div>
-      <p style={{ color: '#4a4a4a', fontSize: '0.76rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
+      <p style={{ color: '#4a4a4a', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
       {project.appStore && project.url && (
         <div style={{ marginTop: '0.75rem' }}>
           <a
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.7rem', letterSpacing: '0.05em' }}
+            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
             onClick={e => e.stopPropagation()}
           >
             github ↗
@@ -167,7 +167,7 @@ function MiniProjectCard({ project }) {
             href={project.pubDev}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.7rem', letterSpacing: '0.05em' }}
+            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
             onClick={e => e.stopPropagation()}
           >
             pub.dev ↗
@@ -180,7 +180,7 @@ function MiniProjectCard({ project }) {
 
 const heroPara = {
   color: '#888',
-  fontSize: '0.9rem',
+  fontSize: '1rem',
   lineHeight: 1.9,
   maxWidth: '540px',
   marginBottom: '1.25rem',
@@ -188,7 +188,7 @@ const heroPara = {
 
 const linkStyle = {
   color: '#555',
-  fontSize: '0.8rem',
+  fontSize: '1rem',
   letterSpacing: '0.05em',
   transition: 'color 0.15s',
   cursor: 'pointer',

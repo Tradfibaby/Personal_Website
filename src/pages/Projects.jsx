@@ -51,7 +51,7 @@ function ProjectCard({ project }) {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.72rem', letterSpacing: '0.05em' }}
+            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
             onClick={e => e.stopPropagation()}
           >
             github ↗
@@ -64,7 +64,7 @@ function ProjectCard({ project }) {
             href={project.pubDev}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.72rem', letterSpacing: '0.05em' }}
+            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
             onClick={e => e.stopPropagation()}
           >
             pub.dev ↗
