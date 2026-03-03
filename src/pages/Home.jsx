@@ -129,22 +129,26 @@ export default function Home() {
 function MiniProjectCard({ project }) {
   const [hovered, setHovered] = useState(false)
   return (
-    <div
+    <a
+      href={project.url}
+      target="_blank"
+      rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        display: 'block',
         border: `1px solid ${hovered ? '#333' : '#1e1e1e'}`,
         padding: '1.1rem',
         transition: 'border-color 0.15s',
+        textDecoration: 'none',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
         <span style={{ color: '#e0e0e0', fontSize: '0.82rem' }}>{project.name}</span>
-        <a href={project.url} target="_blank" rel="noopener noreferrer"
-          style={{ color: '#444', fontSize: '0.82rem' }}>↗</a>
+        <span style={{ color: '#444', fontSize: '0.82rem' }}>↗</span>
       </div>
-      <p style={{ color: '#4a4a4a', fontSize: '0.76rem', lineHeight: 1.6 }}>{project.description}</p>
-    </div>
+      <p style={{ color: '#4a4a4a', fontSize: '0.76rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
+    </a>
   )
 }
 
