@@ -3,7 +3,7 @@ import { posts } from '../data/posts'
 
 export default function Writing() {
   return (
-    <section style={{ paddingTop: '4rem' }}>
+    <section style={{ paddingTop: '4rem', backgroundColor: 'var(--bg)' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '2rem' }}>
         <h1 style={heading}>writing</h1>
         <a

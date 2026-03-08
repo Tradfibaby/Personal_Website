@@ -1,14 +1,19 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
-// heroPhase: 0=tradfibaby animating, 1=para1, 2=para2, 3=para3
+import { useState, useEffect } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
 import { EncryptedText } from '../components/ui/encrypted-text'
 import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
 
+let hasAnimated = false
+
 export default function Home({ onNavReady }) {
-  const [heroPhase, setHeroPhase] = useState(0)
+  const [heroPhase, setHeroPhase] = useState(hasAnimated ? 4 : 0)
+
+  useEffect(() => {
+    if (hasAnimated) onNavReady?.()
+  }, [])
   return (
     <div>
       {/* Hero */}
@@ -20,6 +25,8 @@ export default function Home({ onNavReady }) {
           letterSpacing: '-0.02em',
           marginBottom: '1.25rem',
           lineHeight: 1.2,
+          backgroundColor: 'var(--bg)',
+          display: 'inline-block',
         }}>
           <EncryptedText
             text="tradfibaby"
@@ -46,7 +53,7 @@ export default function Home({ onNavReady }) {
           words="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
           style={{ ...heroPara, marginBottom: '3rem' }}
           enabled={heroPhase >= 3}
-          onComplete={() => setHeroPhase(4)}
+          onComplete={() => { setHeroPhase(4); hasAnimated = true }}
         />
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
@@ -68,9 +75,9 @@ export default function Home({ onNavReady }) {
 
       {/* Currently */}
       <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.3s' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0' }}>
           <SectionLabel>currently</SectionLabel>
-          <Link to="/writing" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}
+          <Link to="/writing" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
           >all writing →</Link>
@@ -108,12 +115,12 @@ export default function Home({ onNavReady }) {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px' }}
+                style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
               >
                 {text} ↗
               </a>
             ) : (
-              <span key={text} style={{ color: '#555' }}>{text}</span>
+              <span key={text} style={{ color: '#555', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}>{text}</span>
             )
           )}
         </div>
@@ -121,9 +128,9 @@ export default function Home({ onNavReady }) {
 
       {/* Projects preview */}
       <section style={{ paddingTop: '3.5rem', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.5s' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.5rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0' }}>
           <SectionLabel>projects</SectionLabel>
-          <Link to="/projects" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em' }}
+          <Link to="/projects" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
           >view all →</Link>
@@ -158,6 +165,7 @@ function MiniProjectCard({ project }) {
         transition: 'border-color 0.15s, box-shadow 0.15s',
         boxShadow: hovered ? '0 0 20px rgba(80, 60, 200, 0.18)' : '0 0 12px rgba(80, 60, 200, 0.07)',
         textDecoration: 'none',
+        backgroundColor: 'var(--bg)',
       }}
     >
       <div className="wireframe-card-inner" aria-hidden="true" />
@@ -202,6 +210,7 @@ const heroPara = {
   lineHeight: 1.9,
   maxWidth: '540px',
   marginBottom: '1.25rem',
+  backgroundColor: 'var(--bg)',
 }
 
 const linkStyle = {
@@ -210,4 +219,6 @@ const linkStyle = {
   letterSpacing: '0.05em',
   transition: 'color 0.15s',
   cursor: 'pointer',
+  backgroundColor: 'var(--bg)',
+  padding: '0.2rem 0.5rem',
 }

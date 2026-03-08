@@ -4,7 +4,7 @@ import { projects } from '../data/projects'
 
 export default function Projects() {
   return (
-    <section style={{ paddingTop: '4rem' }}>
+    <section style={{ paddingTop: '4rem', backgroundColor: 'var(--bg)' }}>
       <h1 style={heading}>projects</h1>
       <SectionLabel>selected work</SectionLabel>
 

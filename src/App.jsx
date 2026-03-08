@@ -13,7 +13,7 @@ export default function App() {
     <BrowserRouter>
       <CursorEffect />
       <Nav navReady={navReady} />
-      <main style={{ maxWidth: '720px', margin: '0 auto', padding: '0 1.5rem 5rem', position: 'relative', zIndex: 1, backgroundColor: 'var(--bg)' }}>
+      <main style={{ maxWidth: '720px', margin: '0 auto', padding: '0 1.5rem 5rem', position: 'relative', zIndex: 1 }}>
         <Routes>
           <Route path="/" element={<Home onNavReady={() => setNavReady(true)} />} />
           <Route path="/writing" element={<Writing />} />
