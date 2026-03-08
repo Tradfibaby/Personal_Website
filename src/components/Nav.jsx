@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { TypewriterEffect } from './ui/typewriter-effect'
 
@@ -9,7 +10,18 @@ const links = [
 
 export default function Nav({ navReady }) {
   const location = useLocation()
-  const linksVisible = location.pathname !== '/' || navReady
+  const onHome = location.pathname === '/'
+  const [linksReady, setLinksReady] = useState(false)
+
+  useEffect(() => {
+    if (!navReady) return
+    const t = setTimeout(() => setLinksReady(true), 400)
+    return () => clearTimeout(t)
+  }, [navReady])
+
+  const logoVisible = !onHome || navReady
+  const linksVisible = !onHome || linksReady
+
   return (
     <nav style={{
       position: 'sticky',
@@ -26,7 +38,15 @@ export default function Nav({ navReady }) {
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        <span style={{ fontFamily: "'Sacramento', cursive", fontSize: '1.9rem', color: '#f0f0f0', lineHeight: 1 }}>t.</span>
+        <NavLink to="/" style={{
+          display: 'flex',
+          alignItems: 'center',
+          textDecoration: 'none',
+          opacity: logoVisible ? 1 : 0,
+          transition: 'opacity 0.4s ease',
+        }}>
+          <img src="/favicon.svg" alt="t." style={{ width: '16px', height: '16px' }} />
+        </NavLink>
         <div style={{ display: 'flex', gap: '2rem' }}>
           {links.map(({ to, label }) => (
             <NavLink
