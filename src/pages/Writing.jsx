@@ -3,8 +3,8 @@ import { posts } from '../data/posts'
 
 export default function Writing() {
   return (
-    <section style={{ paddingTop: '4rem', backgroundColor: 'var(--bg)' }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '2rem' }}>
+    <section style={{ paddingTop: '4rem' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '2rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0', display: 'inline-flex' }}>
         <h1 style={heading}>writing</h1>
         <a
           href="https://incoherentyapping.substack.com"
@@ -41,6 +41,7 @@ function PostRow({ post }) {
         borderBottom: '1px solid #181818',
         textDecoration: 'none',
         cursor: 'pointer',
+        backgroundColor: 'var(--bg)',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '1rem', flexWrap: 'wrap' }}>

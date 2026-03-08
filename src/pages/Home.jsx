@@ -86,16 +86,8 @@ export default function Home({ onNavReady }) {
               href: 'https://incoherentyapping.substack.com/p/what-would-you-do-to-survive',
             },
             {
-              text: 'human adaptation speed in the AI age',
-              href: null,
-            },
-            {
               text: 'five thousand years of market making - the function never changes',
               href: 'https://incoherentyapping.substack.com/p/dancing-with-volatility-abc',
-            },
-            {
-              text: 'mobile apps and the on-chain liquidity explosion',
-              href: null,
             },
           ].map(({ text, href }) =>
             href ? (
