@@ -37,7 +37,7 @@ export default function Home({ onNavReady }) {
             revealDelayMs={110}
             flipDelayMs={40}
             encryptedClassName="text-neutral-500"
-            onComplete={() => { setHeroPhase(4); onNavReady?.() }}
+            onComplete={() => { onNavReady?.(); setTimeout(() => setHeroPhase(4), 400) }}
           />
         </h1>
 
