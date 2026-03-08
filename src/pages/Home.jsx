@@ -4,6 +4,7 @@ import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
 import { EncryptedText } from '../components/ui/encrypted-text'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
+import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 
 let hasAnimated = false
 
@@ -64,7 +65,7 @@ export default function Home({ onNavReady }) {
       {/* Currently */}
       <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.3s' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0' }}>
-          <SectionLabel>currently</SectionLabel>
+          <SectionLabel>recently</SectionLabel>
           <Link to="/writing" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
@@ -126,7 +127,7 @@ export default function Home({ onNavReady }) {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {projects.slice(0, 3).map(project => (
-            <MiniProjectCard key={project.name} project={project} />
+            <MiniProjectCard key={project.name} project={project} enabled={heroPhase >= 4} />
           ))}
         </div>
       </section>
@@ -135,7 +136,7 @@ export default function Home({ onNavReady }) {
 }
 
 
-function MiniProjectCard({ project }) {
+function MiniProjectCard({ project, enabled }) {
   const [hovered, setHovered] = useState(false)
   return (
     <a
@@ -161,7 +162,14 @@ function MiniProjectCard({ project }) {
           <span style={{ color: '#e0e0e0', fontSize: '0.9rem' }}>{project.name}</span>
           <span style={{ color: '#444', fontSize: '0.9rem' }}>↗</span>
         </div>
-        <p style={{ color: '#4a4a4a', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
+        <TextGenerateEffect
+          words={project.description}
+          style={{ color: '#4a4a4a', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}
+          enabled={enabled}
+          duration={0.4}
+          startDelay={1}
+          filter={false}
+        />
         {project.appStore && project.url && (
           <div style={{ marginTop: '0.75rem' }}>
             <span
