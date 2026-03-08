@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
+import { TypewriterEffect } from './ui/typewriter-effect'
 
 const links = [
   { to: '/', label: 'home' },
@@ -6,7 +7,9 @@ const links = [
   { to: '/projects', label: 'projects' },
 ]
 
-export default function Nav() {
+export default function Nav({ navReady }) {
+  const location = useLocation()
+  const linksVisible = location.pathname !== '/' || navReady
   return (
     <nav style={{
       position: 'sticky',
@@ -37,7 +40,7 @@ export default function Nav() {
                 transition: 'color 0.15s',
               })}
             >
-              {label}
+              <TypewriterEffect text={label} enabled={linksVisible} />
             </NavLink>
           ))}
         </div>

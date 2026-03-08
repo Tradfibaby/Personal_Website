@@ -7,7 +7,7 @@ import { EncryptedText } from '../components/ui/encrypted-text'
 import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
 
-export default function Home() {
+export default function Home({ onNavReady }) {
   const [heroPhase, setHeroPhase] = useState(0)
   return (
     <div>
@@ -26,7 +26,7 @@ export default function Home() {
             revealDelayMs={110}
             flipDelayMs={40}
             encryptedClassName="text-neutral-500"
-            onComplete={() => setHeroPhase(1)}
+            onComplete={() => { setHeroPhase(1); onNavReady?.() }}
           />
         </h1>
 
