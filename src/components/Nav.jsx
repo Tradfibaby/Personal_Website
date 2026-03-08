@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { TypewriterEffect } from './ui/typewriter-effect'
 
@@ -11,16 +10,8 @@ const links = [
 export default function Nav({ navReady }) {
   const location = useLocation()
   const onHome = location.pathname === '/'
-  const [linksReady, setLinksReady] = useState(false)
-
-  useEffect(() => {
-    if (!navReady) return
-    const t = setTimeout(() => setLinksReady(true), 400)
-    return () => clearTimeout(t)
-  }, [navReady])
-
-  const logoVisible = !onHome || navReady
-  const linksVisible = !onHome || linksReady
+  const logoVisible  = !onHome || navReady
+  const linksVisible = !onHome || navReady
 
   return (
     <nav style={{
