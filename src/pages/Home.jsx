@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
 import { EncryptedText } from '../components/ui/encrypted-text'
-import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
 
 let hasAnimated = false
@@ -12,7 +11,11 @@ export default function Home({ onNavReady }) {
   const [heroPhase, setHeroPhase] = useState(hasAnimated ? 4 : 0)
 
   useEffect(() => {
-    if (hasAnimated) onNavReady?.()
+    if (hasAnimated) {
+      onNavReady?.()
+      return
+    }
+    hasAnimated = true
   }, [])
   return (
     <div>
@@ -33,28 +36,13 @@ export default function Home({ onNavReady }) {
             revealDelayMs={110}
             flipDelayMs={40}
             encryptedClassName="text-neutral-500"
-            onComplete={() => { setHeroPhase(1); onNavReady?.() }}
+            onComplete={() => { setHeroPhase(4); onNavReady?.() }}
           />
         </h1>
 
-        <TextGenerateEffect
-          words="i'm a founder, operator, and writer. I love thinking about how markets and technology reshape the way humans organise value and power - and what it does to the people caught inside it."
-          style={heroPara}
-          enabled={heroPhase >= 1}
-          onComplete={() => setHeroPhase(2)}
-        />
-        <TextGenerateEffect
-          words="in a past life, I worked as a quant/dev at an investment bank and co-founded several projects in crypto, from DeFi to privacy and trading apps. I have been fortunate to surround myself with people far smarter and always generous in sharing their knowledge, wisdom, and perspective."
-          style={heroPara}
-          enabled={heroPhase >= 2}
-          onComplete={() => setHeroPhase(3)}
-        />
-        <TextGenerateEffect
-          words="most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included."
-          style={{ ...heroPara, marginBottom: '3rem' }}
-          enabled={heroPhase >= 3}
-          onComplete={() => { setHeroPhase(4); hasAnimated = true }}
-        />
+        <p style={{ ...heroPara, opacity: heroPhase >= 1 ? 1 : 0, transition: 'opacity 0.5s ease' }}>i'm a founder, operator, and writer. I love thinking about how markets and technology reshape the way humans organise value and power - and what it does to the people caught inside it.</p>
+        <p style={{ ...heroPara, opacity: heroPhase >= 1 ? 1 : 0, transition: 'opacity 0.5s ease 0.15s' }}>in a past life, I worked as a quant/dev at an investment bank and co-founded several projects in crypto, from DeFi to privacy and trading apps. I have been fortunate to surround myself with people far smarter and always generous in sharing their knowledge, wisdom, and perspective.</p>
+        <p style={{ ...heroPara, marginBottom: '3rem', opacity: heroPhase >= 1 ? 1 : 0, transition: 'opacity 0.5s ease 0.3s' }}>most of my time now goes into writing and building around AI, finance, and what happens when old infrastructure meets new incentives. human nature stays legible if you know where to look - dramas, documentaries, and dating shows included.</p>
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {[

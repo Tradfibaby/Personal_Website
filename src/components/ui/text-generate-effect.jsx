@@ -9,11 +9,13 @@ export function TextGenerateEffect({
   duration = 0.6,
   enabled = true,
   onComplete,
+  instant = false,
 }) {
   const [scope, animate] = useAnimate()
   const wordsArray = words.trim().split(/\s+/)
 
   useEffect(() => {
+    if (instant) { onComplete?.(); return }
     if (!enabled) return
     animate(
       "span",
@@ -28,7 +30,7 @@ export function TextGenerateEffect({
     ).then(() => {
       onComplete?.()
     })
-  }, [enabled])
+  }, [enabled, instant])
 
   return (
     <p style={style} className={className}>
@@ -37,8 +39,8 @@ export function TextGenerateEffect({
           <motion.span
             key={word + idx}
             style={{
-              opacity: 0,
-              filter: filter ? "blur(6px)" : "none",
+              opacity: instant ? 1 : 0,
+              filter: instant ? "none" : (filter ? "blur(6px)" : "none"),
               display: "inline",
             }}
           >

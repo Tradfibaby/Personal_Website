@@ -16,14 +16,16 @@ export function EncryptedText({
   className = '',
   enabled = true,
   onComplete,
+  instant = false,
 }) {
   const [chars, setChars] = useState(
-    () => text.split('').map(() => ({ char: randomChar(charset), revealed: false }))
+    () => text.split('').map((c) => ({ char: instant ? c : randomChar(charset), revealed: instant }))
   )
   const flipRef = useRef(null)
   const timeoutsRef = useRef([])
 
   useEffect(() => {
+    if (instant) { onComplete?.(); return }
     if (!enabled) return
 
     // Single shared interval for all unrevealed chars
@@ -50,10 +52,10 @@ export function EncryptedText({
       clearInterval(flipRef.current)
       timeoutsRef.current.forEach(clearTimeout)
     }
-  }, [enabled])
+  }, [enabled, instant])
 
   return (
-    <span className={className} style={{ opacity: enabled ? 1 : 0 }}>
+    <span className={className} style={{ opacity: instant || enabled ? 1 : 0 }}>
       {chars.map((c, i) => (
         <span key={i} className={c.revealed ? revealedClassName : encryptedClassName}>
           {c.char}
