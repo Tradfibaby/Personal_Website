@@ -15,4 +15,12 @@ export const projects = [
     demo: null,
     language: 'Dart',
   },
+  {
+    name: 'polymarket-dart-sdk',
+    description: 'Dart/Flutter SDK for the Polymarket prediction markets API.',
+    url: 'https://github.com/Riten-Zone/Polymarket-Dart-SDK',
+    pubDev: 'https://pub.dev/packages/polymarket_dart',
+    demo: null,
+    language: 'Dart',
+  },
 ]
