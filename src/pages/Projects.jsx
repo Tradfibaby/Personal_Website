@@ -25,6 +25,7 @@ function ProjectCard({ project }) {
       href={project.appStore ?? project.url}
       target="_blank"
       rel="noopener noreferrer"
+      className="wireframe-card"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -32,45 +33,49 @@ function ProjectCard({ project }) {
         border: `1px solid ${hovered ? '#333' : '#1e1e1e'}`,
         padding: '1.25rem',
         cursor: 'pointer',
-        transition: 'border-color 0.15s',
+        position: 'relative',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
+        boxShadow: hovered ? '0 0 20px rgba(80, 60, 200, 0.18)' : '0 0 12px rgba(80, 60, 200, 0.07)',
         textDecoration: 'none',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-        <span style={{ color: '#e0e0e0', fontSize: '0.85rem' }}>{project.name}</span>
-        <span style={{ color: '#444', fontSize: '0.85rem', lineHeight: 1 }}>↗</span>
+      <div className="wireframe-card-inner">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+          <span style={{ color: '#e0e0e0', fontSize: '0.85rem' }}>{project.name}</span>
+          <span style={{ color: '#444', fontSize: '0.85rem', lineHeight: 1 }}>↗</span>
+        </div>
+
+        <p style={{ color: '#555', fontSize: '0.8rem', lineHeight: 1.7, margin: 0 }}>
+          {project.description}
+        </p>
+
+        {project.appStore && project.url && (
+          <div style={{ marginTop: '1rem' }}>
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
+              onClick={e => e.stopPropagation()}
+            >
+              github ↗
+            </a>
+          </div>
+        )}
+        {project.pubDev && (
+          <div style={{ marginTop: '1rem' }}>
+            <a
+              href={project.pubDev}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
+              onClick={e => e.stopPropagation()}
+            >
+              pub.dev ↗
+            </a>
+          </div>
+        )}
       </div>
-
-      <p style={{ color: '#555', fontSize: '0.8rem', lineHeight: 1.7, margin: 0 }}>
-        {project.description}
-      </p>
-
-      {project.appStore && project.url && (
-        <div style={{ marginTop: '1rem' }}>
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
-            onClick={e => e.stopPropagation()}
-          >
-            github ↗
-          </a>
-        </div>
-      )}
-      {project.pubDev && (
-        <div style={{ marginTop: '1rem' }}>
-          <a
-            href={project.pubDev}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em' }}
-            onClick={e => e.stopPropagation()}
-          >
-            pub.dev ↗
-          </a>
-        </div>
-      )}
     </a>
   )
 }

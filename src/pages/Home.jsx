@@ -147,47 +147,52 @@ function MiniProjectCard({ project }) {
       href={project.appStore ?? project.url}
       target="_blank"
       rel="noopener noreferrer"
+      className="wireframe-card"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
         display: 'block',
         border: `1px solid ${hovered ? '#333' : '#1e1e1e'}`,
         padding: '1.1rem',
-        transition: 'border-color 0.15s',
+        position: 'relative',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
+        boxShadow: hovered ? '0 0 20px rgba(80, 60, 200, 0.18)' : '0 0 12px rgba(80, 60, 200, 0.07)',
         textDecoration: 'none',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-        <span style={{ color: '#e0e0e0', fontSize: '0.9rem' }}>{project.name}</span>
-        <span style={{ color: '#444', fontSize: '0.9rem' }}>↗</span>
+      <div className="wireframe-card-inner">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+          <span style={{ color: '#e0e0e0', fontSize: '0.9rem' }}>{project.name}</span>
+          <span style={{ color: '#444', fontSize: '0.9rem' }}>↗</span>
+        </div>
+        <p style={{ color: '#4a4a4a', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
+        {project.appStore && project.url && (
+          <div style={{ marginTop: '0.75rem' }}>
+            <span
+              role="link"
+              tabIndex={0}
+              style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(project.url, '_blank', 'noopener,noreferrer') }}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(project.url, '_blank', 'noopener,noreferrer') } }}
+            >
+              github ↗
+            </span>
+          </div>
+        )}
+        {project.pubDev && (
+          <div style={{ marginTop: '0.75rem' }}>
+            <span
+              role="link"
+              tabIndex={0}
+              style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(project.pubDev, '_blank', 'noopener,noreferrer') }}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(project.pubDev, '_blank', 'noopener,noreferrer') } }}
+            >
+              pub.dev ↗
+            </span>
+          </div>
+        )}
       </div>
-      <p style={{ color: '#4a4a4a', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>{project.description}</p>
-      {project.appStore && project.url && (
-        <div style={{ marginTop: '0.75rem' }}>
-          <span
-            role="link"
-            tabIndex={0}
-            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
-            onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(project.url, '_blank', 'noopener,noreferrer') }}
-            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(project.url, '_blank', 'noopener,noreferrer') } }}
-          >
-            github ↗
-          </span>
-        </div>
-      )}
-      {project.pubDev && (
-        <div style={{ marginTop: '0.75rem' }}>
-          <span
-            role="link"
-            tabIndex={0}
-            style={{ color: '#444', fontSize: '0.9rem', letterSpacing: '0.05em', cursor: 'pointer' }}
-            onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(project.pubDev, '_blank', 'noopener,noreferrer') }}
-            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); window.open(project.pubDev, '_blank', 'noopener,noreferrer') } }}
-          >
-            pub.dev ↗
-          </span>
-        </div>
-      )}
     </a>
   )
 }
