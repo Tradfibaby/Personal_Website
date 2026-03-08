@@ -142,6 +142,10 @@ a {
 }
 .wireframe-card::before  { top: -1px; left: -1px;  border-width: 1px 0 0 1px; }
 .wireframe-card::after   { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
-.wireframe-card-inner { position: relative; }
+.wireframe-card-inner {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+}
 .wireframe-card-inner::before { top: -1px; right: -1px;  border-width: 1px 1px 0 0; }
 .wireframe-card-inner::after  { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }

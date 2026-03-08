@@ -129,7 +129,7 @@ export default function Home({ onNavReady }) {
           >view all →</Link>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {projects.slice(0, 3).map(project => (
             <MiniProjectCard key={project.name} project={project} />
           ))}
@@ -160,7 +160,7 @@ function MiniProjectCard({ project }) {
         textDecoration: 'none',
       }}
     >
-      <div className="wireframe-card-inner">
+      <div className="wireframe-card-inner" aria-hidden="true" />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
           <span style={{ color: '#e0e0e0', fontSize: '0.9rem' }}>{project.name}</span>
           <span style={{ color: '#444', fontSize: '0.9rem' }}>↗</span>
@@ -192,7 +192,6 @@ function MiniProjectCard({ project }) {
             </span>
           </div>
         )}
-      </div>
     </a>
   )
 }

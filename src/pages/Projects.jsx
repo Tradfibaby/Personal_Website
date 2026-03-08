@@ -8,7 +8,7 @@ export default function Projects() {
       <h1 style={heading}>projects</h1>
       <SectionLabel>selected work</SectionLabel>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
         {projects.map((project) => (
           <ProjectCard key={project.name} project={project} />
         ))}
@@ -39,7 +39,7 @@ function ProjectCard({ project }) {
         textDecoration: 'none',
       }}
     >
-      <div className="wireframe-card-inner">
+      <div className="wireframe-card-inner" aria-hidden="true" />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
           <span style={{ color: '#e0e0e0', fontSize: '0.85rem' }}>{project.name}</span>
           <span style={{ color: '#444', fontSize: '0.85rem', lineHeight: 1 }}>↗</span>
@@ -75,7 +75,6 @@ function ProjectCard({ project }) {
             </a>
           </div>
         )}
-      </div>
     </a>
   )
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*<>{}[]'
 const GRID = 40
-const RADIUS = 70
+const RADIUS = 100
 const MAX_SHIFT = 18
 
 function randomChar() {
