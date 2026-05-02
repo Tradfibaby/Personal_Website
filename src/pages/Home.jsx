@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
+import { posts } from '../data/posts'
 import { EncryptedText } from '../components/ui/encrypted-text'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
 import { TextGenerateEffect } from '../components/ui/text-generate-effect'
@@ -72,38 +73,29 @@ export default function Home({ onNavReady }) {
           >all writing →</Link>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.95rem' }}>
-          {[
-            {
-              text: 'AI displacement and the closing escape route',
-              href: 'https://incoherentyapping.substack.com/p/the-structural-destruction-of-white',
-            },
-            {
-              text: "privacy infrastructure that doesn't ask for your data",
-              href: 'https://github.com/Riten-Zone/Anon-Snap',
-            },
-            {
-              text: 'what happens when AI optimises for its own survival',
-              href: 'https://incoherentyapping.substack.com/p/what-would-you-do-to-survive',
-            },
-            {
-              text: 'five thousand years of market making - the function never changes',
-              href: 'https://incoherentyapping.substack.com/p/dancing-with-volatility-abc',
-            },
-          ].map(({ text, href }) =>
-            href ? (
+          {posts.slice(0, 4).map((post) => {
+            const isInternal = !!post.slug
+            const linkStyle = { color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }
+            return isInternal ? (
+              <Link
+                key={post.slug}
+                to={`/writing/${post.slug}`}
+                style={linkStyle}
+              >
+                {post.title}
+              </Link>
+            ) : (
               <a
-                key={text}
-                href={href}
+                key={post.link}
+                href={post.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
+                style={linkStyle}
               >
-                {text} ↗
+                {post.title} ↗
               </a>
-            ) : (
-              <span key={text} style={{ color: '#555', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}>{text}</span>
             )
-          )}
+          })}
         </div>
       </section>
 
