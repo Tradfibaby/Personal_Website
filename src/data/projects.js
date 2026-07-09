@@ -16,6 +16,13 @@ export const projects = [
     language: 'Dart',
   },
   {
+    name: 'polymarket-recorder',
+    description: 'Rust service that records live orderbook and trade data from Polymarket.',
+    url: 'https://github.com/Riten-Zone/Polymarket_Recorder',
+    demo: null,
+    language: 'Rust',
+  },
+  {
     name: 'polymarket-dart-sdk',
     description: 'Dart/Flutter SDK for the Polymarket prediction markets API.',
     url: 'https://github.com/Riten-Zone/Polymarket-Dart-SDK',

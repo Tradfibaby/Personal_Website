@@ -110,7 +110,7 @@ export default function Home({ onNavReady }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
-          {projects.slice(0, 3).map(project => (
+          {projects.slice(0, 4).map(project => (
             <MiniProjectCard key={project.name} project={project} enabled={heroPhase >= 4} />
           ))}
         </div>
