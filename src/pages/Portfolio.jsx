@@ -151,17 +151,8 @@ function ScrollScrub({ src, poster, chapters, duration }) {
   }
 
   const { t, progress, idx } = view
-  const chapter = chapters[idx]
-  const isTitle = idx === 0
-
-  // scroll-linked chapter transitions: everything is a pure function of scrub time
-  const chapterEnd = chapters[idx + 1]?.start ?? duration
-  const local = Math.min(1, Math.max(0, (t - chapter.start) / Math.max(0.1, chapterEnd - chapter.start)))
-  const fadeIn = idx === 0 ? 1 : Math.min(1, local / 0.14)
-  const fadeOut = idx === chapters.length - 1 ? 1 : Math.min(1, (1 - local) / 0.14)
-  const vis = Math.max(0, Math.min(fadeIn, fadeOut))
-  const slideX = (1 - fadeIn) * 42 - (1 - fadeOut) * 42
-  const introVis = isTitle ? Math.max(0, 1 - local * 1.25) : 0
+  // scroll hint fades out over the first seconds of the film
+  const hintVis = Math.max(0, 1 - t / 2.5)
 
   return (
     <div ref={wrapRef} style={{ height: '520vh', width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
@@ -189,96 +180,25 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
         />
 
-        {/* Intro: dark scrim + brand title over the opening space shot */}
-        {introVis > 0 && (
-          <>
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'radial-gradient(ellipse at center, rgba(8, 8, 8, 0.62) 0%, rgba(8, 8, 8, 0.86) 100%)',
-              opacity: introVis,
-              pointerEvents: 'none',
+        {/* Scroll hint, fades out as the film starts */}
+        {hintVis > 0 && (
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: '5vh',
+            transform: 'translateX(-50%)',
+            opacity: hintVis,
+            pointerEvents: 'none',
+          }}>
+            <span style={{
+              display: 'block',
+              width: '1px',
+              height: '26px',
+              margin: '0 auto',
+              backgroundColor: '#4be8e2',
+              animation: 'scrolly-hint 1.6s ease-out infinite',
             }} />
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: introVis,
-              transform: `scale(${1 + local * 0.18})`,
-              pointerEvents: 'none',
-            }}>
-              <span style={{
-                fontFamily: "'Orbitron', 'Space Mono', monospace",
-                fontWeight: 700,
-                fontSize: 'clamp(2.6rem, 8vw, 5rem)',
-                letterSpacing: '0.04em',
-                color: '#4be8e2',
-                textShadow: '0 0 22px rgba(75, 232, 226, 0.45), 0 0 70px rgba(75, 232, 226, 0.18)',
-              }}>own.fun</span>
-            </div>
-            <div style={{
-              position: 'absolute',
-              left: '50%',
-              bottom: '5vh',
-              transform: 'translateX(-50%)',
-              opacity: introVis,
-              pointerEvents: 'none',
-            }}>
-              <span style={{
-                display: 'block',
-                width: '1px',
-                height: '26px',
-                margin: '0 auto',
-                backgroundColor: '#4be8e2',
-                animation: 'scrolly-hint 1.6s ease-out infinite',
-              }} />
-            </div>
-          </>
-        )}
-
-        {/* Chapter title, scroll-linked slide + fade */}
-        {!isTitle && vis > 0 && (
-          <>
-            <div style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: '38vh',
-              background: 'linear-gradient(to top, rgba(8, 8, 8, 0.8) 0%, rgba(8, 8, 8, 0) 100%)',
-              opacity: vis,
-              pointerEvents: 'none',
-            }} />
-            <div style={{
-              position: 'absolute',
-              left: 'clamp(1.5rem, 6vw, 5rem)',
-              bottom: '10vh',
-              maxWidth: '440px',
-              opacity: vis,
-              transform: `translateX(${slideX}px)`,
-              pointerEvents: 'none',
-            }}>
-              <span style={{
-                display: 'block',
-                color: '#555',
-                fontSize: '0.7rem',
-                letterSpacing: '0.25em',
-                marginBottom: '0.5rem',
-              }}>{String(idx).padStart(2, '0')}</span>
-              <span style={{
-                display: 'block',
-                fontFamily: "'Orbitron', 'Space Mono', monospace",
-                fontWeight: 500,
-                fontSize: 'clamp(1.2rem, 2.6vw, 1.7rem)',
-                lineHeight: 1.35,
-                color: '#4be8e2',
-                textShadow: '0 0 18px rgba(75, 232, 226, 0.35)',
-              }}>{chapter.title}</span>
-            </div>
-          </>
+          </div>
         )}
 
         {/* Progress bar + chapter ticks */}
