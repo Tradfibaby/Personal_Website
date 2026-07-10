@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Portfolio source videos (large originals, re-encoded copies live in public/portfolio)
+src/assets/portfolio/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -4,7 +4,8 @@ import { TypewriterEffect } from './ui/typewriter-effect'
 const links = [
   { to: '/', label: 'home' },
   { to: '/writing', label: 'writing' },
-  { to: '/projects', label: 'projects' },
+  { to: '/portfolio', label: 'portfolio' },
+  { to: '/open-source', label: 'open source' },
 ]
 
 export default function Nav({ navReady }) {

@@ -5,7 +5,7 @@ import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 export default function Projects() {
   return (
     <section style={{ paddingTop: '4rem' }}>
-      <h1 style={heading}>projects</h1>
+      <h1 style={heading}>open source</h1>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
         {projects.map((project) => (
