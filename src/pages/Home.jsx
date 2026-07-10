@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import SectionLabel from '../components/SectionLabel'
 import { projects } from '../data/projects'
+import { portfolio } from '../data/portfolio'
 import { posts } from '../data/posts'
 import { EncryptedText } from '../components/ui/encrypted-text'
 import { TypewriterEffect } from '../components/ui/typewriter-effect'
@@ -99,11 +100,33 @@ export default function Home({ onNavReady }) {
         </div>
       </section>
 
-      {/* Projects preview */}
+      {/* Portfolio preview */}
+      <section style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem', borderBottom: '1px solid #181818', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.4s' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0' }}>
+          <SectionLabel>portfolio</SectionLabel>
+          <Link to="/portfolio" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
+            onMouseEnter={e => (e.target.style.color = '#888')}
+            onMouseLeave={e => (e.target.style.color = '#444')}
+          >view all →</Link>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.95rem' }}>
+          {portfolio.map(item => (
+            <Link
+              key={item.slug}
+              to="/portfolio"
+              style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
+            >
+              {item.name} <span style={{ color: '#4a4a4a' }}>- {item.tagline}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Open source preview */}
       <section style={{ paddingTop: '3.5rem', opacity: heroPhase >= 4 ? 1 : 0, transition: 'opacity 0.7s ease 0.5s' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.5rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0' }}>
-          <SectionLabel>projects</SectionLabel>
-          <Link to="/projects" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
+          <SectionLabel>open source</SectionLabel>
+          <Link to="/open-source" style={{ color: '#444', fontSize: '0.8rem', letterSpacing: '0.05em', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
             onMouseEnter={e => (e.target.style.color = '#888')}
             onMouseLeave={e => (e.target.style.color = '#444')}
           >view all →</Link>

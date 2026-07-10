@@ -51,7 +51,7 @@ function CaseStudy({ item, last }) {
             ))}
           </div>
         </div>
-        <PhoneLoop src={item.loopVideo} caption={item.loopCaption} />
+        <PhoneLoop src={item.loopVideo} caption={item.loopCaption} landscape={item.loopLandscape} />
       </div>
 
       {/* Wide showcase video */}
@@ -60,11 +60,12 @@ function CaseStudy({ item, last }) {
   )
 }
 
-function PhoneLoop({ src, caption }) {
+function PhoneLoop({ src, caption, landscape }) {
   return (
     <div style={{ flex: '0 0 auto', margin: '0 auto' }}>
       <div style={{
-        width: '170px',
+        width: landscape ? '300px' : '170px',
+        maxWidth: '100%',
         padding: '7px',
         border: '1px solid #2a2a2a',
         borderRadius: '26px',

@@ -24,6 +24,7 @@ export const portfolio = [
     stack: ['react native', 'expo', 'hyperliquid'],
     loopVideo: '/portfolio/riten-dashboard.mp4',
     loopCaption: 'market dashboard',
+    loopLandscape: true,
     mainVideo: '/portfolio/riten-demo.mp4',
     mainPoster: '/portfolio/riten-demo-poster.jpg',
     mainCaption: 'trading interface walkthrough · 2 min',
