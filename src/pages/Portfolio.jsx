@@ -102,8 +102,7 @@ function ScrollyFilm({ item }) {
 function ScrollScrub({ src, poster, chapters, duration }) {
   const wrapRef = useRef(null)
   const videoRef = useRef(null)
-  const [chapterIdx, setChapterIdx] = useState(0)
-  const [progress, setProgress] = useState(0)
+  const [view, setView] = useState({ t: 0, progress: 0, idx: 0 })
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -131,10 +130,9 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           // big jumps seek directly, small ones ease in for a smoother scrub
           video.currentTime = Math.abs(diff) > 2.5 ? target : cur + diff * 0.22
         }
-        setProgress(p)
         let idx = 0
         for (let i = 0; i < chapters.length; i++) if (target >= chapters[i].start) idx = i
-        setChapterIdx(idx)
+        setView(v => (v.t === target && v.progress === p && v.idx === idx) ? v : { t: target, progress: p, idx })
       }
       raf = requestAnimationFrame(tick)
     }
@@ -146,14 +144,24 @@ function ScrollScrub({ src, poster, chapters, duration }) {
     const wrap = wrapRef.current
     const video = videoRef.current
     if (!video.duration) return
-    const next = chapters[Math.min(chapterIdx + 1, chapters.length - 1)]
+    const next = chapters[Math.min(view.idx + 1, chapters.length - 1)]
     const scrollable = wrap.offsetHeight - window.innerHeight
     const top = wrap.getBoundingClientRect().top + window.scrollY + (next.start / video.duration) * scrollable
     window.scrollTo({ top: top + 2, behavior: 'smooth' })
   }
 
-  const chapter = chapters[chapterIdx]
-  const isTitle = chapterIdx === 0
+  const { t, progress, idx } = view
+  const chapter = chapters[idx]
+  const isTitle = idx === 0
+
+  // scroll-linked chapter transitions: everything is a pure function of scrub time
+  const chapterEnd = chapters[idx + 1]?.start ?? duration
+  const local = Math.min(1, Math.max(0, (t - chapter.start) / Math.max(0.1, chapterEnd - chapter.start)))
+  const fadeIn = idx === 0 ? 1 : Math.min(1, local / 0.14)
+  const fadeOut = idx === chapters.length - 1 ? 1 : Math.min(1, (1 - local) / 0.14)
+  const vis = Math.max(0, Math.min(fadeIn, fadeOut))
+  const slideX = (1 - fadeIn) * 42 - (1 - fadeOut) * 42
+  const introVis = isTitle ? Math.max(0, 1 - local * 1.25) : 0
 
   return (
     <div ref={wrapRef} style={{ height: '520vh', width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
@@ -181,50 +189,101 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
         />
 
-        {/* Chapter caption */}
-        <div
-          key={chapterIdx}
-          className="scrolly-caption"
-          style={isTitle ? {
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pointerEvents: 'none',
-          } : {
-            position: 'absolute',
-            left: 'clamp(1.5rem, 6vw, 5rem)',
-            bottom: '14vh',
-            maxWidth: '340px',
-            pointerEvents: 'none',
-          }}
-        >
-          <span style={{
-            display: 'inline-block',
-            color: '#f0f0f0',
-            fontSize: isTitle ? '2.4rem' : '1.15rem',
-            letterSpacing: isTitle ? '-0.02em' : '0',
-            backgroundColor: 'rgba(8, 8, 8, 0.82)',
-            padding: '0.3rem 0.7rem',
-          }}>{chapter.title}</span>
-          {chapter.sub && (
-            <span style={{
-              display: 'inline-block',
-              color: '#888',
-              fontSize: '0.85rem',
-              lineHeight: 1.6,
-              backgroundColor: 'rgba(8, 8, 8, 0.82)',
-              padding: '0.25rem 0.7rem',
-              marginTop: '0.35rem',
-            }}>{chapter.sub}</span>
-          )}
-        </div>
+        {/* Intro: dark scrim + brand title over the opening space shot */}
+        {introVis > 0 && (
+          <>
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'radial-gradient(ellipse at center, rgba(8, 8, 8, 0.62) 0%, rgba(8, 8, 8, 0.86) 100%)',
+              opacity: introVis,
+              pointerEvents: 'none',
+            }} />
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: introVis,
+              transform: `scale(${1 + local * 0.18})`,
+              pointerEvents: 'none',
+            }}>
+              <span style={{
+                fontFamily: "'Orbitron', 'Space Mono', monospace",
+                fontWeight: 700,
+                fontSize: 'clamp(2.6rem, 8vw, 5rem)',
+                letterSpacing: '0.04em',
+                color: '#4be8e2',
+                textShadow: '0 0 22px rgba(75, 232, 226, 0.45), 0 0 70px rgba(75, 232, 226, 0.18)',
+              }}>own.fun</span>
+            </div>
+            <div style={{
+              position: 'absolute',
+              left: '50%',
+              bottom: '5vh',
+              transform: 'translateX(-50%)',
+              opacity: introVis,
+              pointerEvents: 'none',
+            }}>
+              <span style={{
+                display: 'block',
+                width: '1px',
+                height: '26px',
+                margin: '0 auto',
+                backgroundColor: '#4be8e2',
+                animation: 'scrolly-hint 1.6s ease-out infinite',
+              }} />
+            </div>
+          </>
+        )}
+
+        {/* Chapter title, scroll-linked slide + fade */}
+        {!isTitle && vis > 0 && (
+          <>
+            <div style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: '38vh',
+              background: 'linear-gradient(to top, rgba(8, 8, 8, 0.8) 0%, rgba(8, 8, 8, 0) 100%)',
+              opacity: vis,
+              pointerEvents: 'none',
+            }} />
+            <div style={{
+              position: 'absolute',
+              left: 'clamp(1.5rem, 6vw, 5rem)',
+              bottom: '10vh',
+              maxWidth: '440px',
+              opacity: vis,
+              transform: `translateX(${slideX}px)`,
+              pointerEvents: 'none',
+            }}>
+              <span style={{
+                display: 'block',
+                color: '#555',
+                fontSize: '0.7rem',
+                letterSpacing: '0.25em',
+                marginBottom: '0.5rem',
+              }}>{String(idx).padStart(2, '0')}</span>
+              <span style={{
+                display: 'block',
+                fontFamily: "'Orbitron', 'Space Mono', monospace",
+                fontWeight: 500,
+                fontSize: 'clamp(1.2rem, 2.6vw, 1.7rem)',
+                lineHeight: 1.35,
+                color: '#4be8e2',
+                textShadow: '0 0 18px rgba(75, 232, 226, 0.35)',
+              }}>{chapter.title}</span>
+            </div>
+          </>
+        )}
 
         {/* Progress bar + chapter ticks */}
         <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '2px', backgroundColor: '#181818' }}>
-          <div style={{ height: '100%', width: `${progress * 100}%`, backgroundColor: '#555' }} />
+          <div style={{ height: '100%', width: `${progress * 100}%`, backgroundColor: 'rgba(75, 232, 226, 0.55)' }} />
         </div>
         <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '8px', pointerEvents: 'none' }}>
           {chapters.map((c, i) => (
@@ -233,8 +292,8 @@ function ScrollScrub({ src, poster, chapters, duration }) {
               left: `${(c.start / duration) * 100}%`,
               bottom: 0,
               width: '1px',
-              height: i === chapterIdx ? '8px' : '5px',
-              backgroundColor: i <= chapterIdx ? '#888' : '#2a2a2a',
+              height: i === idx ? '8px' : '5px',
+              backgroundColor: i === idx ? '#4be8e2' : i < idx ? '#666' : '#2a2a2a',
             }} />
           ))}
         </div>
