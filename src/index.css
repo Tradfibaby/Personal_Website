@@ -149,3 +149,12 @@ a {
 }
 .wireframe-card-inner::before { top: -1px; right: -1px;  border-width: 1px 1px 0 0; }
 .wireframe-card-inner::after  { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+
+/* Portfolio scrollytelling captions: slide in horizontally on chapter change */
+.scrolly-caption {
+  animation: scrolly-slide 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes scrolly-slide {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}

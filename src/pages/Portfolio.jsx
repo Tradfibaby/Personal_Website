@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { portfolio } from '../data/portfolio'
 
 export default function Portfolio() {
@@ -55,8 +55,191 @@ function CaseStudy({ item, last }) {
       </div>
 
       {/* Wide showcase video */}
-      <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} caption={item.mainCaption} aspect={item.mainAspect} />
+      {item.scrubVideo ? (
+        <ScrollyFilm item={item} />
+      ) : (
+        <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} caption={item.mainCaption} aspect={item.mainAspect} />
+      )}
     </section>
+  )
+}
+
+function ScrollyFilm({ item }) {
+  const prefersReduced = typeof window !== 'undefined'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [showFull, setShowFull] = useState(false)
+
+  if (prefersReduced) {
+    return <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} caption={item.mainCaption} aspect={item.mainAspect} />
+  }
+  return (
+    <div>
+      <ScrollScrub src={item.scrubVideo} poster={item.mainPoster} chapters={item.chapters} duration={item.scrubDuration} />
+      <div style={{ marginTop: '0.6rem', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <p style={{ color: '#3a3a3a', fontSize: '0.7rem', letterSpacing: '0.05em', margin: 0, backgroundColor: 'var(--bg)', display: 'inline-block' }}>
+          scroll to scrub · click to skip ahead
+        </p>
+        {!showFull && (
+          <button
+            onClick={() => setShowFull(true)}
+            style={{ color: '#555', fontSize: '0.8rem', letterSpacing: '0.05em', background: 'var(--bg)', border: 'none', cursor: 'pointer', padding: '0.1rem 0.3rem' }}
+            onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
+            onMouseLeave={e => (e.target.style.color = '#555')}
+          >
+            watch the full film with sound ▶
+          </button>
+        )}
+      </div>
+      {showFull && (
+        <div style={{ marginTop: '1.5rem' }}>
+          <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} caption={item.mainCaption} aspect={item.mainAspect} autoPlay />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ScrollScrub({ src, poster, chapters, duration }) {
+  const wrapRef = useRef(null)
+  const videoRef = useRef(null)
+  const [chapterIdx, setChapterIdx] = useState(0)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const wrap = wrapRef.current
+    const video = videoRef.current
+    let raf
+
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        video.preload = 'auto'
+        video.load()
+        io.disconnect()
+      }
+    }, { rootMargin: '1200px' })
+    io.observe(wrap)
+
+    const tick = () => {
+      if (video.duration) {
+        const rect = wrap.getBoundingClientRect()
+        const scrollable = rect.height - window.innerHeight
+        const p = Math.min(1, Math.max(0, -rect.top / scrollable))
+        const target = p * (video.duration - 0.05)
+        const cur = video.currentTime
+        const diff = target - cur
+        if (!video.seeking && Math.abs(diff) > 0.02) {
+          // big jumps seek directly, small ones ease in for a smoother scrub
+          video.currentTime = Math.abs(diff) > 2.5 ? target : cur + diff * 0.22
+        }
+        setProgress(p)
+        let idx = 0
+        for (let i = 0; i < chapters.length; i++) if (target >= chapters[i].start) idx = i
+        setChapterIdx(idx)
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => { cancelAnimationFrame(raf); io.disconnect() }
+  }, [chapters])
+
+  const skipToNext = () => {
+    const wrap = wrapRef.current
+    const video = videoRef.current
+    if (!video.duration) return
+    const next = chapters[Math.min(chapterIdx + 1, chapters.length - 1)]
+    const scrollable = wrap.offsetHeight - window.innerHeight
+    const top = wrap.getBoundingClientRect().top + window.scrollY + (next.start / video.duration) * scrollable
+    window.scrollTo({ top: top + 2, behavior: 'smooth' })
+  }
+
+  const chapter = chapters[chapterIdx]
+  const isTitle = chapterIdx === 0
+
+  return (
+    <div ref={wrapRef} style={{ height: '520vh', width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
+      <div
+        onClick={skipToNext}
+        style={{
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          backgroundColor: '#080808',
+          overflow: 'hidden',
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={src}
+          poster={poster}
+          muted
+          playsInline
+          preload="metadata"
+          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+        />
+
+        {/* Chapter caption */}
+        <div
+          key={chapterIdx}
+          className="scrolly-caption"
+          style={isTitle ? {
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          } : {
+            position: 'absolute',
+            left: 'clamp(1.5rem, 6vw, 5rem)',
+            bottom: '14vh',
+            maxWidth: '340px',
+            pointerEvents: 'none',
+          }}
+        >
+          <span style={{
+            display: 'inline-block',
+            color: '#f0f0f0',
+            fontSize: isTitle ? '2.4rem' : '1.15rem',
+            letterSpacing: isTitle ? '-0.02em' : '0',
+            backgroundColor: 'rgba(8, 8, 8, 0.82)',
+            padding: '0.3rem 0.7rem',
+          }}>{chapter.title}</span>
+          {chapter.sub && (
+            <span style={{
+              display: 'inline-block',
+              color: '#888',
+              fontSize: '0.85rem',
+              lineHeight: 1.6,
+              backgroundColor: 'rgba(8, 8, 8, 0.82)',
+              padding: '0.25rem 0.7rem',
+              marginTop: '0.35rem',
+            }}>{chapter.sub}</span>
+          )}
+        </div>
+
+        {/* Progress bar + chapter ticks */}
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '2px', backgroundColor: '#181818' }}>
+          <div style={{ height: '100%', width: `${progress * 100}%`, backgroundColor: '#555' }} />
+        </div>
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '8px', pointerEvents: 'none' }}>
+          {chapters.map((c, i) => (
+            <span key={i} style={{
+              position: 'absolute',
+              left: `${(c.start / duration) * 100}%`,
+              bottom: 0,
+              width: '1px',
+              height: i === chapterIdx ? '8px' : '5px',
+              backgroundColor: i <= chapterIdx ? '#888' : '#2a2a2a',
+            }} />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -88,8 +271,8 @@ function PhoneLoop({ src, caption, landscape }) {
   )
 }
 
-function ShowcaseVideo({ src, poster, caption, aspect }) {
-  const [playing, setPlaying] = useState(false)
+function ShowcaseVideo({ src, poster, caption, aspect, autoPlay = false }) {
+  const [playing, setPlaying] = useState(autoPlay)
   const [hovered, setHovered] = useState(false)
 
   return (
