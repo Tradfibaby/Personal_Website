@@ -113,7 +113,7 @@ export default function Home({ onNavReady }) {
           {portfolio.map(item => (
             <Link
               key={item.slug}
-              to="/portfolio"
+              to={`/portfolio/${item.slug}`}
               style={{ color: '#888', textDecoration: 'underline', textDecorationColor: '#333', textUnderlineOffset: '3px', backgroundColor: 'var(--bg)', padding: '0.1rem 0.3rem' }}
             >
               {item.name} <span style={{ color: '#4a4a4a' }}>- {item.tagline}</span>

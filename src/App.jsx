@@ -20,6 +20,7 @@ export default function App() {
           <Route path="/writing" element={<Writing />} />
           <Route path="/writing/:slug" element={<Post />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:slug" element={<Portfolio />} />
           <Route path="/open-source" element={<Projects />} />
           <Route path="/projects" element={<Navigate to="/open-source" replace />} />
         </Routes>
