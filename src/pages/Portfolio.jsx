@@ -137,53 +137,11 @@ function CaseStudy({ item }) {
 function ScrollyFilm({ item }) {
   const prefersReduced = typeof window !== 'undefined'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const [showFull, setShowFull] = useState(false)
 
   if (prefersReduced) {
     return <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
   }
-  return (
-    <div>
-      <ScrollScrub src={item.scrubVideo} poster={item.mainPoster} chapters={item.chapters} duration={item.scrubDuration} />
-      {!showFull ? (
-        <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
-          <SoundButton onClick={() => setShowFull(true)} />
-        </div>
-      ) : (
-        <div style={{ marginTop: '1.5rem' }}>
-          <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} autoPlay />
-        </div>
-      )}
-    </div>
-  )
-}
-
-function SoundButton({ onClick }) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <button
-      onClick={onClick}
-      aria-label="watch the full film with sound"
-      title="watch with sound"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        width: '34px',
-        height: '34px',
-        borderRadius: '50%',
-        border: `1px solid ${hovered ? '#4be8e2' : '#2a2a2a'}`,
-        backgroundColor: 'var(--bg)',
-        color: hovered ? '#4be8e2' : '#555',
-        fontSize: '0.7rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingLeft: '2px',
-        cursor: 'pointer',
-        transition: 'color 0.2s, border-color 0.2s',
-      }}
-    >▶</button>
-  )
+  return <ScrollScrub src={item.scrubVideo} poster={item.mainPoster} chapters={item.chapters} duration={item.scrubDuration} />
 }
 
 function ScrollScrub({ src, poster, chapters, duration }) {
@@ -253,7 +211,7 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          backgroundColor: '#080808',
+          backgroundColor: 'var(--bg)',
           overflow: 'hidden',
         }}
       >
