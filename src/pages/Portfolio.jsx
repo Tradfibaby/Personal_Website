@@ -303,20 +303,37 @@ function OwnFunHero() {
           <span style={{
             display: 'block',
             color: '#9a9a9a',
-            fontSize: '0.62rem',
+            fontSize: 'clamp(0.7rem, 1.6vw, 0.82rem)',
             letterSpacing: '0.4em',
             whiteSpace: 'nowrap',
           }}>
             SCROLL DOWN TO EXPLORE
           </span>
+          {/* tick and chevron fall together, then fade */}
           <span style={{
             display: 'block',
-            width: '1px',
-            height: '22px',
-            margin: '1.1rem auto 0',
-            backgroundColor: 'rgba(255, 255, 255, 0.55)',
+            width: 'fit-content',
+            margin: '1.2rem auto 0',
             animation: 'scrolly-hint 1.6s ease-out infinite',
-          }} />
+          }}>
+            <span style={{
+              display: 'block',
+              width: '1px',
+              height: '24px',
+              margin: '0 auto',
+              backgroundColor: 'rgba(255, 255, 255, 0.55)',
+            }} />
+            <svg
+              width="15"
+              height="9"
+              viewBox="0 0 15 9"
+              fill="none"
+              aria-hidden="true"
+              style={{ display: 'block', margin: '3px auto 0' }}
+            >
+              <path d="M1 1.5L7.5 7.5L14 1.5" stroke="rgba(255, 255, 255, 0.55)" strokeWidth="1.3" />
+            </svg>
+          </span>
         </div>
       )}
     </div>
