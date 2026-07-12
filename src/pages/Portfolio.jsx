@@ -255,6 +255,13 @@ function OwnFunHero() {
     }}>
       <ParticleField />
 
+      <div className="ownfun-lines" aria-hidden="true">
+        <div className="ownfun-line ownfun-line-1" />
+        <div className="ownfun-line ownfun-line-2" />
+        <div className="ownfun-line ownfun-line-3" />
+        <div className="ownfun-line ownfun-line-4" />
+      </div>
+
       {/* the mesh is dense enough to fight the type, so sink it behind the centre */}
       <div aria-hidden="true" style={{
         position: 'absolute',
@@ -317,6 +324,7 @@ function OwnFunHero() {
 }
 
 const LINK_DIST = 165   // long enough that the links close into a web, not a scatter of stars
+const PUSH_COUNT = 4    // nodes added per click, matching the app's push quantity
 
 /* own.fun's login background: a dense teal mesh, drifting and re-triangulating itself. */
 function ParticleField() {
@@ -326,7 +334,15 @@ function ParticleField() {
     const canvas = ref.current
     const ctx = canvas.getContext('2d')
     const still = prefersStill()
-    let raf, w = 0, h = 0, dots = []
+    let raf, w = 0, h = 0, dots = [], ceiling = 0
+
+    const spawn = (x, y) => ({
+      x,
+      y,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: 1 + Math.random() * 1.6,
+    })
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -337,21 +353,30 @@ function ParticleField() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
       const count = Math.min(170, Math.round((w * h) / 5600))
-      dots = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        r: 1 + Math.random() * 1.6,
-      }))
+      ceiling = count + 90
+      dots = Array.from({ length: count }, () => spawn(Math.random() * w, Math.random() * h))
+    }
+
+    // clicking seeds the web where you tapped, as the app's push does
+    const push = e => {
+      const rect = canvas.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      for (let i = 0; i < PUSH_COUNT; i++) {
+        dots.push(spawn(x + (Math.random() - 0.5) * 26, y + (Math.random() - 0.5) * 26))
+      }
+      // the oldest nodes retire so a click-happy visitor can't grind the frame rate down
+      if (dots.length > ceiling) dots.splice(0, dots.length - ceiling)
     }
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h)
 
       for (const d of dots) {
-        d.x += d.vx
-        d.y += d.vy
+        if (!still) {
+          d.x += d.vx
+          d.y += d.vy
+        }
         if (d.x < 0) d.x += w
         if (d.x > w) d.x -= w
         if (d.y < 0) d.y += h
@@ -383,23 +408,31 @@ function ParticleField() {
         ctx.fill()
       }
       ctx.shadowBlur = 0
+    }
 
-      raf = requestAnimationFrame(draw)
+    const loop = () => {
+      draw()
+      raf = requestAnimationFrame(loop)
+    }
+
+    // clicks land on the hero, not the canvas: the type and the cue sit on top of it
+    const host = canvas.parentElement
+    const onPointerDown = e => {
+      push(e)
+      if (still) draw()   // nothing is animating, so paint the new nodes in
     }
 
     resize()
     window.addEventListener('resize', resize)
-    if (still) {
-      for (const d of dots) { d.vx = 0; d.vy = 0 }
-      draw()
-      cancelAnimationFrame(raf)
-    } else {
-      raf = requestAnimationFrame(draw)
-    }
+    host.addEventListener('pointerdown', onPointerDown)
+
+    if (still) draw()
+    else raf = requestAnimationFrame(loop)
 
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
+      host.removeEventListener('pointerdown', onPointerDown)
     }
   }, [])
 
