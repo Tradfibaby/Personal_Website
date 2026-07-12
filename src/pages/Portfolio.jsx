@@ -255,6 +255,13 @@ function OwnFunHero() {
     }}>
       <ParticleField />
 
+      {/* the mesh is dense enough to fight the type, so sink it behind the centre */}
+      <div aria-hidden="true" style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse 44% 38% at 50% 48%, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0) 100%)',
+      }} />
+
       <div style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', zIndex: 2 }}>
         <BackLink />
       </div>
@@ -266,7 +273,7 @@ function OwnFunHero() {
           className="ownfun-phrase"
           style={{
             marginTop: '1.5rem',
-            color: '#8ad9d9',
+            color: '#f0f0f0',
             fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
             letterSpacing: '0.28em',
           }}
@@ -288,7 +295,7 @@ function OwnFunHero() {
         }}>
           <span style={{
             display: 'block',
-            color: '#555',
+            color: '#9a9a9a',
             fontSize: '0.62rem',
             letterSpacing: '0.4em',
             whiteSpace: 'nowrap',
@@ -300,7 +307,7 @@ function OwnFunHero() {
             width: '1px',
             height: '22px',
             margin: '1.1rem auto 0',
-            backgroundColor: '#4be8e2',
+            backgroundColor: 'rgba(255, 255, 255, 0.55)',
             animation: 'scrolly-hint 1.6s ease-out infinite',
           }} />
         </div>
@@ -309,9 +316,9 @@ function OwnFunHero() {
   )
 }
 
-const LINK_DIST = 120
+const LINK_DIST = 165   // long enough that the links close into a web, not a scatter of stars
 
-/* Drifting linked particles, the same field the app puts behind its login. */
+/* own.fun's login background: a dense teal mesh, drifting and re-triangulating itself. */
 function ParticleField() {
   const ref = useRef(null)
 
@@ -329,13 +336,13 @@ function ParticleField() {
       canvas.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      const count = Math.min(72, Math.round((w * h) / 17000))
+      const count = Math.min(170, Math.round((w * h) / 5600))
       dots = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.28,
-        vy: (Math.random() - 0.5) * 0.28,
-        r: 0.6 + Math.random() * 1.5,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: 1 + Math.random() * 1.6,
       }))
     }
 
@@ -351,28 +358,31 @@ function ParticleField() {
         if (d.y > h) d.y -= h
       }
 
+      ctx.lineWidth = 1
       for (let i = 0; i < dots.length; i++) {
         for (let j = i + 1; j < dots.length; j++) {
           const a = dots[i], b = dots[j]
           const dx = a.x - b.x, dy = a.y - b.y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < LINK_DIST) {
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.13 * (1 - dist / LINK_DIST)})`
-            ctx.lineWidth = 1
-            ctx.beginPath()
-            ctx.moveTo(a.x, a.y)
-            ctx.lineTo(b.x, b.y)
-            ctx.stroke()
-          }
+          const d2 = dx * dx + dy * dy
+          if (d2 >= LINK_DIST * LINK_DIST) continue   // skip the sqrt for the pairs that miss
+          const near = 1 - Math.sqrt(d2) / LINK_DIST
+          ctx.strokeStyle = `rgba(0, 214, 214, ${0.34 * near})`
+          ctx.beginPath()
+          ctx.moveTo(a.x, a.y)
+          ctx.lineTo(b.x, b.y)
+          ctx.stroke()
         }
       }
 
-      ctx.fillStyle = 'rgba(180, 255, 255, 0.5)'
+      ctx.fillStyle = 'rgba(80, 240, 240, 0.9)'
+      ctx.shadowColor = 'rgba(0, 255, 255, 0.6)'
+      ctx.shadowBlur = 6
       for (const d of dots) {
         ctx.beginPath()
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2)
         ctx.fill()
       }
+      ctx.shadowBlur = 0
 
       raf = requestAnimationFrame(draw)
     }
