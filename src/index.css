@@ -157,13 +157,60 @@ a {
   100% { transform: translateY(18px); opacity: 0; }
 }
 
-/* Portfolio tiles: ornn-style bar patterns, gentle breathing + hover brighten */
-.bar-tile .bar-fig {
-  transition: filter 0.35s ease;
+/* own.fun case study: the app's own neon title, flickering like a dying sign */
+.ownfun-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 13vw, 7rem);
+  line-height: 1.05;
+  color: #00ffff;
+  text-shadow: 0 0 12px rgba(0, 255, 255, 0.7), 0 0 44px rgba(0, 255, 255, 0.3);
+  transition: opacity 0.06s linear;
 }
-.bar-tile:hover .bar-fig {
-  filter: brightness(1.9);
+.ownfun-title.flicker { animation: ownfun-flicker 0.1s infinite; }
+.ownfun-title.dim     { opacity: 0.5; text-shadow: none; }
+.ownfun-title.off     { opacity: 0; text-shadow: none; }
+
+@keyframes ownfun-flicker {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.8; }
+  100% { opacity: 1; }
 }
-@keyframes bar-breathe {
-  to { transform: scaleY(var(--s1)); }
+
+.ownfun-phrase {
+  animation: ownfun-phrase-in 0.5s ease-out both;
+}
+@keyframes ownfun-phrase-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ownfun-title {
+    animation: none !important;
+    opacity: 1 !important;
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+  }
+  .ownfun-phrase { animation: none; }
+}
+
+/* Portfolio tiles: hairline field, slow breathing, hover bloom on the lit cluster */
+.bar-tile .line-fig {
+  opacity: 0.9;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+.bar-tile:hover .line-fig {
+  opacity: 1;
+  /* shadow alpha follows source alpha, so only the bright centre blooms */
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
+}
+.line-fig-l {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes line-breathe {
+  to { transform: scaleY(var(--s)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .line-fig-l { animation: none !important; }
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { portfolio } from '../data/portfolio'
 
@@ -40,51 +40,68 @@ function Tile({ item }) {
           </span>
         </div>
       </div>
-      <BarPattern seed={item.slug} dense={item.slug === 'riten'} />
+      <LineField seed={item.slug} />
     </Link>
   )
 }
 
-/* ornn-style generative bar pattern: seeded, centre-anchored, breathing */
-function BarPattern({ seed, dense }) {
-  const bars = useRef(null)
-  if (!bars.current) {
+const COUNT = 38          // hairlines across the frame
+const FOCAL = 0.34        // fraction of the width lit up in the centre
+
+/* Field of dim hairlines with a brighter, ragged-edged cluster at the centre. */
+function LineField({ seed }) {
+  const lines = useMemo(() => {
     let h = 0
     for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0
     const rand = mulberry32(h || 1)
-    const count = dense ? 72 : 30
-    bars.current = Array.from({ length: count }, (_, i) => {
-      const tier = rand()
-      const height = tier < 0.18 ? 12 + rand() * 18 : tier < 0.72 ? 34 + rand() * 34 : 74 + rand() * 26
+
+    return Array.from({ length: COUNT }, (_, i) => {
+      const x = ((i + 0.5) / COUNT) * 100
+      const lit = Math.abs(x - 50) / 50 < FOCAL
+
+      // lit lines sit inside an inset rectangle; the rest run nearly full height
+      const top = lit ? 19 + rand() * 5 : 1 + rand() * 5
+      const bottom = lit ? 81 - rand() * 5 : 99 - rand() * 5
+
       return {
-        height,
-        opacity: 0.35 + rand() * 0.65,
-        s1: 0.82 + rand() * 0.36,
-        dur: 3 + rand() * 3,
-        delay: -(rand() * 6),
+        x,
+        top,
+        bottom,
+        opacity: lit ? 0.8 + rand() * 0.2 : 0.07 + rand() * 0.08,
+        scale: 0.94 + rand() * 0.12,
+        dur: 5 + rand() * 4,
+        delay: -(rand() * 9),
       }
     })
-  }
+  }, [seed])
+
   return (
-    <div className="bar-fig" aria-hidden="true" style={{
-      display: 'flex',
-      gap: dense ? '3px' : '5px',
-      alignItems: 'center',
-      height: '210px',
-      overflow: 'hidden',
-    }}>
-      {bars.current.map((b, i) => (
-        <span key={i} style={{
-          flex: '1 0 auto',
-          height: `${b.height}%`,
-          backgroundColor: '#222222',
-          opacity: b.opacity,
-          transformOrigin: 'center',
-          '--s1': b.s1,
-          animation: `bar-breathe ${b.dur}s ease-in-out ${b.delay}s infinite alternate`,
-        }} />
+    <svg
+      className="line-fig"
+      aria-hidden="true"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      style={{ display: 'block', width: '100%', height: '210px' }}
+    >
+      {lines.map((l, i) => (
+        <line
+          key={i}
+          className="line-fig-l"
+          x1={l.x}
+          y1={l.top}
+          x2={l.x}
+          y2={l.bottom}
+          stroke="#ffffff"
+          strokeWidth="1"
+          vectorEffect="non-scaling-stroke"
+          style={{
+            opacity: l.opacity,
+            '--s': l.scale,
+            animation: `line-breathe ${l.dur}s ease-in-out ${l.delay}s infinite alternate`,
+          }}
+        />
       ))}
-    </div>
+    </svg>
   )
 }
 
@@ -99,26 +116,29 @@ function mulberry32(a) {
 
 function CaseStudy({ item }) {
   useEffect(() => { window.scrollTo(0, 0) }, [])
+  const hero = item.hero === 'ownfun'
+
   return (
-    <section style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <Link to="/portfolio" aria-label="back to portfolio" style={{ color: '#555', fontSize: '0.9rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0.3rem' }}
-            onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
-            onMouseLeave={e => (e.target.style.color = '#555')}
-          >←</Link>
+    <section style={{ paddingTop: hero ? 0 : '4rem', paddingBottom: '4rem' }}>
+      {hero ? (
+        <OwnFunHero />
+      ) : (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <BackLink />
+          </div>
+          <div>
+            <h2 style={{ fontSize: '1.15rem', fontWeight: '400', color: '#f0f0f0', letterSpacing: '-0.01em', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
+              {item.name}
+            </h2>
+          </div>
+          <div>
+            <p style={{ color: '#555', fontSize: '0.9rem', margin: 0, backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
+              {item.tagline}
+            </p>
+          </div>
         </div>
-        <div>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: '400', color: '#f0f0f0', letterSpacing: '-0.01em', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
-            {item.name}
-          </h2>
-        </div>
-        <div>
-          <p style={{ color: '#555', fontSize: '0.9rem', margin: 0, backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
-            {item.tagline}
-          </p>
-        </div>
-      </div>
+      )}
 
       {item.scrubVideo ? (
         <ScrollyFilm item={item} />
@@ -131,6 +151,254 @@ function CaseStudy({ item }) {
         </div>
       )}
     </section>
+  )
+}
+
+function BackLink() {
+  return (
+    <Link to="/portfolio" aria-label="back to portfolio" style={{ color: '#555', fontSize: '0.9rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0.3rem' }}
+      onMouseEnter={e => (e.target.style.color = '#f0f0f0')}
+      onMouseLeave={e => (e.target.style.color = '#555')}
+    >←</Link>
+  )
+}
+
+/* own.fun's launch screen, rebuilt: the app's first screen is the first screen of the case study. */
+const OWN_PHRASES = [
+  'OWN THEM ALL',
+  'OWN YOUR FREEDOM',
+  "DON'T TRADE, OWN",
+  'OWN SH*T, HAVE FUN',
+  'DEGEN DEEP IN THE TRENCHES',
+  'OWN BETTER, OWN FOR THE CULTURE',
+]
+
+const prefersStill = () =>
+  typeof window !== 'undefined'
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+function OwnFunHero() {
+  // with motion off the sign is simply lit, and stays lit
+  const [titleClass, setTitleClass] = useState(() => (prefersStill() ? '' : 'off'))
+  const [titleText, setTitleText] = useState(() => (prefersStill() ? 'Own.fun' : 'Own'))
+  const [phrase, setPhrase] = useState(OWN_PHRASES[0])
+  const [cue, setCue] = useState(1)
+
+  useEffect(() => {
+    if (prefersStill()) return
+
+    // the sign warms up, then never quite settles
+    const warmUp = setTimeout(() => {
+      setTitleClass('')
+      setTitleText('Own.fun')
+    }, 700)
+
+    const flicker = setInterval(() => {
+      const r = Math.random()
+      if (r < 0.05) {
+        setTitleClass('off')
+        setTimeout(() => setTitleClass(''), Math.random() * 150 + 75)
+      } else if (r < 0.15) {
+        setTitleClass('dim')
+        setTimeout(() => setTitleClass(''), Math.random() * 300 + 150)
+      } else if (r < 0.35) {
+        setTitleClass('flicker')
+        setTimeout(() => setTitleClass(''), Math.random() * 75 + 75)
+      } else {
+        setTitleClass('')
+      }
+    }, 200)
+
+    // ".fun" drops out at random, the way the app's does
+    const drop = setInterval(() => {
+      if (Math.random() < 0.5) {
+        setTitleText('Own')
+        setTimeout(() => setTitleText('Own.fun'), Math.random() * 400 + 150)
+      }
+    }, 1500)
+
+    const phrases = setInterval(() => {
+      setPhrase(p => {
+        const rest = OWN_PHRASES.filter(x => x !== p)
+        return rest[Math.floor(Math.random() * rest.length)]
+      })
+    }, 3000)
+
+    return () => {
+      clearTimeout(warmUp)
+      clearInterval(flicker)
+      clearInterval(drop)
+      clearInterval(phrases)
+    }
+  }, [])
+
+  // the cue only belongs on screen while the hero does
+  useEffect(() => {
+    const onScroll = () => setCue(Math.max(0, 1 - window.scrollY / 180))
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <div style={{
+      position: 'relative',
+      width: '100vw',
+      marginLeft: 'calc(50% - 50vw)',
+      height: 'calc(100svh - 48px)',   // 48px: the sticky nav above
+      minHeight: '420px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+      backgroundColor: '#000',
+    }}>
+      <ParticleField />
+
+      <div style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', zIndex: 2 }}>
+        <BackLink />
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 1.5rem' }}>
+        <h1 className={`ownfun-title ${titleClass}`}>{titleText}</h1>
+        <p
+          key={phrase}
+          className="ownfun-phrase"
+          style={{
+            marginTop: '1.5rem',
+            color: '#8ad9d9',
+            fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
+            letterSpacing: '0.28em',
+          }}
+        >
+          {phrase}
+        </p>
+      </div>
+
+      {cue > 0 && (
+        <div style={{
+          position: 'absolute',
+          bottom: '6vh',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          opacity: cue,
+          pointerEvents: 'none',
+          textAlign: 'center',
+          zIndex: 1,
+        }}>
+          <span style={{
+            display: 'block',
+            color: '#555',
+            fontSize: '0.62rem',
+            letterSpacing: '0.4em',
+            whiteSpace: 'nowrap',
+          }}>
+            SCROLL DOWN TO EXPLORE
+          </span>
+          <span style={{
+            display: 'block',
+            width: '1px',
+            height: '22px',
+            margin: '1.1rem auto 0',
+            backgroundColor: '#4be8e2',
+            animation: 'scrolly-hint 1.6s ease-out infinite',
+          }} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+const LINK_DIST = 120
+
+/* Drifting linked particles, the same field the app puts behind its login. */
+function ParticleField() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const canvas = ref.current
+    const ctx = canvas.getContext('2d')
+    const still = prefersStill()
+    let raf, w = 0, h = 0, dots = []
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      w = canvas.offsetWidth
+      h = canvas.offsetHeight
+      canvas.width = w * dpr
+      canvas.height = h * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+      const count = Math.min(72, Math.round((w * h) / 17000))
+      dots = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: (Math.random() - 0.5) * 0.28,
+        r: 0.6 + Math.random() * 1.5,
+      }))
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h)
+
+      for (const d of dots) {
+        d.x += d.vx
+        d.y += d.vy
+        if (d.x < 0) d.x += w
+        if (d.x > w) d.x -= w
+        if (d.y < 0) d.y += h
+        if (d.y > h) d.y -= h
+      }
+
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const a = dots[i], b = dots[j]
+          const dx = a.x - b.x, dy = a.y - b.y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < LINK_DIST) {
+            ctx.strokeStyle = `rgba(0, 255, 255, ${0.13 * (1 - dist / LINK_DIST)})`
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(a.x, a.y)
+            ctx.lineTo(b.x, b.y)
+            ctx.stroke()
+          }
+        }
+      }
+
+      ctx.fillStyle = 'rgba(180, 255, 255, 0.5)'
+      for (const d of dots) {
+        ctx.beginPath()
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      raf = requestAnimationFrame(draw)
+    }
+
+    resize()
+    window.addEventListener('resize', resize)
+    if (still) {
+      for (const d of dots) { d.vx = 0; d.vy = 0 }
+      draw()
+      cancelAnimationFrame(raf)
+    } else {
+      raf = requestAnimationFrame(draw)
+    }
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
+
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden="true"
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+    />
   )
 }
 
@@ -195,9 +463,7 @@ function ScrollScrub({ src, poster, chapters, duration }) {
     window.scrollTo({ top: top + 2, behavior: 'smooth' })
   }
 
-  const { t, progress, idx } = view
-  // scroll hint fades out over the first seconds of the film
-  const hintVis = Math.max(0, 1 - t / 2.5)
+  const { progress, idx } = view
 
   return (
     <div ref={wrapRef} style={{ height: '520vh', width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
@@ -224,27 +490,6 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           preload="metadata"
           style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
         />
-
-        {/* Scroll hint, fades out as the film starts */}
-        {hintVis > 0 && (
-          <div style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: '5vh',
-            transform: 'translateX(-50%)',
-            opacity: hintVis,
-            pointerEvents: 'none',
-          }}>
-            <span style={{
-              display: 'block',
-              width: '1px',
-              height: '26px',
-              margin: '0 auto',
-              backgroundColor: '#4be8e2',
-              animation: 'scrolly-hint 1.6s ease-out infinite',
-            }} />
-          </div>
-        )}
 
         {/* Progress bar + chapter ticks */}
         <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '2px', backgroundColor: '#181818' }}>
