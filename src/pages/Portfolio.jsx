@@ -340,8 +340,11 @@ function OwnFunHero() {
   )
 }
 
-const LINK_DIST = 165   // long enough that the links close into a web, not a scatter of stars
-const PUSH_COUNT = 4    // nodes added per click, matching the app's push quantity
+const LINK_DIST = 165      // long enough that the links close into a web, not a scatter of stars
+const PUSH_COUNT = 4       // nodes added per click, matching the app's push quantity
+const REPULSE_DIST = 200   // the app's hover radius: the web bends away from the cursor
+const REPULSE_FORCE = 2.4  // px per frame at the cursor, easing to nothing at the radius
+const RELAX = 0.9          // how fast a shoved node drifts home once the cursor moves on
 
 /* own.fun's login background: a dense teal mesh, drifting and re-triangulating itself. */
 function ParticleField() {
@@ -352,10 +355,14 @@ function ParticleField() {
     const ctx = canvas.getContext('2d')
     const still = prefersStill()
     let raf, w = 0, h = 0, dots = [], ceiling = 0
+    const cursor = { x: -1e4, y: -1e4 }
 
+    // ox/oy is how far the cursor has shoved a node off its drift; it relaxes back to zero
     const spawn = (x, y) => ({
       x,
       y,
+      ox: 0,
+      oy: 0,
       vx: (Math.random() - 0.5) * 0.3,
       vy: (Math.random() - 0.5) * 0.3,
       r: 1 + Math.random() * 1.6,
@@ -393,25 +400,41 @@ function ParticleField() {
         if (!still) {
           d.x += d.vx
           d.y += d.vy
+          d.ox *= RELAX
+          d.oy *= RELAX
         }
         if (d.x < 0) d.x += w
         if (d.x > w) d.x -= w
         if (d.y < 0) d.y += h
         if (d.y > h) d.y -= h
+
+        // shoulder the nodes aside as the cursor passes, then let them settle back
+        const cx = d.x + d.ox - cursor.x
+        const cy = d.y + d.oy - cursor.y
+        const c2 = cx * cx + cy * cy
+        if (c2 < REPULSE_DIST * REPULSE_DIST && c2 > 0.01) {
+          const dist = Math.sqrt(c2)
+          const force = REPULSE_FORCE * (1 - dist / REPULSE_DIST)
+          d.ox += (cx / dist) * force
+          d.oy += (cy / dist) * force
+        }
+
+        d.px = d.x + d.ox
+        d.py = d.y + d.oy
       }
 
       ctx.lineWidth = 1
       for (let i = 0; i < dots.length; i++) {
         for (let j = i + 1; j < dots.length; j++) {
           const a = dots[i], b = dots[j]
-          const dx = a.x - b.x, dy = a.y - b.y
+          const dx = a.px - b.px, dy = a.py - b.py
           const d2 = dx * dx + dy * dy
           if (d2 >= LINK_DIST * LINK_DIST) continue   // skip the sqrt for the pairs that miss
           const near = 1 - Math.sqrt(d2) / LINK_DIST
           ctx.strokeStyle = `rgba(0, 214, 214, ${0.34 * near})`
           ctx.beginPath()
-          ctx.moveTo(a.x, a.y)
-          ctx.lineTo(b.x, b.y)
+          ctx.moveTo(a.px, a.py)
+          ctx.lineTo(b.px, b.py)
           ctx.stroke()
         }
       }
@@ -421,7 +444,7 @@ function ParticleField() {
       ctx.shadowBlur = 6
       for (const d of dots) {
         ctx.beginPath()
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2)
+        ctx.arc(d.px, d.py, d.r, 0, Math.PI * 2)
         ctx.fill()
       }
       ctx.shadowBlur = 0
@@ -432,16 +455,27 @@ function ParticleField() {
       raf = requestAnimationFrame(loop)
     }
 
-    // clicks land on the hero, not the canvas: the type and the cue sit on top of it
+    // pointer events land on the hero, not the canvas: the type and the cue sit on top of it
     const host = canvas.parentElement
     const onPointerDown = e => {
       push(e)
       if (still) draw()   // nothing is animating, so paint the new nodes in
     }
+    const onPointerMove = e => {
+      const rect = canvas.getBoundingClientRect()
+      cursor.x = e.clientX - rect.left
+      cursor.y = e.clientY - rect.top
+    }
+    const onPointerLeave = () => {
+      cursor.x = -1e4
+      cursor.y = -1e4
+    }
 
     resize()
     window.addEventListener('resize', resize)
     host.addEventListener('pointerdown', onPointerDown)
+    host.addEventListener('pointermove', onPointerMove)
+    host.addEventListener('pointerleave', onPointerLeave)
 
     if (still) draw()
     else raf = requestAnimationFrame(loop)
@@ -450,6 +484,8 @@ function ParticleField() {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
       host.removeEventListener('pointerdown', onPointerDown)
+      host.removeEventListener('pointermove', onPointerMove)
+      host.removeEventListener('pointerleave', onPointerLeave)
     }
   }, [])
 
@@ -469,13 +505,13 @@ function ScrollyFilm({ item }) {
   if (prefersReduced) {
     return <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
   }
-  return <ScrollScrub src={item.scrubVideo} poster={item.mainPoster} chapters={item.chapters} duration={item.scrubDuration} />
+  return <ScrollScrub src={item.scrubVideo} poster={item.mainPoster} chapters={item.chapters} />
 }
 
-function ScrollScrub({ src, poster, chapters, duration }) {
+function ScrollScrub({ src, poster, chapters }) {
   const wrapRef = useRef(null)
   const videoRef = useRef(null)
-  const [view, setView] = useState({ t: 0, progress: 0, idx: 0 })
+  const [idx, setIdx] = useState(0)
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -503,9 +539,9 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           // big jumps seek directly, small ones ease in for a smoother scrub
           video.currentTime = Math.abs(diff) > 2.5 ? target : cur + diff * 0.22
         }
-        let idx = 0
-        for (let i = 0; i < chapters.length; i++) if (target >= chapters[i].start) idx = i
-        setView(v => (v.t === target && v.progress === p && v.idx === idx) ? v : { t: target, progress: p, idx })
+        let at = 0
+        for (let i = 0; i < chapters.length; i++) if (target >= chapters[i].start) at = i
+        setIdx(prev => (prev === at ? prev : at))
       }
       raf = requestAnimationFrame(tick)
     }
@@ -513,22 +549,20 @@ function ScrollScrub({ src, poster, chapters, duration }) {
     return () => { cancelAnimationFrame(raf); io.disconnect() }
   }, [chapters])
 
-  const skipToNext = () => {
+  const jumpTo = i => {
     const wrap = wrapRef.current
     const video = videoRef.current
     if (!video.duration) return
-    const next = chapters[Math.min(view.idx + 1, chapters.length - 1)]
+    const chapter = chapters[Math.min(Math.max(i, 0), chapters.length - 1)]
     const scrollable = wrap.offsetHeight - window.innerHeight
-    const top = wrap.getBoundingClientRect().top + window.scrollY + (next.start / video.duration) * scrollable
+    const top = wrap.getBoundingClientRect().top + window.scrollY + (chapter.start / video.duration) * scrollable
     window.scrollTo({ top: top + 2, behavior: 'smooth' })
   }
-
-  const { progress, idx } = view
 
   return (
     <div ref={wrapRef} style={{ height: '520vh', width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
       <div
-        onClick={skipToNext}
+        onClick={() => jumpTo(idx + 1)}
         style={{
           position: 'sticky',
           top: 0,
@@ -551,24 +585,54 @@ function ScrollScrub({ src, poster, chapters, duration }) {
           style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
         />
 
-        {/* Progress bar + chapter ticks */}
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '2px', backgroundColor: '#181818' }}>
-          <div style={{ height: '100%', width: `${progress * 100}%`, backgroundColor: 'rgba(75, 232, 226, 0.55)' }} />
-        </div>
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '8px', pointerEvents: 'none' }}>
+        {/* Chapter rail: one dash per chapter, the one you're in lights up */}
+        <nav
+          aria-label="chapters"
+          onClick={e => e.stopPropagation()}   // the film itself skips on click; the rail shouldn't
+          style={{
+            position: 'absolute',
+            right: '1.5rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '10px',
+          }}
+        >
           {chapters.map((c, i) => (
-            <span key={i} style={{
-              position: 'absolute',
-              left: `${(c.start / duration) * 100}%`,
-              bottom: 0,
-              width: '1px',
-              height: i === idx ? '8px' : '5px',
-              backgroundColor: i === idx ? '#4be8e2' : i < idx ? '#666' : '#2a2a2a',
-            }} />
+            <ChapterDash key={i} n={i} active={i === idx} seen={i < idx} onJump={jumpTo} />
           ))}
-        </div>
+        </nav>
       </div>
     </div>
+  )
+}
+
+function ChapterDash({ n, active, seen, onJump }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <button
+      onClick={() => onJump(n)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      aria-label={`chapter ${n + 1}`}
+      aria-current={active ? 'true' : undefined}
+      style={{
+        display: 'block',
+        width: active ? '28px' : hovered ? '22px' : '14px',
+        height: '2px',
+        padding: 0,
+        border: 'none',
+        cursor: 'pointer',
+        backgroundColor: active
+          ? '#4be8e2'
+          : seen ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.16)',
+        boxShadow: active ? '0 0 8px rgba(75, 232, 226, 0.8)' : 'none',
+        transition: 'width 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease',
+      }}
+    />
   )
 }
 
