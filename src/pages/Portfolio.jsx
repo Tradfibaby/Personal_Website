@@ -612,6 +612,12 @@ function ScrollScrub({ src, poster, chapters }) {
 function ChapterDash({ n, active, seen, onJump }) {
   const [hovered, setHovered] = useState(false)
 
+  // every dash is the same length; only the light changes
+  const colour = active
+    ? '#4be8e2'
+    : hovered ? 'rgba(255, 255, 255, 0.7)'
+    : seen ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.16)'
+
   return (
     <button
       onClick={() => onJump(n)}
@@ -621,16 +627,14 @@ function ChapterDash({ n, active, seen, onJump }) {
       aria-current={active ? 'true' : undefined}
       style={{
         display: 'block',
-        width: active ? '28px' : hovered ? '22px' : '14px',
+        width: '22px',
         height: '2px',
         padding: 0,
         border: 'none',
         cursor: 'pointer',
-        backgroundColor: active
-          ? '#4be8e2'
-          : seen ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.16)',
+        backgroundColor: colour,
         boxShadow: active ? '0 0 8px rgba(75, 232, 226, 0.8)' : 'none',
-        transition: 'width 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease',
+        transition: 'background-color 0.25s ease, box-shadow 0.25s ease',
       }}
     />
   )
