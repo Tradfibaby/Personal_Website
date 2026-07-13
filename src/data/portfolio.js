@@ -2,7 +2,7 @@ export const portfolio = [
   {
     slug: 'own',
     name: 'own.fun',
-    tagline: 'discover culture, simplified',
+    tagline: 'onchain culture, simplified',
     hero: 'ownfun',
     mainVideo: '/portfolio/ownfun-promo.mp4',
     mainPoster: '/portfolio/ownfun-promo-poster.jpg',

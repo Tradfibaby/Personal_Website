@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { portfolio } from '../data/portfolio'
 
@@ -27,91 +27,11 @@ export default function Portfolio() {
 
 function Tile({ item }) {
   return (
-    <Link to={`/portfolio/${item.slug}`} className="bar-tile" style={{ display: 'block', textDecoration: 'none' }}>
-      <div style={{ borderTop: '1px solid #2a2a2a', paddingTop: '1.4rem', marginBottom: '1.6rem' }}>
-        <div>
-          <span style={{ color: '#f0f0f0', fontSize: '1rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
-            {item.name}
-          </span>
-        </div>
-        <div>
-          <span style={{ color: '#666', fontSize: '0.85rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
-            {item.tagline}
-          </span>
-        </div>
-      </div>
-      <LineField seed={item.slug} />
+    <Link to={`/portfolio/${item.slug}`} className="p-tile">
+      <span className="p-tile-name">{item.name}</span>
+      <span className="p-tile-tag">{item.tagline}</span>
     </Link>
   )
-}
-
-const COUNT = 38          // hairlines across the frame
-const FOCAL = 0.34        // fraction of the width lit up in the centre
-
-/* Field of dim hairlines with a brighter, ragged-edged cluster at the centre. */
-function LineField({ seed }) {
-  const lines = useMemo(() => {
-    let h = 0
-    for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0
-    const rand = mulberry32(h || 1)
-
-    return Array.from({ length: COUNT }, (_, i) => {
-      const x = ((i + 0.5) / COUNT) * 100
-      const lit = Math.abs(x - 50) / 50 < FOCAL
-
-      // lit lines sit inside an inset rectangle; the rest run nearly full height
-      const top = lit ? 19 + rand() * 5 : 1 + rand() * 5
-      const bottom = lit ? 81 - rand() * 5 : 99 - rand() * 5
-
-      return {
-        x,
-        top,
-        bottom,
-        opacity: lit ? 0.8 + rand() * 0.2 : 0.07 + rand() * 0.08,
-        scale: 0.94 + rand() * 0.12,
-        dur: 5 + rand() * 4,
-        delay: -(rand() * 9),
-      }
-    })
-  }, [seed])
-
-  return (
-    <svg
-      className="line-fig"
-      aria-hidden="true"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      style={{ display: 'block', width: '100%', height: '210px' }}
-    >
-      {lines.map((l, i) => (
-        <line
-          key={i}
-          className="line-fig-l"
-          x1={l.x}
-          y1={l.top}
-          x2={l.x}
-          y2={l.bottom}
-          stroke="#ffffff"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-          style={{
-            opacity: l.opacity,
-            '--s': l.scale,
-            animation: `line-breathe ${l.dur}s ease-in-out ${l.delay}s infinite alternate`,
-          }}
-        />
-      ))}
-    </svg>
-  )
-}
-
-function mulberry32(a) {
-  return function () {
-    a |= 0; a = (a + 0x6D2B79F5) | 0
-    let t = Math.imul(a ^ (a >>> 15), 1 | a)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
 }
 
 function CaseStudy({ item }) {

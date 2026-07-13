@@ -240,23 +240,34 @@ a {
   .ownfun-line { animation: none; }
 }
 
-/* Portfolio tiles: hairline field, slow breathing, hover bloom on the lit cluster */
-.bar-tile .line-fig {
-  opacity: 0.9;
-  transition: opacity 0.4s ease, filter 0.4s ease;
+/* Portfolio tiles: name and tagline over a rule, nothing else */
+.p-tile {
+  display: block;
+  text-decoration: none;
+  border-top: 1px solid #1c1c1c;
+  padding-top: 1.4rem;
+  transition: border-color 0.3s ease;
 }
-.bar-tile:hover .line-fig {
-  opacity: 1;
-  /* shadow alpha follows source alpha, so only the bright centre blooms */
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
+.p-tile:hover,
+.p-tile:focus-visible {
+  border-color: #4a4a4a;
 }
-.line-fig-l {
-  transform-box: fill-box;
-  transform-origin: center;
+.p-tile-name,
+.p-tile-tag {
+  display: block;
+  background-color: var(--bg);
 }
-@keyframes line-breathe {
-  to { transform: scaleY(var(--s)); }
+.p-tile-name {
+  color: #999;
+  font-size: 1rem;
+  transition: color 0.3s ease;
 }
-@media (prefers-reduced-motion: reduce) {
-  .line-fig-l { animation: none !important; }
+.p-tile:hover .p-tile-name,
+.p-tile:focus-visible .p-tile-name {
+  color: #f0f0f0;
+}
+.p-tile-tag {
+  color: #555;
+  font-size: 0.85rem;
+  margin-top: 0.15rem;
 }
