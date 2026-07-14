@@ -71,8 +71,8 @@ export const ritenParts = [
     n: '04',
     title: 'the positions',
     lede: 'and what you can do to them',
-    copy: 'five open, with pnl, roe, liquidation price and margin on each. reverse one and the trade is restated before you commit. close them all and the fills stack up as they land.',
-    box: { x: 137, y: 558, w: 1138, h: 188 },
+    copy: 'six open, with pnl, roe, liquidation price and margin on each. reverse one and the trade is restated before you commit. close them all and the fills stack up as they land.',
+    box: { x: 137, y: 562, w: 1138, h: 216 },
     label: { x: 706, y: 1022 },
     below: true,
     loops: [

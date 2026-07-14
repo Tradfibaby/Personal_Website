@@ -569,7 +569,7 @@ const RITEN_COUNTS = [
   ['1', 'live chart'],
   ['2', 'sides of the book'],
   ['1', 'full order ticket'],
-  ['5', 'open positions'],
+  ['6', 'open positions'],
   ['0', 'screens to swipe between'],
 ]
 
