@@ -70,14 +70,22 @@ export const ritenParts = [
   {
     n: '04',
     title: 'the positions',
-    lede: 'and what you can do to them',
-    copy: 'six open, with pnl, roe, liquidation price and margin on each. reverse one and the trade is restated before you commit. close them all and the fills stack up as they land.',
+    lede: 'six open, every column live',
+    copy: 'size, position value, entry and mark price, pnl with roe, liquidation price, margin and funding, on every one of the six. reverse one and the whole trade is restated before you commit: long to short, same size, at market, with the liquidation price it would leave you at.',
     box: { x: 137, y: 562, w: 1138, h: 216 },
     label: { x: 706, y: 1022 },
     below: true,
+    // one continuous take rather than three clips looping out of phase against each other
+    stacked: true,
     loops: [
-      { video: '/portfolio/riten/reverse.mp4', still: '/portfolio/riten/still-reverse.png', w: 530, h: 690, caption: 'reversing in one step' },
-      { video: '/portfolio/riten/order-fills.mp4', still: '/portfolio/riten/still-positions.png', w: 500, h: 330, caption: 'market-closing the book' },
+      {
+        video: '/portfolio/riten/positions-story.mp4',
+        still: '/portfolio/riten/still-positions-story.png',
+        w: 1534,
+        h: 680,
+        wide: true,
+        caption: 'the table live, then one position reversed, through to the order going out',
+      },
     ],
   },
 ]

@@ -615,10 +615,10 @@ function RitenCase({ item }) {
         padding: 0,
         margin: '3.5rem auto 0',
         maxWidth: '1240px',
-        fontSize: '0.7rem',
+        fontSize: '0.78rem',
         letterSpacing: '0.16em',
         textTransform: 'uppercase',
-        color: '#555',
+        color: '#6b7378',
       }}>
         {RITEN_COUNTS.map(([n, label]) => (
           <li key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '0.45rem' }}>
@@ -650,8 +650,8 @@ function RitenCase({ item }) {
 
 const ritenEyebrow = {
   margin: 0,
-  color: '#555',
-  fontSize: '0.7rem',
+  color: '#6b7378',
+  fontSize: '0.8rem',
   letterSpacing: '0.2em',
   textTransform: 'lowercase',
 }
@@ -752,40 +752,65 @@ function Callout({ part }) {
 }
 
 function RitenPart({ part, flip }) {
+  const copy = (
+    <div style={{ direction: 'ltr' }}>
+      <p style={{ ...ritenEyebrow, marginBottom: '1.25rem' }}>
+        <span style={{ color: '#4be8e2' }}>{part.n}</span>
+        <span style={{ marginLeft: '0.75rem' }}>{part.lede}</span>
+      </p>
+      <h2 style={{
+        fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
+        fontWeight: '400',
+        color: '#f0f0f0',
+        letterSpacing: '-0.025em',
+        lineHeight: 1.1,
+        margin: '0 0 1.25rem',
+      }}>
+        {part.title}
+      </h2>
+      <p style={{ color: '#777', fontSize: '0.95rem', lineHeight: 1.7, margin: 0, maxWidth: part.stacked ? '58ch' : '38ch' }}>
+        {part.copy}
+      </p>
+    </div>
+  )
+
+  const loops = (
+    <div style={{ direction: 'ltr', display: 'flex', flexWrap: 'wrap', gap: '1.75rem', alignItems: 'flex-start' }}>
+      {part.loops.map(loop => (
+        /* 1.5x native is as far as a crop of the recording can be pushed before it softens */
+        <figure
+          key={loop.video}
+          style={{
+            margin: 0,
+            flex: loop.wide ? '1 1 100%' : '1 1 200px',
+            maxWidth: `${Math.round(loop.w * (loop.wide ? 1 : 1.5))}px`,
+          }}
+        >
+          <LoopFrame src={loop.video} still={loop.still} alt={loop.caption} />
+          <figcaption style={{ color: '#7c848a', fontSize: '0.85rem', letterSpacing: '0.02em', lineHeight: 1.5, paddingTop: '0.8rem' }}>
+            {loop.caption}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  )
+
+  // the positions table only reads at something close to its native width, so that
+  // section drops the two-column rhythm and runs full bleed instead
+  if (part.stacked) {
+    return (
+      <div style={{ marginTop: '9rem' }}>
+        <div style={{ marginBottom: '2.5rem' }}>{copy}</div>
+        {loops}
+      </div>
+    )
+  }
+
   return (
     <div style={{ marginTop: '9rem' }}>
       <div className="riten-row" style={{ direction: flip ? 'rtl' : 'ltr' }}>
-        <div style={{ direction: 'ltr' }}>
-          <p style={{ ...ritenEyebrow, marginBottom: '1.25rem' }}>
-            <span style={{ color: '#4be8e2' }}>{part.n}</span>
-            <span style={{ marginLeft: '0.75rem' }}>{part.lede}</span>
-          </p>
-          <h2 style={{
-            fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
-            fontWeight: '400',
-            color: '#f0f0f0',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.1,
-            margin: '0 0 1.25rem',
-          }}>
-            {part.title}
-          </h2>
-          <p style={{ color: '#777', fontSize: '0.95rem', lineHeight: 1.7, margin: 0, maxWidth: '38ch' }}>
-            {part.copy}
-          </p>
-        </div>
-
-        <div style={{ direction: 'ltr', display: 'flex', flexWrap: 'wrap', gap: '1.75rem', alignItems: 'flex-start' }}>
-          {part.loops.map(loop => (
-            /* 1.5x native is as far as a crop of the recording can be pushed before it softens */
-            <figure key={loop.video} style={{ margin: 0, flex: '1 1 200px', maxWidth: `${Math.round(loop.w * 1.5)}px` }}>
-              <LoopFrame src={loop.video} still={loop.still} alt={loop.caption} />
-              <figcaption style={{ color: '#4a4a4a', fontSize: '0.7rem', letterSpacing: '0.08em', paddingTop: '0.6rem' }}>
-                {loop.caption}
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        {copy}
+        {loops}
       </div>
     </div>
   )
@@ -816,10 +841,10 @@ function RitenMacro() {
         {ritenMacro.map(w => (
           <div key={w.title} style={{ maxWidth: `${w.width}px` }}>
             <LoopFrame src={w.video} still={w.still} alt={w.title} maxWidth={w.width} exact />
-            <h3 style={{ fontSize: '0.9rem', fontWeight: '400', color: '#f0f0f0', margin: '1rem 0 0.4rem' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: '400', color: '#f0f0f0', margin: '1rem 0 0.45rem' }}>
               {w.title}
             </h3>
-            <p style={{ color: '#666', fontSize: '0.8rem', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ color: '#7c848a', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
               {w.copy}
             </p>
           </div>
