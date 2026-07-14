@@ -38,8 +38,8 @@ export const ritenParts = [
     n: '01',
     title: 'the chart',
     lede: 'live, 1h, 4h, 12h, 1d',
-    copy: 'candles redraw, volume follows, and the open, high, low and close restate above them. mark price, oracle price, 24h change, open interest and funding all sit in one strip, so the instrument never has to be looked up.',
-    box: { x: 140, y: 105, w: 850, h: 450 },
+    copy: 'switch the timeframe and the candles redraw, volume follows, and the open, high, low and close restate above them. mark, oracle, 24h change, open interest and funding sit in the strip above, so the instrument never has to be looked up.',
+    box: { x: 137, y: 150, w: 858, h: 404 },
     label: { x: 565, y: -52 },
     loops: [
       { video: '/portfolio/riten/chart-timeframes.mp4', still: '/portfolio/riten/still-chart.png', w: 844, h: 480, caption: 'switching timeframes' },
@@ -50,7 +50,7 @@ export const ritenParts = [
     title: 'the book',
     lede: 'every level of depth',
     copy: 'both ladders and the spread, always on screen. tick size steps from 0.001 to 0.01 and the book re-aggregates around the mid, so you can zoom out to find the wall and back in to work the spread.',
-    box: { x: 995, y: 105, w: 280, h: 450 },
+    box: { x: 997, y: 100, w: 278, h: 455 },
     label: { x: 1135, y: -52 },
     loops: [
       { video: '/portfolio/riten/orderbook-depth.mp4', still: '/portfolio/riten/still-orderbook.png', w: 350, h: 520, caption: 're-aggregating the ladder' },
@@ -61,7 +61,7 @@ export const ritenParts = [
     title: 'the ticket',
     lede: 'the whole order, one column',
     copy: 'cross margin, leverage, market or limit, reduce-only, take profit and stop loss. drag the size and margin, liquidation price and fees all recalculate together. nothing is a screen away.',
-    box: { x: 1280, y: 105, w: 285, h: 445 },
+    box: { x: 1278, y: 100, w: 282, h: 600 },   // down past Place Order, to the liq/margin/fees summary
     label: { x: 1450, y: -124 },
     loops: [
       { video: '/portfolio/riten/size-ticket.mp4', still: '/portfolio/riten/still-ticket.png', w: 420, h: 480, caption: 'sizing to 14% of buying power' },
@@ -72,8 +72,8 @@ export const ritenParts = [
     title: 'the positions',
     lede: 'and what you can do to them',
     copy: 'five open, with pnl, roe, liquidation price and margin on each. reverse one and the trade is restated before you commit. close them all and the fills stack up as they land.',
-    box: { x: 140, y: 563, w: 1135, h: 177 },
-    label: { x: 707, y: 1022 },
+    box: { x: 137, y: 558, w: 1138, h: 188 },
+    label: { x: 706, y: 1022 },
     below: true,
     loops: [
       { video: '/portfolio/riten/reverse.mp4', still: '/portfolio/riten/still-reverse.png', w: 530, h: 690, caption: 'reversing in one step' },

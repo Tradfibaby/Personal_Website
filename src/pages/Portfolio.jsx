@@ -595,8 +595,8 @@ function RitenCase({ item }) {
         {item.tagline}
       </h1>
 
-      <p style={{ color: '#777', fontSize: '1rem', lineHeight: 1.65, maxWidth: '46ch', margin: '0 0 2rem' }}>
-        every instrument a trading desk gives you, on a screen you hold in one hand.
+      <p style={{ color: '#777', fontSize: '1rem', lineHeight: 1.65, maxWidth: '48ch', margin: '0 0 2rem' }}>
+        every view a professional-grade desktop trading interface gives you, in your pocket.
         nothing collapsed into a menu, nothing a swipe away.
       </p>
 
