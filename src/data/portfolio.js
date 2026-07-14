@@ -81,10 +81,10 @@ export const ritenParts = [
       {
         video: '/portfolio/riten/positions-story.mp4',
         still: '/portfolio/riten/still-positions-story.png',
-        w: 1534,
-        h: 680,
+        w: 1200,
+        h: 540,
         wide: true,
-        caption: 'the table live, then one position reversed, through to the order going out',
+        caption: 'one take: the table live, then the camera follows a position into the reverse sheet and out the other side as the order goes',
       },
     ],
   },
