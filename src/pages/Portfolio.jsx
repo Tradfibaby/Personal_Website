@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
-import { portfolio } from '../data/portfolio'
+import { portfolio, ritenDesk, ritenMacro } from '../data/portfolio'
 
 export default function Portfolio() {
   const { slug } = useParams()
@@ -37,6 +37,8 @@ function Tile({ item }) {
 function CaseStudy({ item }) {
   useEffect(() => { window.scrollTo(0, 0) }, [])
   const hero = item.hero === 'ownfun'
+
+  if (item.hero === 'riten') return <RitenCase item={item} />
 
   return (
     <section style={{ paddingTop: hero ? 0 : '4rem', paddingBottom: '4rem' }}>
@@ -556,6 +558,169 @@ function ChapterDash({ n, active, seen, onJump }) {
         boxShadow: active ? '0 0 8px rgba(75, 232, 226, 0.8)' : 'none',
         transition: 'background-color 0.25s ease, box-shadow 0.25s ease',
       }}
+    />
+  )
+}
+
+/* The whole case for riten is the density: a desk of instruments running on a handset.
+   So the page opens on the entire device, and only then takes it apart. */
+const RITEN_COUNTS = [
+  ['1', 'live chart'],
+  ['2', 'sides of the book'],
+  ['1', 'full order ticket'],
+  ['5', 'open positions'],
+  ['0', 'screens to swipe between'],
+]
+
+function RitenCase({ item }) {
+  return (
+    <section style={{ paddingTop: '4rem', paddingBottom: '5rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <BackLink />
+      </div>
+
+      <h2 style={{ fontSize: '1.15rem', fontWeight: '400', color: '#f0f0f0', letterSpacing: '-0.01em', margin: 0 }}>
+        {item.name}
+      </h2>
+      <p style={{ color: '#555', fontSize: '0.9rem', margin: '0 0 2.5rem' }}>
+        {item.tagline}
+      </p>
+
+      {/* the device breaks the column: at reading width it is too small to make its own case */}
+      <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', padding: '0 1.5rem' }}>
+        <LoopFrame
+          src="/portfolio/riten/terminal-full.mp4"
+          poster="/portfolio/riten/terminal-full-poster.jpg"
+          still="/portfolio/riten/terminal-full-poster.jpg"
+          alt="the riten zone terminal running on a phone in landscape"
+          maxWidth={1240}
+          centred
+        />
+
+        <ul style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: '0.5rem 2.25rem',
+          listStyle: 'none',
+          padding: 0,
+          margin: '1.75rem auto 0',
+          maxWidth: '1240px',
+          fontSize: '0.7rem',
+          letterSpacing: '0.16em',
+          textTransform: 'uppercase',
+          color: '#555',
+        }}>
+          {RITEN_COUNTS.map(([n, label]) => (
+            <li key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '0.45rem' }}>
+              <span style={{ color: '#4be8e2' }}>{n}</span>
+              <span>{label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <SectionRule label="the desk" />
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+        gap: '3rem 2.5rem',
+        alignItems: 'start',
+      }}>
+        {ritenDesk.map(f => <RitenFeature key={f.title} feature={f} />)}
+      </div>
+
+      <SectionRule label="the macro" />
+      <p style={{ color: '#555', fontSize: '0.9rem', maxWidth: '52ch', margin: '0 0 2.5rem' }}>
+        the reason to hold both at once. the order book tells you what is happening; this tells you why.
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2.5rem 2rem', alignItems: 'flex-start' }}>
+        {ritenMacro.map(f => <RitenWidget key={f.title} feature={f} />)}
+      </div>
+
+      <SectionRule label="the walkthrough" />
+      <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
+    </section>
+  )
+}
+
+function SectionRule({ label }) {
+  return (
+    <p style={{
+      margin: '4.5rem 0 2rem',
+      paddingTop: '1.5rem',
+      borderTop: '1px solid #181818',
+      color: '#555',
+      fontSize: '0.7rem',
+      letterSpacing: '0.2em',
+    }}>
+      ▪ {label}
+    </p>
+  )
+}
+
+function RitenFeature({ feature }) {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.9rem',
+      gridColumn: feature.span ? '1 / -1' : undefined,
+    }}>
+      <h3 style={{ fontSize: '0.9rem', fontWeight: '400', color: '#f0f0f0', margin: 0 }}>
+        {feature.title}
+      </h3>
+      <LoopFrame src={feature.video} still={feature.still} alt={feature.title} maxWidth={feature.width} />
+      <p style={{ color: '#555', fontSize: '0.85rem', lineHeight: 1.6, margin: 0, maxWidth: '40ch' }}>
+        {feature.copy}
+      </p>
+    </div>
+  )
+}
+
+/* These are cropped from a 640x296 recording of an app that no longer runs, so they are
+   locked to their native size. Stretching them is the one thing that ruins them. */
+function RitenWidget({ feature }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: feature.width }}>
+      <h3 style={{ fontSize: '0.9rem', fontWeight: '400', color: '#f0f0f0', margin: 0 }}>
+        {feature.title}
+      </h3>
+      <LoopFrame src={feature.video} still={feature.still} alt={feature.title} maxWidth={feature.width} exact />
+      <p style={{ color: '#555', fontSize: '0.8rem', lineHeight: 1.6, margin: 0 }}>
+        {feature.copy}
+      </p>
+    </div>
+  )
+}
+
+/* A loop, or its own still if the visitor has asked for less motion. */
+function LoopFrame({ src, still, poster, alt, maxWidth, exact, centred }) {
+  const still_only = !src || prefersStill()
+
+  const box = {
+    display: 'block',
+    width: exact ? `${maxWidth}px` : '100%',
+    maxWidth: maxWidth ? `${maxWidth}px` : '100%',
+    height: 'auto',
+    margin: centred ? '0 auto' : undefined,
+    border: '1px solid #1e1e1e',
+    backgroundColor: '#000',
+  }
+
+  if (still_only) return <img src={still} alt={alt} style={box} />
+
+  return (
+    <video
+      src={src}
+      poster={poster}
+      aria-label={alt}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      style={box}
     />
   )
 }

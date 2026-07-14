@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>riten zone - cut assets</title>
+<style>
+  :root {
+    --ground: #07080a;
+    --rule: #1c2023;
+    --ink: #e9ebec;
+    --muted: #7c848a;
+    --faint: #4e565c;
+    --accent: #4be8e2;
+    --ask: #f0616d;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 1.5rem 8rem;
+    background: var(--ground); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .prose { max-width: 66ch; }
+
+  header { padding: 4.5rem 0 3rem; }
+  h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 400; letter-spacing: -0.02em; margin: 0 0 1rem; text-wrap: balance; }
+  header p { color: var(--muted); margin: 0; max-width: 60ch; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--faint); margin: 0 0 1.75rem;
+  }
+  .eyebrow::before { content: "\25AA  "; color: var(--accent); }
+
+  section { padding: 4rem 0; border-top: 1px solid var(--rule); }
+  h2 { font-size: 1.3rem; font-weight: 400; letter-spacing: -0.01em; margin: 0 0 1rem; text-wrap: balance; }
+  h3 { font-size: 0.95rem; font-weight: 500; margin: 0; }
+  p { margin: 0 0 1rem; }
+  p.note { color: var(--muted); }
+
+  figure { margin: 0; }
+  .shot { display: block; width: 100%; height: auto; background: #000; }
+  .bordered { border: 1px solid var(--rule); }
+  figcaption { font-family: var(--mono); font-size: 0.7rem; color: var(--faint); letter-spacing: 0.04em; padding-top: 0.55rem; }
+
+  /* the hero is the whole argument: a desk of instruments, running on a handset */
+  .hero { padding-bottom: 1rem; }
+  .hero video { display: block; width: 100%; height: auto; background: #000; }
+  .hero-claim {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 2.25rem;
+    margin-top: 1.75rem; font-family: var(--mono); font-size: 0.74rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint);
+  }
+  .hero-claim span { display: flex; align-items: baseline; gap: 0.45rem; }
+  .hero-claim b { color: var(--accent); font-weight: 400; }
+
+  .loops { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem 2.5rem; margin-top: 2.5rem; align-items: start; }
+  .loop { display: flex; flex-direction: column; }
+  .loop-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem; }
+  .live {
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid rgba(75, 232, 226, 0.35); padding: 0.1rem 0.4rem;
+  }
+  .loop video { max-width: 100%; border: 1px solid var(--rule); background: #000; }
+  .loop .cap { font-family: var(--mono); font-size: 0.7rem; color: var(--faint); padding-top: 0.55rem; }
+  .loop .copy { color: var(--muted); font-size: 0.9rem; line-height: 1.55; margin-top: 0.9rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem 2rem; align-items: start; margin-top: 2.5rem; }
+  .card { display: flex; flex-direction: column; gap: 0.75rem; }
+  .card .copy { color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+  .card .copy strong { color: var(--ink); font-weight: 500; display: block; }
+
+  /* dashboard pieces are pinned to native pixels - scaling them up is what ruins them */
+  .native { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2.5rem; align-items: flex-start; }
+  .native img, .native video { display: block; border: 1px solid var(--rule); background: #000; }
+
+  .verdict { border-left: 2px solid var(--accent); padding: 0.25rem 0 0.25rem 1.25rem; margin-top: 2.5rem; }
+  .verdict p { color: var(--muted); margin: 0; }
+  .verdict strong { color: var(--ink); font-weight: 500; }
+  .verdict.warn { border-left-color: var(--ask); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">portfolio / riten</p>
+    <h1>A trading desk, running on a handset</h1>
+    <p>Eight loops and eight stills, cut from the recordings. The thesis of the page is the density: every instrument a desk would give you, on a screen you hold in one hand.</p>
+  </header>
+
+  <section class="hero" style="border-top: none;">
+    <video src="loops/terminal-full.mp4" autoplay muted loop playsinline aria-label="The full riten zone terminal running on a phone in landscape."></video>
+    <div class="hero-claim">
+      <span><b>1</b> live chart</span>
+      <span><b>2</b> sides of the book</span>
+      <span><b>1</b> full order ticket</span>
+      <span><b>5</b> open positions</span>
+      <span><b>0</b> screens to swipe between</span>
+    </div>
+    <p class="note" style="margin-top: 1.5rem; max-width: 62ch;">Cut from the first three seconds, the only stretch with the whole device in frame and no caption burned in. Played forward then backward so it loops seamlessly.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">motion / the terminal</p>
+    <div class="prose">
+      <h2>Six things that only read as motion</h2>
+      <p class="note">Each is cropped from the black-background recording with no caption in frame and no camera drift. Silent looping MP4, not GIF: same effect, full colour, a fraction of the weight.</p>
+    </div>
+
+    <div class="loops">
+      <div class="loop">
+        <div class="loop-head"><h3>Reverse a position</h3><span class="live">loop</span></div>
+        <video src="loops/reverse.mp4" autoplay muted loop playsinline width="530" height="690"></video>
+        <div class="cap">530 x 690 / 3.4s / 200 KB</div>
+        <p class="copy">The screen dims, the sheet rises on the right, and the trade is restated before you commit: Long to Short, same size, at market, with the new liquidation price. The best thing in the footage.</p>
+      </div>
+
+      <div class="loop">
+        <div class="loop-head"><h3>Re-aggregate the book</h3><span class="live">loop</span></div>
+        <video src="loops/orderbook-depth.mp4" autoplay muted loop playsinline width="350" height="520"></video>
+        <div class="cap">350 x 520 / 8.2s / 432 KB</div>
+        <p class="copy">Instead of the blink. Tick size steps 0.001 to 0.002 to 0.01 and the ladder rebuilds itself around the spread each time. The blinking book is not in the footage: it only ever updates while the camera is panning.</p>
+      </div>
+
+      <div class="loop">
+        <div class="loop-head"><h3>Close the whole book</h3><span class="live">loop</span></div>
+        <video src="loops/order-fills.mp4" autoplay muted loop playsinline width="500" height="330"></video>
+        <div class="cap">500 x 330 / 10s / 384 KB</div>
+        <p class="copy">Fills stacking as five positions are market-closed one after another. BTC sold at $63,832, ETH bought at $1,774, SOL at $79.24, ARB at $0.09. The position count ticks down behind it.</p>
+      </div>
+
+      <div class="loop">
+        <div class="loop-head"><h3>Chart, across timeframes</h3><span class="live">loop</span></div>
+        <video src="loops/chart-timeframes.mp4" autoplay muted loop playsinline width="880" height="480"></video>
+        <div class="cap">880 x 480 / 6.5s / 204 KB</div>
+        <p class="copy">Live, 1H, 2H, 4H, 12H, 1D. The candles redraw and the volume histogram follows, with OHLC restated above the chart each time.</p>
+      </div>
+
+      <div class="loop">
+        <div class="loop-head"><h3>Size the trade</h3><span class="live">loop</span></div>
+        <video src="loops/size-ticket.mp4" autoplay muted loop playsinline width="420" height="480"></video>
+        <div class="cap">420 x 480 / 5s / 168 KB</div>
+        <p class="copy">The slider drags from 7% to 14% of buying power, size follows from 9.81 to 19.63 USDC, and the limit price snaps to mid. Everything recalculating together.</p>
+      </div>
+
+      <div class="loop">
+        <div class="loop-head"><h3>The whole terminal</h3><span class="live">loop</span></div>
+        <video src="loops/terminal-full.mp4" autoplay muted loop playsinline width="1720" height="840"></video>
+        <div class="cap">1720 x 840 / 5.4s / 680 KB</div>
+        <p class="copy">The hero, repeated here for the set. Chart, book, ticket and positions all live at once, on one handset, with nothing to swipe between.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">motion / the macro</p>
+    <div class="prose">
+      <h2>The dashboard widgets that move</h2>
+      <p class="note">Both cut at the moments you flagged. These are native size, which is as large as they can ever be shown.</p>
+    </div>
+
+    <div class="native">
+      <figure>
+        <video src="loops/dash-stablecoin.mp4" autoplay muted loop playsinline width="170" height="130"></video>
+        <figcaption>stablecoin cap, scrubbed / 170 x 130 / 8 KB</figcaption>
+      </figure>
+      <figure>
+        <video src="loops/dash-fed.mp4" autoplay muted loop playsinline width="272" height="136"></video>
+        <figcaption>fed odds, tooltip / 272 x 136 / 12 KB</figcaption>
+      </figure>
+    </div>
+
+    <div class="prose verdict">
+      <p><strong>Both are real interactions, not decoration.</strong> The stablecoin curve is being scrubbed: the dot walks back through Nov 14, 13, 12, 11, 10 and the headline figure follows it. The Fed widget opens a probability tooltip per date, breaking the December meeting into 50bps cut, 25bps cut, no change and a hike.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">stills / the macro</p>
+    <div class="prose">
+      <h2>The three that stay still</h2>
+      <p class="note">Fear &amp; Greed and the Altcoin Index are one crop, as you asked: they share a column in the app and they answer the same question.</p>
+    </div>
+
+    <div class="native">
+      <figure>
+        <img src="dash/etf.png" width="400" height="142" alt="ETF net flow chart with BTC and ETH toggles, all-time net flow of $72.377B.">
+        <figcaption>etf net flow / 400 x 142</figcaption>
+      </figure>
+      <figure>
+        <img src="dash/sentiment.png" width="208" height="144" alt="Fear and greed gauge at 9, extreme fear, above an altcoin index at 45 out of 100.">
+        <figcaption>fear &amp; greed + altcoin / 208 x 144</figcaption>
+      </figure>
+      <figure>
+        <img src="dash/liquidations.png" width="172" height="130" alt="Total liquidations by timeframe, longs against shorts.">
+        <figcaption>liquidations / 172 x 130</figcaption>
+      </figure>
+    </div>
+
+    <div class="prose verdict warn">
+      <p><strong>This is the ceiling, not a first pass.</strong> The app is gone and the recording is 640 x 296, so these are shown above at their true size. The ETF chart is the only one large enough to anchor a section alone. The honest layout is a tight row of small tiles at 1x, not five big soft ones.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">stills / the terminal</p>
+    <div class="prose">
+      <h2>Five crops from one clean frame</h2>
+      <p class="note">All from 32 seconds, native resolution. Useful as the reduced-motion fallbacks, and for anywhere a loop would be too much.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="grid-column: 1 / -1;">
+        <figure>
+          <img class="shot bordered" src="crops/1-chart.png" alt="Candlestick chart for HYPE-USDC with timeframe selector and volume histogram.">
+          <figcaption>chart / 960 x 530</figcaption>
+        </figure>
+        <div class="copy"><strong>The chart.</strong> Pair, leverage, mark and oracle price, 24h change, volume, open interest and funding, in one strip.</div>
+      </div>
+
+      <div class="card">
+        <figure>
+          <img class="shot bordered" src="crops/2-orderbook.png" alt="Order book with ask and bid ladders either side of the spread.">
+          <figcaption>order book / 328 x 512</figcaption>
+        </figure>
+        <div class="copy"><strong>The book.</strong> Both ladders and the spread.</div>
+      </div>
+
+      <div class="card">
+        <figure>
+          <img class="shot bordered" src="crops/3-ticket.png" alt="Order ticket with market and limit tabs, size slider and risk toggles.">
+          <figcaption>ticket / 340 x 512</figcaption>
+        </figure>
+        <div class="copy"><strong>The ticket.</strong> Cross margin, leverage, market or limit, size, reduce-only, take profit and stop loss.</div>
+      </div>
+
+      <div class="card">
+        <figure>
+          <img class="shot bordered" src="crops/5-reverse.png" alt="The reverse position confirmation sheet.">
+          <figcaption>reverse, still / 340 x 400</figcaption>
+        </figure>
+        <div class="copy"><strong>Reverse, frozen.</strong> The fallback when motion is off.</div>
+      </div>
+
+      <div class="card" style="grid-column: 1 / -1;">
+        <figure>
+          <img class="shot bordered" src="crops/4-positions.png" alt="Open positions table with PNL, liquidation price and margin.">
+          <figcaption>positions / 1290 x 220</figcaption>
+        </figure>
+        <div class="copy"><strong>Five positions, live.</strong> Size, entry, mark, PNL with ROE, liquidation price, margin, and per-row limit / market / reverse controls.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
