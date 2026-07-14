@@ -628,15 +628,21 @@ function RitenCase({ item }) {
         ))}
       </ul>
 
-      {ritenParts.map((part, i) => (
-        <RitenPart key={part.n} part={part} flip={i % 2 === 1} />
-      ))}
+      {/* the reading column is ~680px, which leaves the loops too small to read.
+          the rest of the case study runs at the hero's width instead. */}
+      <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', padding: '0 1.5rem' }}>
+        <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+          {ritenParts.map((part, i) => (
+            <RitenPart key={part.n} part={part} flip={i % 2 === 1} />
+          ))}
 
-      <RitenMacro />
+          <RitenMacro />
 
-      <div style={{ marginTop: '9rem' }}>
-        <p style={{ ...ritenEyebrow, marginBottom: '2rem' }}>the walkthrough</p>
-        <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
+          <div style={{ marginTop: '9rem' }}>
+            <p style={{ ...ritenEyebrow, marginBottom: '2rem' }}>the walkthrough</p>
+            <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
+          </div>
+        </div>
       </div>
     </section>
   )

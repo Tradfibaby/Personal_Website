@@ -39,10 +39,10 @@ export const ritenParts = [
     title: 'the chart',
     lede: 'live, 1h, 4h, 12h, 1d',
     copy: 'switch the timeframe and the candles redraw, volume follows, and the open, high, low and close restate above them. mark, oracle, 24h change, open interest and funding sit in the strip above, so the instrument never has to be looked up.',
-    box: { x: 137, y: 150, w: 858, h: 404 },
+    box: { x: 137, y: 178, w: 858, h: 376 },
     label: { x: 565, y: -52 },
     loops: [
-      { video: '/portfolio/riten/chart-timeframes.mp4', still: '/portfolio/riten/still-chart.png', w: 844, h: 480, caption: 'switching timeframes' },
+      { video: '/portfolio/riten/chart-timeframes.mp4', still: '/portfolio/riten/still-chart.png', w: 966, h: 426, caption: 'switching timeframes' },
     ],
   },
   {
@@ -53,7 +53,7 @@ export const ritenParts = [
     box: { x: 997, y: 100, w: 278, h: 455 },
     label: { x: 1135, y: -52 },
     loops: [
-      { video: '/portfolio/riten/orderbook-depth.mp4', still: '/portfolio/riten/still-orderbook.png', w: 350, h: 520, caption: 're-aggregating the ladder' },
+      { video: '/portfolio/riten/orderbook-depth.mp4', still: '/portfolio/riten/still-orderbook.png', w: 326, h: 520, caption: 're-aggregating the ladder' },
     ],
   },
   {
@@ -64,7 +64,7 @@ export const ritenParts = [
     box: { x: 1278, y: 100, w: 282, h: 600 },   // down past Place Order, to the liq/margin/fees summary
     label: { x: 1450, y: -124 },
     loops: [
-      { video: '/portfolio/riten/size-ticket.mp4', still: '/portfolio/riten/still-ticket.png', w: 420, h: 480, caption: 'sizing to 14% of buying power' },
+      { video: '/portfolio/riten/size-ticket.mp4', still: '/portfolio/riten/still-ticket.png', w: 326, h: 506, caption: 'sizing to 14% of buying power' },
     ],
   },
   {
