@@ -30,58 +30,64 @@ export const portfolio = [
   },
 ]
 
-/* Every loop is a crop of the demo recording, so each one carries a still for
-   visitors who have asked their system for less motion. */
-export const ritenDesk = [
+/* The four regions of the one screen. The exploded diagram calls these out on the
+   device itself, so the coordinates below are in the hero video's own pixel space
+   (1720 x 840) - move a crop, move the callout with it. */
+export const ritenParts = [
   {
-    title: 'reverse a position',
-    copy: 'the screen dims, the sheet rises, and the trade is restated before you commit: long to short, same size, at market, with the new liquidation price.',
-    video: '/portfolio/riten/reverse.mp4',
-    still: '/portfolio/riten/still-reverse.png',
-    width: 530,
-    height: 690,
+    n: '01',
+    title: 'the chart',
+    lede: 'live, 1h, 4h, 12h, 1d',
+    copy: 'candles redraw, volume follows, and the open, high, low and close restate above them. mark price, oracle price, 24h change, open interest and funding all sit in one strip, so the instrument never has to be looked up.',
+    box: { x: 140, y: 105, w: 850, h: 450 },
+    label: { x: 565, y: -52 },
+    loops: [
+      { video: '/portfolio/riten/chart-timeframes.mp4', still: '/portfolio/riten/still-chart.png', w: 844, h: 480, caption: 'switching timeframes' },
+    ],
   },
   {
-    title: 'close the whole book',
-    copy: 'five positions market-closed one after another, fills stacking as they land. the position count ticks down behind them.',
-    video: '/portfolio/riten/order-fills.mp4',
-    still: '/portfolio/riten/still-positions.png',
-    width: 500,
-    height: 330,
+    n: '02',
+    title: 'the book',
+    lede: 'every level of depth',
+    copy: 'both ladders and the spread, always on screen. tick size steps from 0.001 to 0.01 and the book re-aggregates around the mid, so you can zoom out to find the wall and back in to work the spread.',
+    box: { x: 995, y: 105, w: 280, h: 450 },
+    label: { x: 1135, y: -52 },
+    loops: [
+      { video: '/portfolio/riten/orderbook-depth.mp4', still: '/portfolio/riten/still-orderbook.png', w: 350, h: 520, caption: 're-aggregating the ladder' },
+    ],
   },
   {
-    title: 'read every level of depth',
-    copy: 'tick size steps from 0.001 to 0.01 and the ladder rebuilds itself around the spread. both sides, always visible.',
-    video: '/portfolio/riten/orderbook-depth.mp4',
-    still: '/portfolio/riten/still-orderbook.png',
-    width: 350,
-    height: 520,
+    n: '03',
+    title: 'the ticket',
+    lede: 'the whole order, one column',
+    copy: 'cross margin, leverage, market or limit, reduce-only, take profit and stop loss. drag the size and margin, liquidation price and fees all recalculate together. nothing is a screen away.',
+    box: { x: 1280, y: 105, w: 285, h: 445 },
+    label: { x: 1450, y: -124 },
+    loops: [
+      { video: '/portfolio/riten/size-ticket.mp4', still: '/portfolio/riten/still-ticket.png', w: 420, h: 480, caption: 'sizing to 14% of buying power' },
+    ],
   },
   {
-    title: 'size the trade',
-    copy: 'the slider drags to 14% of buying power, size follows, and the limit price snaps to mid. margin, liquidation and fees all recalculate together.',
-    video: '/portfolio/riten/size-ticket.mp4',
-    still: '/portfolio/riten/still-ticket.png',
-    width: 420,
-    height: 480,
-  },
-  {
-    title: 'the chart, across timeframes',
-    copy: 'live, 1h, 4h, 12h, 1d. the candles redraw, volume follows, and OHLC restates above them.',
-    video: '/portfolio/riten/chart-timeframes.mp4',
-    still: '/portfolio/riten/still-chart.png',
-    width: 844,
-    height: 480,
-    span: true,   // squeezed into half a column the candles stop being readable
+    n: '04',
+    title: 'the positions',
+    lede: 'and what you can do to them',
+    copy: 'five open, with pnl, roe, liquidation price and margin on each. reverse one and the trade is restated before you commit. close them all and the fills stack up as they land.',
+    box: { x: 140, y: 563, w: 1135, h: 177 },
+    label: { x: 707, y: 1022 },
+    below: true,
+    loops: [
+      { video: '/portfolio/riten/reverse.mp4', still: '/portfolio/riten/still-reverse.png', w: 530, h: 690, caption: 'reversing in one step' },
+      { video: '/portfolio/riten/order-fills.mp4', still: '/portfolio/riten/still-positions.png', w: 500, h: 330, caption: 'market-closing the book' },
+    ],
   },
 ]
 
-/* The macro widgets come from a 640x296 screen recording of an app that no longer
-   runs, so they are pinned to native pixels. Scaling any of them up turns them to mush. */
+/* The macro widgets come from a 640x296 recording of an app that no longer runs, so
+   they are pinned to native pixels. Scaling any of them up turns them to mush. */
 export const ritenMacro = [
   {
     title: 'institutional interest',
-    copy: 'etf net flow, btc against eth, scrubbed by the day. +$72.377b since inception.',
+    copy: 'etf net flow, btc against eth, scrubbed by the day.',
     video: '/portfolio/riten/dash-etf.mp4',
     still: '/portfolio/riten/dash-etf.png',
     width: 400,
@@ -89,14 +95,14 @@ export const ritenMacro = [
   },
   {
     title: 'the degen read',
-    copy: 'fear and greed at 9, extreme fear. the altcoin index at 45. is the room scared, and is this a bitcoin tape?',
+    copy: 'fear and greed at 9. the altcoin index at 45.',
     still: '/portfolio/riten/dash-sentiment.png',
     width: 208,
     height: 144,
   },
   {
     title: 'dry powder',
-    copy: 'stablecoin market cap, scrubbed back through the week. money entering the system, or leaving it.',
+    copy: 'stablecoin market cap, scrubbed back through the week.',
     video: '/portfolio/riten/dash-stablecoin.mp4',
     still: '/portfolio/riten/dash-stablecoin.png',
     width: 170,
@@ -104,7 +110,7 @@ export const ritenMacro = [
   },
   {
     title: 'the macro factor',
-    copy: 'december fomc, broken into a cut, a hold and a hike, priced by the day.',
+    copy: 'december fomc, priced as a cut, a hold or a hike.',
     video: '/portfolio/riten/dash-fed.mp4',
     still: '/portfolio/riten/dash-fed.png',
     width: 272,

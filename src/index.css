@@ -271,3 +271,33 @@ a {
   font-size: 0.85rem;
   margin-top: 0.15rem;
 }
+
+/* riten: text on one side, the loops on the other, alternating down the page.
+   `direction: rtl` on the row is what flips them, so the source order stays readable. */
+.riten-row {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 3rem 4rem;
+  align-items: center;
+}
+
+/* Below the callout labels stop being legible: the SVG scales with the device, so at
+   phone width the type would land under 7px. Drop them and let the headings do the work. */
+@media (max-width: 860px) {
+  .riten-row {
+    grid-template-columns: 1fr;
+    direction: ltr !important;
+    gap: 1.75rem;
+  }
+  .riten-callouts {
+    display: none;
+  }
+  /* with the labels gone, the margin that held them would just be a gap */
+  .riten-hero {
+    aspect-ratio: 1720 / 840 !important;
+  }
+  .riten-hero-media {
+    top: 0 !important;
+    height: 100% !important;
+  }
+}

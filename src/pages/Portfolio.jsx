@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
-import { portfolio, ritenDesk, ritenMacro } from '../data/portfolio'
+import { portfolio, ritenParts, ritenMacro } from '../data/portfolio'
 
 export default function Portfolio() {
   const { slug } = useParams()
@@ -562,8 +562,9 @@ function ChapterDash({ n, active, seen, onJump }) {
   )
 }
 
-/* The whole case for riten is the density: a desk of instruments running on a handset.
-   So the page opens on the entire device, and only then takes it apart. */
+/* riten's case is the density: a desk of instruments running on a handset. So the page
+   shows the whole device once, calls out the four regions on it, then pulls each one
+   apart in turn. The diagram and the sections below share ritenParts, so they agree. */
 const RITEN_COUNTS = [
   ['1', 'live chart'],
   ['2', 'sides of the book'],
@@ -574,146 +575,273 @@ const RITEN_COUNTS = [
 
 function RitenCase({ item }) {
   return (
-    <section style={{ paddingTop: '4rem', paddingBottom: '5rem' }}>
-      <div style={{ marginBottom: '1.5rem' }}>
+    <section style={{ paddingTop: '3.5rem', paddingBottom: '6rem' }}>
+      <div style={{ marginBottom: '3rem' }}>
         <BackLink />
       </div>
 
-      <h2 style={{ fontSize: '1.15rem', fontWeight: '400', color: '#f0f0f0', letterSpacing: '-0.01em', margin: 0 }}>
-        {item.name}
-      </h2>
-      <p style={{ color: '#555', fontSize: '0.9rem', margin: '0 0 2.5rem' }}>
-        {item.tagline}
-      </p>
+      <p style={{ ...ritenEyebrow, marginBottom: '1.5rem' }}>{item.name}</p>
 
-      {/* the device breaks the column: at reading width it is too small to make its own case */}
-      <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', padding: '0 1.5rem' }}>
-        <LoopFrame
-          src="/portfolio/riten/terminal-full.mp4"
-          poster="/portfolio/riten/terminal-full-poster.jpg"
-          still="/portfolio/riten/terminal-full-poster.jpg"
-          alt="the riten zone terminal running on a phone in landscape"
-          maxWidth={1240}
-          centred
-        />
-
-        <ul style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          gap: '0.5rem 2.25rem',
-          listStyle: 'none',
-          padding: 0,
-          margin: '1.75rem auto 0',
-          maxWidth: '1240px',
-          fontSize: '0.7rem',
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
-          color: '#555',
-        }}>
-          {RITEN_COUNTS.map(([n, label]) => (
-            <li key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '0.45rem' }}>
-              <span style={{ color: '#4be8e2' }}>{n}</span>
-              <span>{label}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <SectionRule label="the desk" />
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-        gap: '3rem 2.5rem',
-        alignItems: 'start',
+      <h1 style={{
+        fontSize: 'clamp(2rem, 5.5vw, 3.4rem)',
+        fontWeight: '400',
+        color: '#f0f0f0',
+        letterSpacing: '-0.035em',
+        lineHeight: 1.05,
+        margin: '0 0 1.75rem',
+        maxWidth: '14ch',
+        textWrap: 'balance',
       }}>
-        {ritenDesk.map(f => <RitenFeature key={f.title} feature={f} />)}
-      </div>
+        {item.tagline}
+      </h1>
 
-      <SectionRule label="the macro" />
-      <p style={{ color: '#555', fontSize: '0.9rem', maxWidth: '52ch', margin: '0 0 2.5rem' }}>
-        the reason to hold both at once. the order book tells you what is happening; this tells you why.
+      <p style={{ color: '#777', fontSize: '1rem', lineHeight: 1.65, maxWidth: '46ch', margin: '0 0 2rem' }}>
+        every instrument a trading desk gives you, on a screen you hold in one hand.
+        nothing collapsed into a menu, nothing a swipe away.
       </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2.5rem 2rem', alignItems: 'flex-start' }}>
-        {ritenMacro.map(f => <RitenWidget key={f.title} feature={f} />)}
-      </div>
 
-      <SectionRule label="the walkthrough" />
-      <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
+      <p style={{ ...ritenEyebrow, marginBottom: '3.5rem' }}>
+        react native · expo · perps
+      </p>
+
+      <RitenExploded />
+
+      <ul style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: '0.5rem 2.25rem',
+        listStyle: 'none',
+        padding: 0,
+        margin: '3.5rem auto 0',
+        maxWidth: '1240px',
+        fontSize: '0.7rem',
+        letterSpacing: '0.16em',
+        textTransform: 'uppercase',
+        color: '#555',
+      }}>
+        {RITEN_COUNTS.map(([n, label]) => (
+          <li key={label} style={{ display: 'flex', alignItems: 'baseline', gap: '0.45rem' }}>
+            <span style={{ color: '#4be8e2' }}>{n}</span>
+            <span>{label}</span>
+          </li>
+        ))}
+      </ul>
+
+      {ritenParts.map((part, i) => (
+        <RitenPart key={part.n} part={part} flip={i % 2 === 1} />
+      ))}
+
+      <RitenMacro />
+
+      <div style={{ marginTop: '9rem' }}>
+        <p style={{ ...ritenEyebrow, marginBottom: '2rem' }}>the walkthrough</p>
+        <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
+      </div>
     </section>
   )
 }
 
-function SectionRule({ label }) {
-  return (
-    <p style={{
-      margin: '4.5rem 0 2rem',
-      paddingTop: '1.5rem',
-      borderTop: '1px solid #181818',
-      color: '#555',
-      fontSize: '0.7rem',
-      letterSpacing: '0.2em',
-    }}>
-      ▪ {label}
-    </p>
-  )
+const ritenEyebrow = {
+  margin: 0,
+  color: '#555',
+  fontSize: '0.7rem',
+  letterSpacing: '0.2em',
+  textTransform: 'lowercase',
 }
 
-function RitenFeature({ feature }) {
+/* An exploded view: the device, with the four regions ringed and named on it. The SVG
+   shares the hero video's coordinate space, padded top and bottom to leave room for the
+   labels, so the callouts stay pinned to the screen at every width. */
+const HERO_W = 1720
+const HERO_H = 840
+const PAD_TOP = 120
+const PAD_BOTTOM = 240
+const VIEW_H = PAD_TOP + HERO_H + PAD_BOTTOM
+
+function RitenExploded() {
+  const still = prefersStill()
+
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '0.9rem',
-      gridColumn: feature.span ? '1 / -1' : undefined,
-    }}>
-      <h3 style={{ fontSize: '0.9rem', fontWeight: '400', color: '#f0f0f0', margin: 0 }}>
-        {feature.title}
-      </h3>
-      <LoopFrame src={feature.video} still={feature.still} alt={feature.title} maxWidth={feature.width} />
-      <p style={{ color: '#555', fontSize: '0.85rem', lineHeight: 1.6, margin: 0, maxWidth: '40ch' }}>
-        {feature.copy}
-      </p>
+    <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', padding: '0 1.5rem' }}>
+      <div className="riten-hero" style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '1240px',
+        margin: '0 auto',
+        aspectRatio: `${HERO_W} / ${VIEW_H}`,
+      }}>
+        {still ? (
+          <img
+            className="riten-hero-media"
+            src="/portfolio/riten/terminal-full-poster.jpg"
+            alt="the riten zone terminal running on a phone in landscape"
+            style={ritenHeroMedia}
+          />
+        ) : (
+          <video
+            className="riten-hero-media"
+            src="/portfolio/riten/terminal-full.mp4"
+            poster="/portfolio/riten/terminal-full-poster.jpg"
+            aria-label="the riten zone terminal running on a phone in landscape"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={ritenHeroMedia}
+          />
+        )}
+
+        {/* the callouts are decoration over the device: the same names are headings below */}
+        <svg
+          className="riten-callouts"
+          viewBox={`0 ${-PAD_TOP} ${HERO_W} ${VIEW_H}`}
+          aria-hidden="true"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible' }}
+        >
+          {ritenParts.map(part => <Callout key={part.n} part={part} />)}
+        </svg>
+      </div>
     </div>
   )
 }
 
-/* These are cropped from a 640x296 recording of an app that no longer runs, so they are
-   locked to their native size. Stretching them is the one thing that ruins them. */
-function RitenWidget({ feature }) {
+const ritenHeroMedia = {
+  position: 'absolute',
+  left: 0,
+  top: `${(PAD_TOP / VIEW_H) * 100}%`,
+  width: '100%',
+  height: `${(HERO_H / VIEW_H) * 100}%`,
+  display: 'block',
+  backgroundColor: '#000',
+}
+
+function Callout({ part }) {
+  const { box, label, below } = part
+  // the leader runs from the ringed region out to the margin, above or below the device
+  const from = below ? box.y + box.h : box.y
+  const to = below ? label.y - 34 : label.y + 16
+  const anchorX = below ? box.x + box.w / 2 : label.x
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: feature.width }}>
-      <h3 style={{ fontSize: '0.9rem', fontWeight: '400', color: '#f0f0f0', margin: 0 }}>
-        {feature.title}
-      </h3>
-      <LoopFrame src={feature.video} still={feature.still} alt={feature.title} maxWidth={feature.width} exact />
-      <p style={{ color: '#555', fontSize: '0.8rem', lineHeight: 1.6, margin: 0 }}>
-        {feature.copy}
+    <g stroke="rgba(255, 255, 255, 0.22)" fill="none" strokeWidth="1.4">
+      <rect x={box.x} y={box.y} width={box.w} height={box.h} strokeDasharray="7 7" />
+      <line x1={anchorX} y1={from} x2={anchorX} y2={to} />
+      <circle cx={anchorX} cy={from} r="4" fill="#4be8e2" stroke="none" />
+      <text
+        x={label.x}
+        y={label.y}
+        textAnchor="middle"
+        stroke="none"
+        fill="#8a9096"
+        fontSize="30"
+        letterSpacing="5"
+        style={{ textTransform: 'uppercase', fontFamily: 'inherit' }}
+      >
+        <tspan fill="#4be8e2">{part.n}</tspan>
+        <tspan dx="14">{part.title}</tspan>
+      </text>
+    </g>
+  )
+}
+
+function RitenPart({ part, flip }) {
+  return (
+    <div style={{ marginTop: '9rem' }}>
+      <div className="riten-row" style={{ direction: flip ? 'rtl' : 'ltr' }}>
+        <div style={{ direction: 'ltr' }}>
+          <p style={{ ...ritenEyebrow, marginBottom: '1.25rem' }}>
+            <span style={{ color: '#4be8e2' }}>{part.n}</span>
+            <span style={{ marginLeft: '0.75rem' }}>{part.lede}</span>
+          </p>
+          <h2 style={{
+            fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
+            fontWeight: '400',
+            color: '#f0f0f0',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.1,
+            margin: '0 0 1.25rem',
+          }}>
+            {part.title}
+          </h2>
+          <p style={{ color: '#777', fontSize: '0.95rem', lineHeight: 1.7, margin: 0, maxWidth: '38ch' }}>
+            {part.copy}
+          </p>
+        </div>
+
+        <div style={{ direction: 'ltr', display: 'flex', flexWrap: 'wrap', gap: '1.75rem', alignItems: 'flex-start' }}>
+          {part.loops.map(loop => (
+            /* 1.5x native is as far as a crop of the recording can be pushed before it softens */
+            <figure key={loop.video} style={{ margin: 0, flex: '1 1 200px', maxWidth: `${Math.round(loop.w * 1.5)}px` }}>
+              <LoopFrame src={loop.video} still={loop.still} alt={loop.caption} />
+              <figcaption style={{ color: '#4a4a4a', fontSize: '0.7rem', letterSpacing: '0.08em', paddingTop: '0.6rem' }}>
+                {loop.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* The second screen. Same argument as the first, aimed at why rather than what. */
+function RitenMacro() {
+  return (
+    <div style={{ marginTop: '10rem', paddingTop: '4rem', borderTop: '1px solid #181818' }}>
+      <p style={{ ...ritenEyebrow, marginBottom: '1.25rem' }}>the second screen</p>
+      <h2 style={{
+        fontSize: 'clamp(1.5rem, 3.4vw, 2.25rem)',
+        fontWeight: '400',
+        color: '#f0f0f0',
+        letterSpacing: '-0.025em',
+        lineHeight: 1.1,
+        margin: '0 0 1.25rem',
+        maxWidth: '20ch',
+      }}>
+        the book tells you what. this tells you why.
+      </h2>
+      <p style={{ color: '#777', fontSize: '0.95rem', lineHeight: 1.7, margin: '0 0 3.5rem', maxWidth: '46ch' }}>
+        a macro layer sitting one swipe from the order book: who is buying, who just got
+        carried out, and what the rates market thinks happens next.
       </p>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem 2.5rem', alignItems: 'flex-start' }}>
+        {ritenMacro.map(w => (
+          <div key={w.title} style={{ maxWidth: `${w.width}px` }}>
+            <LoopFrame src={w.video} still={w.still} alt={w.title} maxWidth={w.width} exact />
+            <h3 style={{ fontSize: '0.9rem', fontWeight: '400', color: '#f0f0f0', margin: '1rem 0 0.4rem' }}>
+              {w.title}
+            </h3>
+            <p style={{ color: '#666', fontSize: '0.8rem', lineHeight: 1.6, margin: 0 }}>
+              {w.copy}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
 /* A loop, or its own still if the visitor has asked for less motion. */
-function LoopFrame({ src, still, poster, alt, maxWidth, exact, centred }) {
-  const still_only = !src || prefersStill()
+function LoopFrame({ src, still, alt, maxWidth, exact }) {
+  const stillOnly = !src || prefersStill()
 
   const box = {
-    display: 'block',
-    width: exact ? `${maxWidth}px` : '100%',
+    // `exact` pins a macro widget to its native pixels, but never past the viewport
+    width: exact ? `min(100%, ${maxWidth}px)` : '100%',
     maxWidth: maxWidth ? `${maxWidth}px` : '100%',
+    display: 'block',
     height: 'auto',
-    margin: centred ? '0 auto' : undefined,
     border: '1px solid #1e1e1e',
     backgroundColor: '#000',
   }
 
-  if (still_only) return <img src={still} alt={alt} style={box} />
+  if (stillOnly) return <img src={still} alt={alt} style={box} />
 
   return (
     <video
       src={src}
-      poster={poster}
       aria-label={alt}
       autoPlay
       muted
