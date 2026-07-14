@@ -272,21 +272,28 @@ a {
   margin-top: 0.15rem;
 }
 
-/* riten's macro widgets: two up, two down. The first column is wider because the ETF
-   chart is 400px native against the others' 170-272, and squeezing it would waste the
-   only widget with any detail in it. */
+/* riten's macro widgets: two up, three down. Six columns is the smallest grid that
+   divides both ways, so the top pair span three each and the bottom trio span two. */
 .riten-macro-grid {
   display: grid;
-  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
-  gap: 3.5rem 3rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 3.5rem 2.5rem;
   align-items: start;
 }
+.riten-macro-grid > :nth-child(-n + 2) { grid-column: span 3; }
+.riten-macro-grid > :nth-child(n + 3)  { grid-column: span 2; }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .riten-macro-grid {
-    grid-template-columns: 1fr;
-    gap: 2.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem 2.5rem;
   }
+  .riten-macro-grid > :nth-child(-n + 2),
+  .riten-macro-grid > :nth-child(n + 3) { grid-column: span 1; }
+}
+
+@media (max-width: 620px) {
+  .riten-macro-grid { grid-template-columns: 1fr; gap: 2.75rem; }
 }
 
 /* riten: text on one side, the loops on the other, alternating down the page.

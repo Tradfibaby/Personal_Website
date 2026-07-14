@@ -71,11 +71,11 @@ export const ritenParts = [
     n: '04',
     title: 'the positions',
     lede: 'six open, every column live',
-    copy: 'size, position value, entry and mark price, pnl with roe, liquidation price, margin and funding, on every one of the six. reverse one and the whole trade is restated before you commit: long to short, same size, at market, with the liquidation price it would leave you at.',
+    copy: 'size, position value, entry and mark price, pnl with roe, liquidation price, margin and funding, on every one of the six. reverse one and the whole trade is restated before you commit. close all, and the six unwind at market together, each fill printing back as it lands, down to an empty table.',
     box: { x: 137, y: 562, w: 1138, h: 216 },
     label: { x: 706, y: 1022 },
     below: true,
-    // one continuous take rather than three clips looping out of phase against each other
+    // one clip rather than three looping out of phase against each other
     stacked: true,
     loops: [
       {
@@ -84,7 +84,7 @@ export const ritenParts = [
         w: 1200,
         h: 540,
         wide: true,
-        caption: 'one take: the table live, then the camera follows a position into the reverse sheet and out the other side as the order goes',
+        caption: 'the table live on six positions, then close all: the six unwind at market and every fill prints back, down to an empty table',
       },
     ],
   },
@@ -107,6 +107,13 @@ export const ritenMacro = [
     still: '/portfolio/riten/dash-sentiment.png',
     width: 208,
     height: 144,
+  },
+  {
+    title: 'who got carried out',
+    copy: 'total liquidations, longs against shorts, over 1h to 24h.',
+    still: '/portfolio/riten/dash-liquidations.png',
+    width: 172,
+    height: 130,
   },
   {
     title: 'dry powder',
