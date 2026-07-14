@@ -24,9 +24,6 @@ export const portfolio = [
     name: 'riten zone',
     tagline: 'a trading terminal in your pocket',
     hero: 'riten',
-    mainVideo: '/portfolio/riten-demo-black.mp4',
-    mainPoster: '/portfolio/riten-demo-black-poster.jpg',
-    mainAspect: '1440 / 738',
   },
 ]
 

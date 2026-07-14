@@ -637,13 +637,6 @@ function RitenCase({ item }) {
           ))}
 
           <RitenMacro />
-
-          {/* the full 114s walkthrough, parked for now: the loops above already tell it
-          <div style={{ marginTop: '9rem' }}>
-            <p style={{ ...ritenEyebrow, marginBottom: '2rem' }}>the walkthrough</p>
-            <ShowcaseVideo src={item.mainVideo} poster={item.mainPoster} aspect={item.mainAspect} />
-          </div>
-          */}
         </div>
       </div>
     </section>
