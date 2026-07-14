@@ -819,6 +819,8 @@ function RitenPart({ part, flip }) {
 }
 
 /* The second screen. Same argument as the first, aimed at why rather than what. */
+const MACRO_MEDIA_H = 144   // the tallest of the four widgets, at native size
+
 function RitenMacro() {
   return (
     <div style={{ marginTop: '10rem', paddingTop: '4rem', borderTop: '1px solid #181818' }}>
@@ -839,14 +841,20 @@ function RitenMacro() {
         carried out, and what the rates market thinks happens next.
       </p>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem 2.5rem', alignItems: 'flex-start' }}>
+      {/* two up, two down. flex-wrapping them at their native widths left a ragged
+          row, and the widgets are all different shapes, so the grid does the aligning. */}
+      <div className="riten-macro-grid">
         {ritenMacro.map(w => (
-          <div key={w.title} style={{ maxWidth: `${w.width}px` }}>
-            <LoopFrame src={w.video} still={w.still} alt={w.title} maxWidth={w.width} exact />
-            <h3 style={{ fontSize: '1rem', fontWeight: '400', color: '#f0f0f0', margin: '1rem 0 0.45rem' }}>
+          <div key={w.title}>
+            {/* the widgets vary from 130 to 144px tall, so pin the media row and sit
+                them on its floor: the titles below then line up across the row */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', minHeight: `${MACRO_MEDIA_H}px` }}>
+              <LoopFrame src={w.video} still={w.still} alt={w.title} maxWidth={w.width} exact />
+            </div>
+            <h3 style={{ fontSize: '1rem', fontWeight: '400', color: '#f0f0f0', margin: '1.1rem 0 0.45rem' }}>
               {w.title}
             </h3>
-            <p style={{ color: '#7c848a', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ color: '#7c848a', fontSize: '0.88rem', lineHeight: 1.6, margin: 0, maxWidth: '34ch' }}>
               {w.copy}
             </p>
           </div>

@@ -272,6 +272,23 @@ a {
   margin-top: 0.15rem;
 }
 
+/* riten's macro widgets: two up, two down. The first column is wider because the ETF
+   chart is 400px native against the others' 170-272, and squeezing it would waste the
+   only widget with any detail in it. */
+.riten-macro-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: 3.5rem 3rem;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .riten-macro-grid {
+    grid-template-columns: 1fr;
+    gap: 2.75rem;
+  }
+}
+
 /* riten: text on one side, the loops on the other, alternating down the page.
    `direction: rtl` on the row is what flips them, so the source order stays readable. */
 .riten-row {
