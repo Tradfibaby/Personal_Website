@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EncryptedText } from '../components/ui/encrypted-text'
+import HudGrid from '../components/universe/HudGrid'
 
-// three.js is heavy, so the universe loads as its own chunk once home mounts
-const ParticleField = lazy(() => import('../components/universe/ParticleField'))
+// the WebGL terrain intro loads as its own chunk, only on the first visit
+const TerrainLoader = lazy(() => import('../components/universe/TerrainLoader'))
 
 /* The home page is a single full-screen field. The four sections of the site drift
    through it as nodes - "about" opens a panel in place, the rest are doorways. The
@@ -33,18 +34,23 @@ let hasAnimated = false
 
 export default function Home({ onNavReady }) {
   const [ready, setReady] = useState(hasAnimated)
+  const [showLoader, setShowLoader] = useState(!hasAnimated)
   const [aboutOpen, setAboutOpen] = useState(false)
   const navigate = useNavigate()
   const wrapRefs = useRef([])
   const mobile = typeof window !== 'undefined' && window.innerWidth <= 768
 
   useEffect(() => {
-    if (hasAnimated) {
-      onNavReady?.()
-      return
-    }
-    hasAnimated = true
+    if (hasAnimated) onNavReady?.()
   }, [])
+
+  // called when the terrain intro reaches 100% - reveal the field, then drop the loader
+  const finishIntro = () => {
+    hasAnimated = true
+    onNavReady?.()
+    setReady(true)
+    setTimeout(() => setShowLoader(false), 1100)
+  }
 
   // Cursor parallax on the nodes: ease a normalised pointer toward each node's depth,
   // writing straight to the DOM so we never re-render on mouse move.
@@ -90,18 +96,34 @@ export default function Home({ onNavReady }) {
   }
 
   return (
-    <div className="universe">
-      <Suspense fallback={null}><ParticleField /></Suspense>
+    <div className="universe hud">
+      <HudGrid />
+
+      {/* First-visit terrain intro, dissolves into the field */}
+      {showLoader && (
+        <Suspense fallback={null}>
+          <TerrainLoader onDone={finishIntro} />
+        </Suspense>
+      )}
+
+      {/* HUD chrome pinned around the edges, tol.is-style technical readouts */}
+      <div className="hud-chrome" style={{ opacity: ready ? 1 : 0, transition: 'opacity 1s ease 0.4s' }}>
+        <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_FIELD</span>
+        <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>UI_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
+        <span className="hud-label" style={{ bottom: '1.4rem', left: '1.6rem' }}>LCK······ 0</span>
+        <span className="hud-label" style={{ bottom: '1.4rem', left: '50%', transform: 'translateX(-50%)' }}>PRG······ 100%</span>
+        <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>SEG {NODES.length} / {NODES.length}</span>
+      </div>
 
       {/* The core wordmark */}
       <div className="universe-core">
         <h1>
           <EncryptedText
             text="tradfibaby"
-            revealDelayMs={110}
+            revealDelayMs={90}
             flipDelayMs={40}
             encryptedClassName="text-neutral-600"
-            onComplete={() => { onNavReady?.(); setTimeout(() => setReady(true), 350) }}
+            enabled={ready}
           />
         </h1>
         <div className="core-sub" style={{ opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 0.2s' }}>

@@ -449,6 +449,64 @@ a {
 }
 .u-panel-links a:hover { color: #f0f0f0; }
 
+/* Terrain intro loader: full-screen wireframe flythrough that dissolves into the site. */
+.terrain-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: radial-gradient(120% 90% at 50% 42%, #0a0a16 0%, #000 70%);
+  opacity: 1;
+  transition: opacity 0.9s ease;
+}
+.terrain-loader.leaving { opacity: 0; pointer-events: none; }
+.terrain-canvas { position: absolute; inset: 0; }
+.terrain-hud {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: min(320px, 70vw);
+}
+.terrain-title {
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  color: #eef0ff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 24px rgba(120, 140, 255, 0.45);
+  margin-bottom: 1.1rem;
+}
+.terrain-bar {
+  height: 1px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  margin-bottom: 0.7rem;
+}
+.terrain-bar span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6a78ff, #9fb0ff);
+  box-shadow: 0 0 10px rgba(120, 140, 255, 0.8);
+}
+.terrain-status {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #5a5c74;
+}
+
+/* tol.is-style HUD chrome: monospace micro-labels pinned to the corners and edges. */
+.hud-chrome { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.hud-label {
+  position: absolute;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #45465a;
+  white-space: nowrap;
+}
+
 /* A small hint at the base of the field, telling first-timers the nodes are the map. */
 .universe-hint {
   position: absolute;
