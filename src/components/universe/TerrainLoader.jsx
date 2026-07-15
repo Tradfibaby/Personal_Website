@@ -56,8 +56,9 @@ varying float vFog;
 varying float vH;
 uniform float uFade;   // 1 -> visible, 0 -> dissolved
 void main(){
-  vec3 lo = vec3(0.22, 0.26, 0.5);
-  vec3 hi = vec3(0.62, 0.72, 1.0);
+  // monochrome: dim grey valleys to near-white ridges, matching the rest of the site
+  vec3 lo = vec3(0.30);
+  vec3 hi = vec3(0.88);
   vec3 col = mix(lo, hi, smoothstep(0.2, 0.8, vH));
   float a = (1.0 - vFog) * 0.85 * uFade;
   gl_FragColor = vec4(col, a);

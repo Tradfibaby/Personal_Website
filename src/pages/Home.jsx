@@ -11,11 +11,12 @@ const TerrainLoader = lazy(() => import('../components/universe/TerrainLoader'))
    wordmark sits at the centre like a small sun; the nodes orbit it and lean away
    from the cursor for depth. */
 
+const ACCENT = '200, 200, 208' // neutral grey-white, consistent with the rest of the site
 const NODES = [
-  { key: 'about',       index: '00', name: 'about',       desc: 'founder, operator, writer',  accent: '150, 130, 255', x: 22, y: 32, mx: 50, my: 40, depth: 22 },
-  { key: 'writing',     index: '01', name: 'writing',     desc: 'essays & field notes',       accent: '110, 220, 255', x: 77, y: 30, mx: 50, my: 53, depth: 30 },
-  { key: 'portfolio',   index: '02', name: 'portfolio',   desc: "things i've built",          accent: '225, 150, 255', x: 21, y: 70, mx: 50, my: 66, depth: 26 },
-  { key: 'open-source', index: '03', name: 'open source', desc: 'code in the open',           accent: '150, 255, 220', x: 79, y: 68, mx: 50, my: 79, depth: 18 },
+  { key: 'about',       index: '00', name: 'about',       desc: 'founder, operator, writer',  accent: ACCENT, x: 22, y: 32, mx: 50, my: 40, depth: 22 },
+  { key: 'writing',     index: '01', name: 'writing',     desc: 'essays & field notes',       accent: ACCENT, x: 77, y: 30, mx: 50, my: 53, depth: 30 },
+  { key: 'portfolio',   index: '02', name: 'portfolio',   desc: "things i've built",          accent: ACCENT, x: 21, y: 70, mx: 50, my: 66, depth: 26 },
+  { key: 'open-source', index: '03', name: 'open source', desc: 'code in the open',           accent: ACCENT, x: 79, y: 68, mx: 50, my: 79, depth: 18 },
 ]
 
 const BIO = [

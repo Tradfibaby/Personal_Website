@@ -250,10 +250,9 @@ a {
   inset: 0;
   overflow: hidden;
   z-index: 1;
-  /* deep-space wash: near-black with the faintest violet lift toward the core */
+  /* near-black with the faintest neutral lift toward the core - no colour */
   background:
-    radial-gradient(120% 90% at 50% 46%, rgba(40, 30, 80, 0.18), transparent 60%),
-    radial-gradient(80% 70% at 50% 50%, rgba(0, 40, 60, 0.10), transparent 70%),
+    radial-gradient(120% 90% at 50% 46%, rgba(255, 255, 255, 0.035), transparent 60%),
     #000000;
 }
 
@@ -273,14 +272,14 @@ a {
   letter-spacing: -0.02em;
   color: #f4f4f6;
   line-height: 1.1;
-  text-shadow: 0 0 24px rgba(120, 120, 255, 0.35), 0 0 60px rgba(0, 200, 255, 0.12);
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.28), 0 0 60px rgba(255, 255, 255, 0.08);
 }
 .universe-core .core-sub {
   margin-top: 0.9rem;
   font-size: 0.72rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: #5a5a72;
+  color: #555;
 }
 /* Slow breathing halo behind the wordmark. */
 .universe-core::before {
@@ -292,7 +291,7 @@ a {
   height: 340px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(90, 80, 220, 0.16), transparent 65%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 65%);
   z-index: -1;
   animation: core-breathe 6s ease-in-out infinite;
 }
@@ -322,7 +321,7 @@ a {
 }
 
 .u-node {
-  --accent: 120, 120, 255;
+  --accent: 190, 190, 200;
   display: block;
   min-width: 158px;
   max-width: 220px;
@@ -454,7 +453,7 @@ a {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: radial-gradient(120% 90% at 50% 42%, #0a0a16 0%, #000 70%);
+  background: radial-gradient(120% 90% at 50% 42%, #0d0d0d 0%, #000 70%);
   opacity: 1;
   transition: opacity 0.9s ease;
 }
@@ -470,9 +469,9 @@ a {
 }
 .terrain-title {
   font-size: clamp(1.8rem, 6vw, 2.8rem);
-  color: #eef0ff;
+  color: #f0f0f0;
   letter-spacing: -0.02em;
-  text-shadow: 0 0 24px rgba(120, 140, 255, 0.45);
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.3);
   margin-bottom: 1.1rem;
 }
 .terrain-bar {
@@ -486,14 +485,14 @@ a {
   display: block;
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #6a78ff, #9fb0ff);
-  box-shadow: 0 0 10px rgba(120, 140, 255, 0.8);
+  background: linear-gradient(90deg, #666, #e0e0e0);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 .terrain-status {
   font-size: 0.62rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #5a5c74;
+  color: #555;
 }
 
 /* tol.is-style HUD chrome: monospace micro-labels pinned to the corners and edges. */

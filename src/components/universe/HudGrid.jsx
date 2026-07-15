@@ -87,13 +87,13 @@ export default function HudGrid() {
           if (dist < LINK) links.push({ x, y, a: f })
         }
 
-        ctx.fillStyle = `rgba(210, 214, 230, ${a})`
+        ctx.fillStyle = `rgba(225, 225, 230, ${a})`
         ctx.fillRect(x - size / 2, y - size / 2, size, size)
       }
 
       // lines reaching from the crosshair to nearby nodes
       for (const l of links) {
-        ctx.strokeStyle = `rgba(150, 170, 255, ${l.a * 0.5})`
+        ctx.strokeStyle = `rgba(255, 255, 255, ${l.a * 0.35})`
         ctx.lineWidth = 1
         ctx.beginPath()
         ctx.moveTo(cur.x, cur.y)
@@ -103,7 +103,7 @@ export default function HudGrid() {
 
       // tracking crosshair
       if (cur.active > 0.01) {
-        ctx.strokeStyle = `rgba(150, 170, 255, ${0.16 * cur.active})`
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.11 * cur.active})`
         ctx.lineWidth = 1
         ctx.beginPath()
         ctx.moveTo(cur.x, 0); ctx.lineTo(cur.x, h)
@@ -111,11 +111,11 @@ export default function HudGrid() {
         ctx.stroke()
 
         // focus reticle
-        ctx.strokeStyle = `rgba(180, 195, 255, ${0.6 * cur.active})`
+        ctx.strokeStyle = `rgba(235, 235, 240, ${0.6 * cur.active})`
         ctx.strokeRect(cur.x - 9, cur.y - 9, 18, 18)
 
         // coordinate readout
-        ctx.fillStyle = `rgba(150, 160, 190, ${0.7 * cur.active})`
+        ctx.fillStyle = `rgba(150, 150, 158, ${0.7 * cur.active})`
         ctx.font = "10px 'Space Mono', monospace"
         ctx.textBaseline = 'top'
         const cx = String(Math.round(cur.x)).padStart(4, '0')
