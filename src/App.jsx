@@ -7,12 +7,15 @@ import Post from './pages/Post'
 import Projects from './pages/Projects'
 import Portfolio from './pages/Portfolio'
 import CursorEffect from './components/ui/cursor-effect'
+import TypographyField from './components/universe/TypographyField'
 
-// The character-grid cursor effect is the default background, but a couple of routes now
-// carry their own field: home (the universe) and the portfolio listing (the HUD grid).
+// The character-grid cursor effect is the default background, but a few routes now carry their
+// own field: home (the universe), the portfolio listing (the HUD grid), and the writing listing
+// (the tol.is-style typography blueprint).
 function BackgroundFX() {
   const { pathname } = useLocation()
   if (pathname === '/' || pathname === '/portfolio') return null
+  if (pathname === '/writing') return <TypographyField />
   return <CursorEffect />
 }
 
