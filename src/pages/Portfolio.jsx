@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { portfolio, ritenParts, ritenMacro } from '../data/portfolio'
+import HudGrid from '../components/universe/HudGrid'
 
 export default function Portfolio() {
   const { slug } = useParams()
@@ -12,16 +13,22 @@ export default function Portfolio() {
   }
 
   return (
-    <section style={{ paddingTop: '4rem' }}>
-      <p style={{ color: '#555', fontSize: '0.7rem', letterSpacing: '0.2em', marginBottom: '2.5rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
-        ▪ portfolio
-      </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2.5rem' }}>
-        {portfolio.map(item => (
-          <Tile key={item.slug} item={item} />
-        ))}
+    <>
+      {/* the HUD grid as a reactive background, behind the listing */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }} aria-hidden="true">
+        <HudGrid />
       </div>
-    </section>
+      <section style={{ paddingTop: '4rem', position: 'relative', zIndex: 1 }}>
+        <p style={{ color: '#555', fontSize: '0.7rem', letterSpacing: '0.2em', marginBottom: '2.5rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
+          ▪ portfolio
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2.5rem' }}>
+          {portfolio.map(item => (
+            <Tile key={item.slug} item={item} />
+          ))}
+        </div>
+      </section>
+    </>
   )
 }
 

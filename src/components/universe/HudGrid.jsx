@@ -7,7 +7,8 @@ import { useEffect, useRef } from 'react'
 
 const GRID = 46        // spacing between nodes, px
 const REACH = 190      // cursor influence radius, px
-const LINK = 118       // draw a line from cursor to nodes within this radius
+const LINK = 130       // a node must be within this radius of the cursor to be linkable
+const MAX_LINKS = 5    // ...and only the nearest few actually get a line, so it stays sparse
 
 export default function HudGrid() {
   const canvasRef = useRef(null)
@@ -84,12 +85,16 @@ export default function HudGrid() {
           y += (dy / (dist || 1)) * f * 10
           a = 0.14 + f * 0.7
           size = 1 + f * 1.6
-          if (dist < LINK) links.push({ x, y, a: f })
+          if (dist < LINK) links.push({ x, y, a: f, d: dist })
         }
 
         ctx.fillStyle = `rgba(225, 225, 230, ${a})`
         ctx.fillRect(x - size / 2, y - size / 2, size, size)
       }
+
+      // only the nearest few nodes get a line, so the web stays sparse
+      links.sort((p, q) => p.d - q.d)
+      links.length = Math.min(links.length, MAX_LINKS)
 
       // lines reaching from the crosshair to nearby nodes
       for (const l of links) {
