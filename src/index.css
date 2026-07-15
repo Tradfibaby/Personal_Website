@@ -240,6 +240,240 @@ a {
   .ownfun-line { animation: none; }
 }
 
+/* ---------------------------------------------------------------------------
+   Home universe: a full-screen field where the four sections drift as nodes.
+   The particle field lives on its own canvas; everything below styles the nodes,
+   the core wordmark, and the about overlay that sits on top of it.
+--------------------------------------------------------------------------- */
+.universe {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  /* deep-space wash: near-black with the faintest violet lift toward the core */
+  background:
+    radial-gradient(120% 90% at 50% 46%, rgba(40, 30, 80, 0.18), transparent 60%),
+    radial-gradient(80% 70% at 50% 50%, rgba(0, 40, 60, 0.10), transparent 70%),
+    #000000;
+}
+
+/* The core wordmark, sitting at the centre like a small sun. */
+.universe-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+}
+.universe-core h1 {
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #f4f4f6;
+  line-height: 1.1;
+  text-shadow: 0 0 24px rgba(120, 120, 255, 0.35), 0 0 60px rgba(0, 200, 255, 0.12);
+}
+.universe-core .core-sub {
+  margin-top: 0.9rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #5a5a72;
+}
+/* Slow breathing halo behind the wordmark. */
+.universe-core::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 340px;
+  height: 340px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 80, 220, 0.16), transparent 65%);
+  z-index: -1;
+  animation: core-breathe 6s ease-in-out infinite;
+}
+@keyframes core-breathe {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.12); }
+}
+
+/* A node = one section, floating. Outer div carries cursor parallax (set from JS),
+   the inner .u-float carries the idle drift, so the two transforms never fight. */
+.u-node-wrap {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  will-change: transform;
+  transition: opacity 0.7s ease, filter 0.7s ease;
+}
+.u-float {
+  animation: u-drift 9s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes u-drift {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(4px, -8px); }
+  50%      { transform: translate(-3px, 5px); }
+  75%      { transform: translate(-6px, -4px); }
+}
+
+.u-node {
+  --accent: 120, 120, 255;
+  display: block;
+  min-width: 158px;
+  max-width: 220px;
+  padding: 0.85rem 1rem 0.95rem;
+  background: rgba(10, 11, 18, 0.5);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  box-shadow: 0 0 18px rgba(var(--accent), 0.06);
+  transition: border-color 0.25s ease, box-shadow 0.35s ease, transform 0.25s ease, background 0.25s ease;
+}
+.u-node:hover,
+.u-node:focus-visible {
+  border-color: rgba(var(--accent), 0.85);
+  background: rgba(14, 16, 26, 0.72);
+  box-shadow: 0 0 30px rgba(var(--accent), 0.28), inset 0 0 20px rgba(var(--accent), 0.05);
+  transform: translateY(-3px);
+  outline: none;
+}
+.u-node-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.u-node-index {
+  font-size: 0.7rem;
+  color: rgba(var(--accent), 0.75);
+  letter-spacing: 0.1em;
+}
+.u-node-name {
+  color: #e6e6ee;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+.u-node-desc {
+  margin-top: 0.35rem;
+  color: #6a6a80;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+.u-node:hover .u-node-desc,
+.u-node:focus-visible .u-node-desc {
+  max-height: 3rem;
+  opacity: 1;
+}
+
+/* About overlay: a terminal panel over a blurred field. Modal, above the nav. */
+.u-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: u-overlay-in 0.3s ease both;
+}
+@keyframes u-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+.u-panel {
+  position: relative;
+  width: min(600px, 100%);
+  max-height: 84vh;
+  overflow-y: auto;
+  background: rgba(9, 10, 16, 0.92);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 60px rgba(90, 80, 220, 0.14);
+  padding: 2.25rem 2rem;
+  animation: u-panel-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes u-panel-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+.u-panel-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+.u-panel-close:hover { color: #e6e6ee; }
+.u-panel h2 {
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #5a5a72;
+  font-weight: 400;
+  margin-bottom: 1.4rem;
+}
+.u-panel p {
+  color: #999;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  margin-bottom: 1.1rem;
+  max-width: 46ch;
+}
+.u-panel-links {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+}
+.u-panel-links a {
+  color: #777;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: color 0.15s ease;
+}
+.u-panel-links a:hover { color: #f0f0f0; }
+
+/* A small hint at the base of the field, telling first-timers the nodes are the map. */
+.universe-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #3a3a4a;
+  pointer-events: none;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .u-node { min-width: 0; width: 100%; max-width: 300px; }
+  .universe-core h1 { text-shadow: 0 0 18px rgba(120, 120, 255, 0.3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .u-float { animation: none; }
+  .universe-core::before { animation: none; opacity: 0.7; }
+}
+
 /* Portfolio tiles: name and tagline over a rule, nothing else */
 .p-tile {
   display: block;
