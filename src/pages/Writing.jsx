@@ -22,7 +22,7 @@ export default function Writing() {
 
   return (
     <section style={{ paddingTop: '4rem' }}>
-      <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: '1rem', marginBottom: '1.5rem', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '0.1rem 0.4rem' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: '1rem', marginBottom: '1.5rem', backgroundColor: 'var(--bg)', padding: '0.1rem 0' }}>
         <h1 style={heading}>writing</h1>
         <a
           href="https://incoherentyapping.substack.com"
@@ -96,7 +96,7 @@ function PostRow({ post }) {
     borderBottom: '1px solid #181818',
     textDecoration: 'none',
     cursor: 'pointer',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'var(--bg)',
   }
 
   return isInternal ? (
