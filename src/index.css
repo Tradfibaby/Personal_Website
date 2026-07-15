@@ -488,12 +488,6 @@ a {
   background: linear-gradient(90deg, #666, #e0e0e0);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
-.terrain-status {
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #555;
-}
 
 /* tol.is-style HUD chrome: monospace micro-labels pinned to the corners and edges. */
 .hud-chrome { position: absolute; inset: 0; z-index: 3; pointer-events: none; }

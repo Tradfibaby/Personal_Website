@@ -13,6 +13,10 @@ const WIDTH = 14
 const DEPTH = 22
 const DURATION = 2600 // ms of intro before it dissolves
 
+const WORD = 'tradfibaby'
+const SCRAMBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*<>'
+const rndChar = () => SCRAMBLE[(Math.random() * SCRAMBLE.length) | 0]
+
 const vertexShader = `
 attribute vec3 position;
 uniform mat4 modelViewMatrix;
@@ -93,8 +97,8 @@ function buildGeometry(gl) {
 export default function TerrainLoader({ onDone }) {
   const mountRef = useRef(null)
   const rootRef = useRef(null)
-  const pctRef = useRef(null)
   const barRef = useRef(null)
+  const titleRef = useRef(null)
   const [leaving, setLeaving] = useState(false)
   const doneRef = useRef(false)
 
@@ -140,6 +144,7 @@ export default function TerrainLoader({ onDone }) {
     const start = performance.now()
     let raf
     let fade = 1
+    let tick = 0
 
     function frame(now) {
       raf = requestAnimationFrame(frame)
@@ -154,9 +159,17 @@ export default function TerrainLoader({ onDone }) {
 
       // progress: fast-forward to the end for reduced motion
       const p = reduce ? 1 : Math.min(elapsed / DURATION, 1)
-      const shown = Math.round(p * 100)
-      if (pctRef.current) pctRef.current.textContent = String(shown).padStart(3, '0')
       if (barRef.current) barRef.current.style.width = `${p * 100}%`
+
+      // the wordmark decodes with the load: letters lock in left-to-right as the bar
+      // fills, the rest keep scrambling - resolving to "tradfibaby" at 100%
+      tick++
+      if (titleRef.current && (reduce || tick % 2 === 0)) {
+        const locked = Math.floor(p * WORD.length)
+        let s = ''
+        for (let i = 0; i < WORD.length; i++) s += i < locked ? WORD[i] : rndChar()
+        titleRef.current.textContent = reduce ? WORD : s
+      }
 
       // once complete, dissolve the mesh and hand off
       if (p >= 1 && !doneRef.current) {
@@ -186,11 +199,8 @@ export default function TerrainLoader({ onDone }) {
     <div ref={rootRef} className={`terrain-loader${leaving ? ' leaving' : ''}`}>
       <div ref={mountRef} className="terrain-canvas" />
       <div className="terrain-hud">
-        <div className="terrain-title">tradfibaby</div>
+        <div className="terrain-title" ref={titleRef}>tradfibaby</div>
         <div className="terrain-bar"><span ref={barRef} /></div>
-        <div className="terrain-status">
-          LOADING FIELD · <span ref={pctRef}>000</span>%
-        </div>
       </div>
     </div>
   )
