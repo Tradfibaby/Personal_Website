@@ -88,11 +88,8 @@ export default function TypographyField() {
         if (a > 0.012) stroke(s.x1, s.y1, s.x2, s.y2, a, 1 + g * 0.8)
       }
 
-      // HUD chrome, kept in the gutters clear of the reading column
-      label('◻ GRID_SEGMENT', w / 2, 18, 'center', 0.5)
+      // the one live HUD label - "lock" flips to 1 while the cursor is over the field
       label(`LCK······ ${cur.active > 0.5 ? 1 : 0}`, 28, h * 0.44)
-      label('PRG······ 100%', 28, h - 30)
-      label('UI_CTL · LIVE', w - 28, 18, 'right', 0.5)
 
       // cursor crosshair + reticle + coordinate readout
       if (cur.active > 0.01) {
