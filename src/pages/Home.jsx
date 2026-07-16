@@ -227,6 +227,8 @@ export default function Home({ onNavReady }) {
                 key={para}
                 words={para}
                 enabled={aboutPhase >= i + 1}
+                duration={0.38}
+                staggerDelay={0.05}
                 onComplete={() => setAboutPhase((phase) => Math.max(phase, i + 2))}
               />
             ))}

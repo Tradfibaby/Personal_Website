@@ -337,7 +337,7 @@ a {
   min-width: 158px;
   max-width: 220px;
   padding: 0.85rem 1rem 0.95rem;
-  background: rgba(5, 5, 6, 0.58);
+  background-color: rgba(5, 5, 6, 0.58);
   border: 1px solid rgba(180, 180, 180, 0.16);
   cursor: pointer;
   text-align: left;
@@ -350,10 +350,38 @@ a {
 .u-node:hover,
 .u-node:focus-visible {
   border-color: rgba(var(--accent), 0.85);
-  background: rgba(12, 12, 13, 0.76);
+  background-color: rgba(12, 12, 13, 0.76);
   box-shadow: 0 0 30px rgba(var(--accent), 0.28), inset 0 0 20px rgba(var(--accent), 0.05);
   transform: translateY(-3px);
   outline: none;
+}
+
+/* open-source variant: no full outline, just four L-shaped corner brackets */
+.u-node--tile {
+  --corner: rgba(180, 180, 180, 0.28);
+  --corner-len: 15px;
+  --corner-t: 1px;
+  border: none;
+  background-image:
+    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner)),
+    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner)),
+    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner)),
+    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner));
+  background-repeat: no-repeat;
+  background-size:
+    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len),
+    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len),
+    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len),
+    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len);
+  background-position:
+    top left, top left,
+    top right, top right,
+    bottom left, bottom left,
+    bottom right, bottom right;
+}
+.u-node--tile:hover,
+.u-node--tile:focus-visible {
+  --corner: rgba(var(--accent), 0.85);
 }
 .u-node-head {
   display: flex;

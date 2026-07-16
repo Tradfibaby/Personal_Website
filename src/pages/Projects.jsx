@@ -84,10 +84,9 @@ export default function Projects() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="u-node wireframe-card"
+                className="u-node u-node--tile"
                 style={{ '--accent': ACCENT }}
               >
-                <span className="wireframe-card-inner" aria-hidden="true" />
                 <span className="u-node-head">
                   <span className="u-node-name">{project.name} ↗</span>
                   <span className="u-node-index">{String(i).padStart(2, '0')}</span>
