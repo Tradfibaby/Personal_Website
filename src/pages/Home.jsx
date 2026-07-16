@@ -111,9 +111,6 @@ export default function Home({ onNavReady }) {
       <div className="hud-chrome" style={{ opacity: ready ? 1 : 0, transition: 'opacity 1s ease 0.4s' }}>
         <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_FIELD</span>
         <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>UI_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
-        <span className="hud-label" style={{ bottom: '1.4rem', left: '1.6rem' }}>LCK······ 0</span>
-        <span className="hud-label" style={{ bottom: '1.4rem', left: '50%', transform: 'translateX(-50%)' }}>PRG······ 100%</span>
-        <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>SEG {NODES.length} / {NODES.length}</span>
       </div>
 
       {/* The core wordmark */}
@@ -163,10 +160,6 @@ export default function Home({ onNavReady }) {
           </div>
         </div>
       ))}
-
-      <div className="universe-hint" style={{ opacity: ready ? 1 : 0, transition: 'opacity 0.8s ease 0.9s' }}>
-        {mobile ? 'tap a node to enter' : 'each node is a doorway'}
-      </div>
 
       {/* About panel */}
       {aboutOpen && (

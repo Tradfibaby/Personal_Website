@@ -8,11 +8,12 @@ import Projects from './pages/Projects'
 import Portfolio from './pages/Portfolio'
 import CursorEffect from './components/ui/cursor-effect'
 
-// The character-grid cursor effect is the default background, but a couple of routes now
-// carry their own field: home (the universe) and the portfolio listing (the typography maze).
+// The character-grid cursor effect is the default background, but a few routes now carry their
+// own field: home and open source (the floating universe) and the portfolio listing (the
+// typography maze).
 function BackgroundFX() {
   const { pathname } = useLocation()
-  if (pathname === '/' || pathname === '/portfolio') return null
+  if (pathname === '/' || pathname === '/portfolio' || pathname === '/open-source') return null
   return <CursorEffect />
 }
 
