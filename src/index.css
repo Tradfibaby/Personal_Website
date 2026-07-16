@@ -417,7 +417,7 @@ a {
   opacity: 1;
 }
 
-/* About overlay: a terminal panel over a blurred field. Modal, above the nav. */
+/* About overlay: text suspended in the field, with only a soft haze for contrast. */
 .u-overlay {
   position: fixed;
   inset: 0;
@@ -425,23 +425,60 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.62);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  padding: clamp(1.25rem, 5vw, 4rem);
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 52% 48%, rgba(255, 255, 255, 0.035), transparent 28rem),
+    rgba(0, 0, 0, 0.54);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   animation: u-overlay-in 0.3s ease both;
+}
+.u-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 24% 28%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 70% 22%, rgba(255, 255, 255, 0.42) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 81% 68%, rgba(255, 255, 255, 0.3) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 35% 77%, rgba(255, 255, 255, 0.24) 0 1px, transparent 1.4px);
+  opacity: 0.5;
 }
 @keyframes u-overlay-in { from { opacity: 0; } to { opacity: 1; } }
 .u-panel {
   position: relative;
-  width: min(600px, 100%);
-  max-height: 84vh;
-  overflow-y: auto;
-  background: rgba(9, 10, 16, 0.92);
-  border: 1px solid var(--border);
-  box-shadow: 0 0 60px rgba(90, 80, 220, 0.14);
-  padding: 2.25rem 2rem;
+  width: min(560px, 100%);
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
   animation: u-panel-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  isolation: isolate;
+}
+.u-panel::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -4rem -5rem;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 44% 43%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.72) 34%, rgba(0, 0, 0, 0.38) 56%, transparent 72%),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.055), transparent 7rem),
+    radial-gradient(circle at 14% 74%, rgba(255, 255, 255, 0.035), transparent 8rem);
+}
+.u-panel::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 1.1rem 0 auto auto;
+  width: 7rem;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0.65;
 }
 @keyframes u-panel-in {
   from { opacity: 0; transform: translateY(14px) scale(0.985); }
@@ -449,8 +486,8 @@ a {
 }
 .u-panel-close {
   position: absolute;
-  top: 1rem;
-  right: 1.1rem;
+  top: 1.35rem;
+  right: 0.35rem;
   background: none;
   border: none;
   color: #666;
@@ -461,15 +498,26 @@ a {
 }
 .u-panel-close:hover { color: #e6e6ee; }
 .u-panel h2 {
+  position: relative;
   font-size: 0.72rem;
   letter-spacing: 0;
   text-transform: uppercase;
-  color: #5a5a72;
+  color: #6f6f78;
   font-weight: 400;
   margin-bottom: 1.4rem;
 }
+.u-panel h2::before {
+  content: '';
+  position: absolute;
+  left: -1.15rem;
+  top: 0.55em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  transform: rotate(45deg);
+}
 .u-panel p {
-  color: #999;
+  color: #a4a4a8;
   font-size: 0.92rem;
   line-height: 1.85;
   margin-bottom: 1.1rem;
@@ -480,8 +528,8 @@ a {
   gap: 1.75rem;
   flex-wrap: wrap;
   margin-top: 1.6rem;
-  padding-top: 1.4rem;
-  border-top: 1px solid var(--border);
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .u-panel-links a {
   color: #777;
