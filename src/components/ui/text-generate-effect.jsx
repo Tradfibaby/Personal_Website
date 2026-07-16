@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { motion, stagger, useAnimate } from "motion/react"
+import { stagger, useAnimate } from "motion/react"
 
 export function TextGenerateEffect({
   words,
@@ -35,9 +35,9 @@ export function TextGenerateEffect({
 
   return (
     <p style={style} className={className}>
-      <motion.span ref={scope}>
+      <span ref={scope}>
         {wordsArray.map((word, idx) => (
-          <motion.span
+          <span
             key={word + idx}
             style={{
               opacity: instant ? 1 : 0,
@@ -46,9 +46,9 @@ export function TextGenerateEffect({
             }}
           >
             {word}{" "}
-          </motion.span>
+          </span>
         ))}
-      </motion.span>
+      </span>
     </p>
   )
 }

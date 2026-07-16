@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react'
+import { useState, useRef, useCallback, useEffect, useImperativeHandle, forwardRef, createElement } from 'react'
 
 const DEFAULT_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
 const randomChar = (cs) => cs[Math.floor(Math.random() * cs.length)]
@@ -39,9 +39,5 @@ export const ScrambleText = forwardRef(function ScrambleText(
 
   useEffect(() => () => clearInterval(timer.current), [])
 
-  return (
-    <Tag className={className} style={style} onMouseEnter={revealed ? run : undefined} {...rest}>
-      {display}
-    </Tag>
-  )
+  return createElement(Tag, { className, style, onMouseEnter: revealed ? run : undefined, ...rest }, display)
 })

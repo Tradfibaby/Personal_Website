@@ -2,22 +2,22 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EncryptedText } from '../components/ui/encrypted-text'
 import { ScrambleText } from '../components/ui/scramble-text'
-import HudGrid from '../components/universe/HudGrid'
+import SpaceSky from '../components/universe/SpaceSky'
 
 // the WebGL terrain intro loads as its own chunk, only on the first visit
 const TerrainLoader = lazy(() => import('../components/universe/TerrainLoader'))
 
-/* The home page is a single full-screen field. The four sections of the site drift
-   through it as nodes - "about" opens a panel in place, the rest are doorways. The
-   wordmark sits at the centre like a small sun; the nodes orbit it and lean away
-   from the cursor for depth. */
+/* The home page is a single full-screen night field. The four sections of the site
+   drift through it as nodes - "about" opens a panel in place, the rest are doorways.
+   The background is a scroll-tilted star sky and wire sea, with the wordmark at the
+   centre like a small sun. */
 
 const ACCENT = '200, 200, 208' // neutral grey-white, consistent with the rest of the site
 const NODES = [
-  { key: 'about',       index: '00', name: 'about',       desc: 'founder, operator, writer',  accent: ACCENT, x: 22, y: 32, mx: 50, my: 40, depth: 22 },
-  { key: 'writing',     index: '01', name: 'writing',     desc: 'essays & field notes',       accent: ACCENT, x: 77, y: 30, mx: 50, my: 53, depth: 30 },
-  { key: 'portfolio',   index: '02', name: 'portfolio',   desc: "things i've built",          accent: ACCENT, x: 21, y: 70, mx: 50, my: 66, depth: 26 },
-  { key: 'open-source', index: '03', name: 'open source', desc: 'code in the open',           accent: ACCENT, x: 79, y: 68, mx: 50, my: 79, depth: 18 },
+  { key: 'about',       index: '00', name: 'about',       desc: 'founder, operator, writer',  accent: ACCENT, x: 22, y: 32, mx: 29, my: 38, depth: 22 },
+  { key: 'writing',     index: '01', name: 'writing',     desc: 'essays & field notes',       accent: ACCENT, x: 77, y: 30, mx: 71, my: 38, depth: 30 },
+  { key: 'portfolio',   index: '02', name: 'portfolio',   desc: "things i've built",          accent: ACCENT, x: 21, y: 70, mx: 29, my: 70, depth: 26 },
+  { key: 'open-source', index: '03', name: 'open source', desc: 'code in the open',           accent: ACCENT, x: 79, y: 68, mx: 71, my: 70, depth: 18 },
 ]
 
 const BIO = [
@@ -66,7 +66,7 @@ export default function Home({ onNavReady }) {
 
   useEffect(() => {
     if (hasAnimated) onNavReady?.()
-  }, [])
+  }, [onNavReady])
 
   // Live local clock - the visitor's own time, ticking each second.
   useEffect(() => {
@@ -129,7 +129,7 @@ export default function Home({ onNavReady }) {
 
   return (
     <div className="universe hud">
-      <HudGrid />
+      <SpaceSky ready={ready} />
 
       {/* First-visit terrain intro, dissolves into the field */}
       {showLoader && (
@@ -140,8 +140,8 @@ export default function Home({ onNavReady }) {
 
       {/* HUD chrome pinned around the edges, tol.is-style technical readouts */}
       <div className="hud-chrome" style={{ opacity: ready ? 1 : 0, transition: 'opacity 1s ease 0.4s' }}>
-        <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_FIELD</span>
-        <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>UI_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
+        <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_SKY</span>
+        <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>SKY_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
         <span className="hud-label" style={{ bottom: '1.4rem', left: '1.6rem' }}>LOCAL · {clock}</span>
         <ScrambleText className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem', pointerEvents: 'auto' }} text={place} />
       </div>

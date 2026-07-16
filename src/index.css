@@ -250,10 +250,20 @@ a {
   inset: 0;
   overflow: hidden;
   z-index: 1;
-  /* near-black with the faintest neutral lift toward the core - no colour */
+  /* near-black fallback beneath the live sky canvas */
   background:
-    radial-gradient(120% 90% at 50% 46%, rgba(255, 255, 255, 0.035), transparent 60%),
+    radial-gradient(120% 90% at 50% 46%, rgba(145, 170, 210, 0.04), transparent 60%),
     #000000;
+}
+
+.space-sky-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: opacity 1.1s ease 0.15s;
 }
 
 /* The core wordmark, sitting at the centre like a small sun. */
@@ -269,15 +279,15 @@ a {
 .universe-core h1 {
   font-size: clamp(2rem, 7vw, 3.4rem);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   color: #f4f4f6;
   line-height: 1.1;
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.28), 0 0 60px rgba(255, 255, 255, 0.08);
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.28), 0 0 60px rgba(132, 178, 220, 0.12);
 }
 .universe-core .core-sub {
   margin-top: 0.9rem;
   font-size: 0.72rem;
-  letter-spacing: 0.35em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #555;
 }
@@ -287,11 +297,12 @@ a {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 340px;
-  height: 340px;
+  width: min(340px, 78vw);
+  height: min(220px, 34vh);
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 65%);
+  background:
+    radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.12) 45%, rgba(132, 178, 220, 0.035) 65%, transparent 76%);
   z-index: -1;
   animation: core-breathe 6s ease-in-out infinite;
 }
@@ -326,18 +337,20 @@ a {
   min-width: 158px;
   max-width: 220px;
   padding: 0.85rem 1rem 0.95rem;
-  background: rgba(10, 11, 18, 0.5);
-  border: 1px solid var(--border);
+  background: rgba(5, 7, 14, 0.56);
+  border: 1px solid rgba(130, 150, 175, 0.18);
   cursor: pointer;
   text-align: left;
   text-decoration: none;
   box-shadow: 0 0 18px rgba(var(--accent), 0.06);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   transition: border-color 0.25s ease, box-shadow 0.35s ease, transform 0.25s ease, background 0.25s ease;
 }
 .u-node:hover,
 .u-node:focus-visible {
   border-color: rgba(var(--accent), 0.85);
-  background: rgba(14, 16, 26, 0.72);
+  background: rgba(11, 15, 26, 0.76);
   box-shadow: 0 0 30px rgba(var(--accent), 0.28), inset 0 0 20px rgba(var(--accent), 0.05);
   transform: translateY(-3px);
   outline: none;
@@ -351,12 +364,12 @@ a {
 .u-node-index {
   font-size: 0.7rem;
   color: rgba(var(--accent), 0.75);
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
 }
 .u-node-name {
   color: #e6e6ee;
   font-size: 1rem;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
 }
 .u-node-desc {
   margin-top: 0.35rem;
@@ -419,7 +432,7 @@ a {
 .u-panel-close:hover { color: #e6e6ee; }
 .u-panel h2 {
   font-size: 0.72rem;
-  letter-spacing: 0.3em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #5a5a72;
   font-weight: 400;
@@ -443,7 +456,7 @@ a {
 .u-panel-links a {
   color: #777;
   font-size: 0.9rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
   transition: color 0.15s ease;
 }
 .u-panel-links a:hover { color: #f0f0f0; }
@@ -470,7 +483,7 @@ a {
 .terrain-title {
   font-size: clamp(1.8rem, 6vw, 2.8rem);
   color: #f0f0f0;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   text-shadow: 0 0 24px rgba(255, 255, 255, 0.3);
   margin-bottom: 1.1rem;
 }
@@ -494,7 +507,7 @@ a {
 .hud-label {
   position: absolute;
   font-size: 0.62rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #45465a;
   white-space: nowrap;
@@ -508,7 +521,7 @@ a {
   transform: translateX(-50%);
   z-index: 3;
   font-size: 0.68rem;
-  letter-spacing: 0.25em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: #3a3a4a;
   pointer-events: none;
@@ -516,7 +529,14 @@ a {
 }
 
 @media (max-width: 768px) {
-  .u-node { min-width: 0; width: 100%; max-width: 300px; }
+  .u-node {
+    min-width: 0;
+    width: 39vw;
+    max-width: 156px;
+    padding: 0.78rem 0.86rem 0.88rem;
+  }
+  .u-node-name { font-size: 0.92rem; }
+  .u-node-index { font-size: 0.64rem; }
   .universe-core h1 { text-shadow: 0 0 18px rgba(120, 120, 255, 0.3); }
 }
 
