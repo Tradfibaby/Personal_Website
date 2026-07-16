@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { projects } from '../data/projects'
 import HudGrid from '../components/universe/HudGrid'
+import { ScrambleText } from '../components/ui/scramble-text'
 
 /* The open-source page shares the home field: a reactive HUD grid with the repos drifting
    through it as nodes. Each node leans away from the cursor for depth (parallax written
@@ -11,14 +12,15 @@ const ACCENT = '200, 200, 200'
 // scatter positions round the field, matching the home layout - desktop (x/y/depth) and a
 // stacked mobile fallback (mx/my)
 const POS = [
-  { x: 22, y: 33, depth: 24, mx: 50, my: 30 },
-  { x: 77, y: 30, depth: 32, mx: 50, my: 45 },
-  { x: 21, y: 69, depth: 20, mx: 50, my: 60 },
-  { x: 79, y: 67, depth: 28, mx: 50, my: 75 },
+  { x: 22, y: 33, depth: 24, mx: 50, my: 24 },
+  { x: 77, y: 30, depth: 32, mx: 50, my: 36 },
+  { x: 21, y: 69, depth: 20, mx: 50, my: 66 },
+  { x: 79, y: 67, depth: 28, mx: 50, my: 78 },
 ]
 
 export default function Projects() {
   const wrapRefs = useRef([])
+  const nameRefs = useRef([])
   const mobile = typeof window !== 'undefined' && window.innerWidth <= 768
 
   // Cursor parallax: ease a normalised pointer toward each node's depth, writing straight to
@@ -65,7 +67,7 @@ export default function Projects() {
       {/* The core wordmark, sitting at the centre like a small sun */}
       <div className="universe-core">
         <h1>open source</h1>
-        <div className="core-sub">code in the open</div>
+        <div className="core-sub">open-sourced dev tooling & applications</div>
       </div>
 
       {/* Each repo drifts through the field as a node / doorway */}
@@ -86,9 +88,13 @@ export default function Projects() {
                 rel="noopener noreferrer"
                 className="u-node u-node--tile"
                 style={{ '--accent': ACCENT }}
+                onMouseEnter={() => nameRefs.current[i]?.scramble()}
               >
                 <span className="u-node-head">
-                  <span className="u-node-name">{project.name} ↗</span>
+                  <span className="u-node-name u-node-link-label">
+                    <ScrambleText ref={(el) => (nameRefs.current[i] = el)} text={project.name} />
+                    <span className="u-node-link-mark">↗</span>
+                  </span>
                   <span className="u-node-index">{String(i).padStart(2, '0')}</span>
                 </span>
                 <span className="u-node-desc">{project.description}</span>
