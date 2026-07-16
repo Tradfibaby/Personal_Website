@@ -142,31 +142,39 @@ function drawMoon(ctx, view, w, h, focal) {
   if (fade <= 0 || p.x < -100 || p.x > w + 100 || p.y < -100 || p.y > h + 100) return
 
   const r = clamp(p.scale * 1.58, 15, 42)
-  const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 3.2)
-  glow.addColorStop(0, `rgba(255, 255, 255, ${0.2 * fade})`)
-  glow.addColorStop(0.38, `rgba(255, 255, 255, ${0.07 * fade})`)
-  glow.addColorStop(1, 'rgba(0, 0, 0, 0)')
-  ctx.fillStyle = glow
-  ctx.beginPath()
-  ctx.arc(p.x, p.y, r * 3.2, 0, Math.PI * 2)
-  ctx.fill()
+  const scale = 2
+  const pad = r * 0.5
+  const cssSize = (r + pad) * 2
+  const moonCanvas = document.createElement('canvas')
+  moonCanvas.width = Math.ceil(cssSize * scale)
+  moonCanvas.height = Math.ceil(cssSize * scale)
+  const moonCtx = moonCanvas.getContext('2d')
+  moonCtx.setTransform(scale, 0, 0, scale, 0, 0)
 
-  ctx.fillStyle = `rgba(245, 245, 245, ${0.9 * fade})`
-  ctx.beginPath()
-  ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
-  ctx.fill()
+  const mx = cssSize * 0.5
+  const my = cssSize * 0.5
+  const moonFill = moonCtx.createRadialGradient(mx - r * 0.35, my - r * 0.22, 0, mx, my, r * 1.05)
+  moonFill.addColorStop(0, `rgba(255, 255, 255, ${0.98 * fade})`)
+  moonFill.addColorStop(1, `rgba(232, 232, 232, ${0.88 * fade})`)
+  moonCtx.fillStyle = moonFill
+  const moonPath = new Path2D('M15.2 3.2C7.5 3.8 3.5 8.8 4.3 13.7C5 18.3 9.2 21.3 14.8 20.8C10.2 17.4 9.8 7.2 15.2 3.2Z')
+  const pathScale = (r * 2.08) / 18
+  moonCtx.save()
+  moonCtx.translate(mx - 10 * pathScale, my - 12 * pathScale)
+  moonCtx.scale(pathScale, pathScale)
+  moonCtx.fill(moonPath)
+  moonCtx.restore()
 
-  ctx.globalCompositeOperation = 'destination-out'
-  ctx.beginPath()
-  ctx.arc(p.x + r * 0.36, p.y - r * 0.08, r * 0.94, 0, Math.PI * 2)
-  ctx.fill()
-  ctx.globalCompositeOperation = 'source-over'
+  const x = p.x - cssSize * 0.5
+  const y = p.y - cssSize * 0.5
+  ctx.save()
+  ctx.globalAlpha = 0.75 * fade
+  ctx.shadowColor = `rgba(255, 255, 255, ${0.32 * fade})`
+  ctx.shadowBlur = r * 1.9
+  ctx.drawImage(moonCanvas, x, y, cssSize, cssSize)
+  ctx.restore()
 
-  ctx.strokeStyle = `rgba(255, 255, 255, ${0.16 * fade})`
-  ctx.lineWidth = 1
-  ctx.beginPath()
-  ctx.arc(p.x, p.y, r, -Math.PI * 0.54, Math.PI * 0.55)
-  ctx.stroke()
+  ctx.drawImage(moonCanvas, x, y, cssSize, cssSize)
 }
 
 function drawSea(ctx, view, w, h, focal, time, reduce) {
