@@ -37,12 +37,23 @@ export default function Home({ onNavReady }) {
   const [ready, setReady] = useState(hasAnimated)
   const [showLoader, setShowLoader] = useState(!hasAnimated)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const [clock, setClock] = useState('')
   const navigate = useNavigate()
   const wrapRefs = useRef([])
   const mobile = typeof window !== 'undefined' && window.innerWidth <= 768
+  // the visitor's own timezone, e.g. "Europe/London" - real, no config needed
+  const timezone = typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : ''
 
   useEffect(() => {
     if (hasAnimated) onNavReady?.()
+  }, [])
+
+  // Live local clock - the visitor's own time, ticking each second.
+  useEffect(() => {
+    const tick = () => setClock(new Date().toLocaleTimeString('en-GB'))
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
   }, [])
 
   // called when the terrain intro reaches 100% - reveal the field, then drop the loader
@@ -111,6 +122,8 @@ export default function Home({ onNavReady }) {
       <div className="hud-chrome" style={{ opacity: ready ? 1 : 0, transition: 'opacity 1s ease 0.4s' }}>
         <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_FIELD</span>
         <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>UI_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
+        <span className="hud-label" style={{ bottom: '1.4rem', left: '1.6rem' }}>LOCAL · {clock}</span>
+        <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>{timezone}</span>
       </div>
 
       {/* The core wordmark */}
