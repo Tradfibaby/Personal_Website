@@ -8,9 +8,9 @@ import { useEffect, useRef } from 'react'
    readout. Monochrome; matches the HUD field used elsewhere on the site. The reading column
    stays solid black, so the field lives in the margins and top/bottom around the content. */
 
-const MG = 46          // maze lattice spacing, px
-const REACH = 210      // cursor influence radius, px
-const MAZE = 200       // drifting segments kept alive
+const MG = 80          // maze lattice spacing, px - the grid squares
+const REACH = 230      // cursor influence radius, px
+const MAZE = 130       // drifting segments kept alive
 
 export default function TypographyField() {
   const canvasRef = useRef(null)
@@ -29,11 +29,12 @@ export default function TypographyField() {
       const cols = Math.ceil(w / MG), rows = Math.ceil(h / MG)
       const c = Math.floor(Math.random() * cols), r = Math.floor(Math.random() * rows)
       const horiz = Math.random() < 0.5
-      const len = 1 + Math.floor(Math.random() * 3)  // 1-3 cells
+      const len = 1 + Math.floor(Math.random() * 2)  // 1-2 cells
       return {
         x1: c * MG, y1: r * MG,
         x2: (c + (horiz ? len : 0)) * MG, y2: (r + (horiz ? 0 : len)) * MG,
-        life: 0, max: 180 + Math.random() * 320,
+        // shorter, varied lifespans so the field is constantly drawing in and out on its own
+        life: 0, max: 90 + Math.random() * 160,
       }
     }
     function buildMaze() {
@@ -57,10 +58,16 @@ export default function TypographyField() {
       const d = Math.hypot(cur.x - x, cur.y - y)
       return d < REACH ? (1 - d / REACH) * cur.active : 0
     }
-    function stroke(x1, y1, x2, y2, a, wdt = 1) {
-      ctx.strokeStyle = `rgba(232, 232, 238, ${a})`
+    // g (0..1) brightens the stroke toward pure white and adds a soft glow, so the cursor
+    // flare reads clearly against the faint resting segments
+    function stroke(x1, y1, x2, y2, a, wdt = 1, g = 0) {
+      const tint = 232 + Math.round(g * 23)
+      ctx.strokeStyle = `rgba(${tint}, ${tint}, ${tint + 6}, ${a})`
       ctx.lineWidth = wdt
+      ctx.shadowBlur = g * 10
+      ctx.shadowColor = `rgba(255, 255, 255, ${g})`
       ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke()
+      ctx.shadowBlur = 0
     }
     function label(txt, x, y, align = 'left', a = 0.4) {
       ctx.fillStyle = `rgba(130, 130, 140, ${a})`
@@ -82,10 +89,11 @@ export default function TypographyField() {
         if (!reduce) s.life++
         if (s.life > s.max) { maze[i] = spawnSeg(); continue }
         const p = s.life / s.max
-        const fade = Math.min(1, p * 6) * Math.min(1, (1 - p) * 6)
+        // longer ramps so each segment is visibly drawing in and fading out on its own
+        const fade = Math.min(1, p * 3) * Math.min(1, (1 - p) * 3)
         const g = glow((s.x1 + s.x2) / 2, (s.y1 + s.y2) / 2)
-        const a = (0.2 + g * 0.75) * fade
-        if (a > 0.012) stroke(s.x1, s.y1, s.x2, s.y2, a, 1 + g * 0.9)
+        const a = Math.min(1, (0.2 + g * 0.9) * fade)
+        if (a > 0.012) stroke(s.x1, s.y1, s.x2, s.y2, a, 1 + g * 1.8, g)
       }
 
       // the one live HUD label - "lock" flips to 1 while the cursor is over the field
