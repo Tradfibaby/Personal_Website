@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { portfolio, ritenParts, ritenMacro } from '../data/portfolio'
-import HudGrid from '../components/universe/HudGrid'
+import TypographyField from '../components/universe/TypographyField'
 
 export default function Portfolio() {
   const { slug } = useParams()
@@ -14,10 +14,8 @@ export default function Portfolio() {
 
   return (
     <>
-      {/* the HUD grid as a reactive background, behind the listing */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0 }} aria-hidden="true">
-        <HudGrid />
-      </div>
+      {/* the tol.is-style typography maze as a reactive background, behind the listing */}
+      <TypographyField />
       <section style={{ paddingTop: '4rem', position: 'relative', zIndex: 1 }}>
         <p style={{ color: '#555', fontSize: '0.7rem', letterSpacing: '0.2em', marginBottom: '2.5rem', backgroundColor: 'var(--bg)', display: 'inline-block', padding: '0.1rem 0' }}>
           ▪ portfolio

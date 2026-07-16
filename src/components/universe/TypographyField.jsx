@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react'
 
 const MG = 46          // maze lattice spacing, px
 const REACH = 210      // cursor influence radius, px
-const MAZE = 150       // drifting segments kept alive
+const MAZE = 200       // drifting segments kept alive
 
 export default function TypographyField() {
   const canvasRef = useRef(null)
@@ -84,8 +84,8 @@ export default function TypographyField() {
         const p = s.life / s.max
         const fade = Math.min(1, p * 6) * Math.min(1, (1 - p) * 6)
         const g = glow((s.x1 + s.x2) / 2, (s.y1 + s.y2) / 2)
-        const a = (0.09 + g * 0.75) * fade
-        if (a > 0.012) stroke(s.x1, s.y1, s.x2, s.y2, a, 1 + g * 0.8)
+        const a = (0.2 + g * 0.75) * fade
+        if (a > 0.012) stroke(s.x1, s.y1, s.x2, s.y2, a, 1 + g * 0.9)
       }
 
       // the one live HUD label - "lock" flips to 1 while the cursor is over the field
