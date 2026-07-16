@@ -356,6 +356,55 @@ a {
   outline: none;
 }
 
+.u-node--home {
+  min-width: 166px;
+  padding: 0.82rem 1rem 0.88rem;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.36), rgba(0, 0, 0, 0.14) 48%, transparent 74%);
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.18);
+}
+.u-node--home:hover,
+.u-node--home:focus-visible {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.18) 50%, transparent 76%);
+  border: none;
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.08);
+}
+.u-node--home.wireframe-card::before,
+.u-node--home.wireframe-card::after,
+.u-node--home .wireframe-card-inner::before,
+.u-node--home .wireframe-card-inner::after {
+  width: 15px;
+  height: 15px;
+  border-color: rgba(255, 255, 255, 0.22);
+  transition: border-color 0.25s ease, width 0.25s ease, height 0.25s ease, opacity 0.25s ease;
+}
+.u-node--home:hover.wireframe-card::before,
+.u-node--home:hover.wireframe-card::after,
+.u-node--home:hover .wireframe-card-inner::before,
+.u-node--home:hover .wireframe-card-inner::after,
+.u-node--home:focus-visible.wireframe-card::before,
+.u-node--home:focus-visible.wireframe-card::after,
+.u-node--home:focus-visible .wireframe-card-inner::before,
+.u-node--home:focus-visible .wireframe-card-inner::after {
+  width: 21px;
+  height: 21px;
+  border-color: rgba(255, 255, 255, 0.62);
+}
+.u-node--home .u-node-index {
+  color: rgba(225, 225, 225, 0.62);
+}
+.u-node--home:hover .u-node-index,
+.u-node--home:focus-visible .u-node-index,
+.u-node--home:hover .u-node-name,
+.u-node--home:focus-visible .u-node-name {
+  color: #f4f4f4;
+}
+
 /* open-source variant: no full outline, just four L-shaped corner brackets */
 .u-node--tile {
   --corner: rgba(180, 180, 180, 0.28);

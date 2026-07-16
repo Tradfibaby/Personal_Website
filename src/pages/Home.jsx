@@ -200,7 +200,7 @@ export default function Home({ onNavReady }) {
           <div className="u-float" style={{ animationDuration: `${8 + i * 1.3}s`, animationDelay: `${i * 0.6}s` }}>
             <button
               type="button"
-              className="u-node wireframe-card"
+              className="u-node u-node--home wireframe-card"
               style={{ '--accent': node.accent }}
               onClick={() => activate(node)}
               onMouseEnter={() => nameRefs.current[i]?.scramble()}
