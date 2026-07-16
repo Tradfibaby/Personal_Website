@@ -922,17 +922,15 @@ function ShowcaseVideo({ src, poster, aspect, autoPlay = false }) {
 
   return (
     <div
-      className="wireframe-card"
       style={{
-        border: `1px solid ${hovered && !playing ? '#333' : '#1e1e1e'}`,
+        position: 'relative',
         boxShadow: hovered && !playing ? '0 0 24px rgba(80, 60, 200, 0.18)' : '0 0 12px rgba(80, 60, 200, 0.07)',
-        transition: 'border-color 0.15s, box-shadow 0.15s',
+        transition: 'box-shadow 0.15s',
         backgroundColor: '#000',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="wireframe-card-inner" aria-hidden="true" />
       {playing ? (
         <video
           src={src}

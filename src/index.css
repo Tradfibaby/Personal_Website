@@ -547,34 +547,10 @@ a {
 
 /* Portfolio tiles: name and tagline over a rule, nothing else */
 .p-tile {
-  --corner: #2c2c2c;
-  --corner-len: 15px;
-  --corner-t: 1px;
   display: block;
   text-decoration: none;
   background-color: var(--bg);
   padding: 1.4rem;
-  /* four L-shaped corner brackets, drawn as gradient arms (no full outline) */
-  background-image:
-    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner)),
-    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner)),
-    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner)),
-    linear-gradient(var(--corner), var(--corner)), linear-gradient(var(--corner), var(--corner));
-  background-repeat: no-repeat;
-  background-size:
-    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len),
-    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len),
-    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len),
-    var(--corner-len) var(--corner-t), var(--corner-t) var(--corner-len);
-  background-position:
-    top left, top left,
-    top right, top right,
-    bottom left, bottom left,
-    bottom right, bottom right;
-}
-.p-tile:hover,
-.p-tile:focus-visible {
-  --corner: #5a5a5a;
 }
 .p-tile-name,
 .p-tile-tag {

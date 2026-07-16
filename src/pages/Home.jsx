@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EncryptedText } from '../components/ui/encrypted-text'
 import { ScrambleText } from '../components/ui/scramble-text'
+import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 import SpaceSky from '../components/universe/SpaceSky'
 
 // the WebGL terrain intro loads as its own chunk, only on the first visit
@@ -55,6 +56,7 @@ export default function Home({ onNavReady }) {
   const [ready, setReady] = useState(hasAnimated)
   const [showLoader, setShowLoader] = useState(!hasAnimated)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const [aboutPhase, setAboutPhase] = useState(0)
   const [clock, setClock] = useState('')
   const navigate = useNavigate()
   const wrapRefs = useRef([])
@@ -117,13 +119,32 @@ export default function Home({ onNavReady }) {
   // Esc closes the about panel.
   useEffect(() => {
     if (!aboutOpen) return
-    const onKey = (e) => { if (e.key === 'Escape') setAboutOpen(false) }
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return
+      setAboutOpen(false)
+      setAboutPhase(0)
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [aboutOpen])
 
+  // About copy reveals one paragraph at a time, matching the old home-page intro.
+  useEffect(() => {
+    if (!aboutOpen) return
+    const id = setTimeout(() => setAboutPhase(1), 140)
+    return () => clearTimeout(id)
+  }, [aboutOpen])
+
+  const closeAbout = () => {
+    setAboutOpen(false)
+    setAboutPhase(0)
+  }
+
   const activate = (node) => {
-    if (node.key === 'about') setAboutOpen(true)
+    if (node.key === 'about') {
+      setAboutPhase(0)
+      setAboutOpen(true)
+    }
     else navigate(`/${node.key}`)
   }
 
@@ -197,12 +218,26 @@ export default function Home({ onNavReady }) {
 
       {/* About panel */}
       {aboutOpen && (
-        <div className="u-overlay" onClick={() => setAboutOpen(false)}>
+        <div className="u-overlay" onClick={closeAbout}>
           <div className="u-panel" onClick={(e) => e.stopPropagation()}>
-            <button className="u-panel-close" onClick={() => setAboutOpen(false)} aria-label="close">✕</button>
+            <button className="u-panel-close" onClick={closeAbout} aria-label="close">✕</button>
             <h2>about</h2>
-            {BIO.map((para, i) => <p key={i}>{para}</p>)}
-            <div className="u-panel-links">
+            {BIO.map((para, i) => (
+              <TextGenerateEffect
+                key={para}
+                words={para}
+                enabled={aboutPhase >= i + 1}
+                onComplete={() => setAboutPhase((phase) => Math.max(phase, i + 2))}
+              />
+            ))}
+            <div
+              className="u-panel-links"
+              style={{
+                opacity: aboutPhase >= BIO.length + 1 ? 1 : 0,
+                pointerEvents: aboutPhase >= BIO.length + 1 ? 'auto' : 'none',
+                transition: 'opacity 0.7s ease',
+              }}
+            >
               {SOCIALS.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
               ))}
