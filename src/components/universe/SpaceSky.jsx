@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
-const STAR_COUNT = 1300
-const MOBILE_STAR_COUNT = 720
+const STAR_COUNT = 280
+const MOBILE_STAR_COUNT = 170
 const GRID_ROWS = 62
 const GRID_COLS = 86
 const CAMERA_Y = 1.35
@@ -24,17 +24,14 @@ function seededRandom(seed) {
 function buildStars(count) {
   const rand = seededRandom(1439)
   return Array.from({ length: count }, () => {
-    const lane = rand()
-    const z = -7 - rand() * 72
-    const spread = 9 + Math.abs(z) * 0.34
     return {
-      x: (rand() - 0.5) * spread * 2,
-      y: 1.8 + rand() * 34 + lane * lane * 10,
-      z,
-      size: 0.45 + rand() * 1.6,
-      alpha: 0.24 + rand() * 0.7,
+      sx: rand() * 1.16 - 0.08,
+      sy: rand() * 0.86 - 0.03,
+      depth: 0.35 + rand() * 0.85,
+      size: 0.38 + rand() * 1.05,
+      alpha: 0.16 + rand() * 0.62,
       phase: rand() * Math.PI * 2,
-      tint: rand(),
+      glow: rand() > 0.9,
     }
   })
 }
@@ -49,17 +46,31 @@ function waveHeight(x, z, time) {
 function drawBackground(ctx, w, h, pitch) {
   const lift = (pitch - MIN_PITCH) / (MAX_PITCH - MIN_PITCH)
   const sky = ctx.createLinearGradient(0, 0, 0, h)
-  sky.addColorStop(0, `rgba(${10 + lift * 8}, ${12 + lift * 10}, ${22 + lift * 16}, 1)`)
-  sky.addColorStop(0.42, 'rgba(2, 3, 8, 1)')
+  sky.addColorStop(0, `rgba(${4 + lift * 4}, ${4 + lift * 4}, ${5 + lift * 5}, 1)`)
+  sky.addColorStop(0.42, 'rgba(1, 1, 2, 1)')
   sky.addColorStop(1, 'rgba(0, 0, 0, 1)')
   ctx.fillStyle = sky
   ctx.fillRect(0, 0, w, h)
 
   const core = ctx.createRadialGradient(w * 0.5, h * 0.56, 0, w * 0.5, h * 0.56, Math.max(w, h) * 0.72)
-  core.addColorStop(0, `rgba(120, 145, 185, ${0.055 + lift * 0.035})`)
-  core.addColorStop(0.48, 'rgba(35, 55, 86, 0.035)')
+  core.addColorStop(0, `rgba(255, 255, 255, ${0.032 + lift * 0.026})`)
+  core.addColorStop(0.5, 'rgba(255, 255, 255, 0.018)')
   core.addColorStop(1, 'rgba(0, 0, 0, 0)')
   ctx.fillStyle = core
+  ctx.fillRect(0, 0, w, h)
+
+  const rightHaze = ctx.createRadialGradient(w * 0.82, h * 0.26, 0, w * 0.82, h * 0.26, Math.max(w, h) * 0.38)
+  rightHaze.addColorStop(0, `rgba(255, 255, 255, ${0.052 + lift * 0.028})`)
+  rightHaze.addColorStop(0.42, `rgba(255, 255, 255, ${0.018 + lift * 0.012})`)
+  rightHaze.addColorStop(1, 'rgba(0, 0, 0, 0)')
+  ctx.fillStyle = rightHaze
+  ctx.fillRect(0, 0, w, h)
+
+  const lowerHaze = ctx.createRadialGradient(w * 0.74, h * 0.86, 0, w * 0.74, h * 0.86, Math.max(w, h) * 0.3)
+  lowerHaze.addColorStop(0, 'rgba(255, 255, 255, 0.025)')
+  lowerHaze.addColorStop(0.5, 'rgba(255, 255, 255, 0.01)')
+  lowerHaze.addColorStop(1, 'rgba(0, 0, 0, 0)')
+  ctx.fillStyle = lowerHaze
   ctx.fillRect(0, 0, w, h)
 }
 
@@ -89,24 +100,37 @@ function projectPoint(point, view, w, h, focal) {
   }
 }
 
-function drawStars(ctx, stars, view, w, h, focal, time, reduce) {
+function drawStars(ctx, stars, view, w, h, time, reduce) {
   for (const star of stars) {
-    const p = projectPoint(star, view, w, h, focal)
-    if (!p || p.x < -20 || p.x > w + 20 || p.y < -20 || p.y > h + 20) continue
+    const parallaxX = view.yaw * star.depth * 0.95
+    const parallaxY = (view.pitch - 0.04) * star.depth * 0.1
+    const wrappedX = ((star.sx + parallaxX + 0.14) % 1.14 + 1.14) % 1.14 - 0.07
+    const x = wrappedX * w
+    const y = (star.sy + parallaxY) * h
+    if (x < -24 || x > w + 24 || y < -24 || y > h * 0.88) continue
 
-    const twinkle = reduce ? 1 : 0.74 + Math.sin(time * 1.6 + star.phase) * 0.26
-    const horizonFade = clamp((h * 0.88 - p.y) / (h * 0.28), 0, 1)
-    const skyFade = clamp((view.pitch + 0.34) / 0.78, 0.32, 1)
+    const twinkle = reduce ? 1 : 0.82 + Math.sin(time * 0.9 + star.phase) * 0.18
+    const horizonFade = clamp((h * 0.76 - y) / (h * 0.22), 0, 1)
+    const skyFade = clamp((view.pitch + 0.12) / 0.5, 0.28, 1)
     const alpha = star.alpha * twinkle * horizonFade * skyFade
-    const size = clamp(star.size * p.scale * 1.24, 0.45, 2.6)
+    const radius = clamp(star.size * (0.72 + star.depth * 0.35), 0.35, 1.45)
 
-    const tint = star.tint > 0.72
-      ? `rgba(205, 218, 255, ${alpha})`
-      : star.tint < 0.18
-        ? `rgba(190, 245, 235, ${alpha * 0.82})`
-        : `rgba(245, 246, 255, ${alpha})`
-    ctx.fillStyle = tint
-    ctx.fillRect(p.x, p.y, size, size)
+    if (star.glow) {
+      const glowRadius = radius * (5 + star.depth * 6)
+      const glow = ctx.createRadialGradient(x, y, 0, x, y, glowRadius)
+      glow.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.16})`)
+      glow.addColorStop(0.45, `rgba(255, 255, 255, ${alpha * 0.045})`)
+      glow.addColorStop(1, 'rgba(0, 0, 0, 0)')
+      ctx.fillStyle = glow
+      ctx.beginPath()
+      ctx.arc(x, y, glowRadius, 0, Math.PI * 2)
+      ctx.fill()
+    }
+
+    ctx.fillStyle = `rgba(238, 238, 238, ${alpha})`
+    ctx.beginPath()
+    ctx.arc(x, y, radius, 0, Math.PI * 2)
+    ctx.fill()
   }
 }
 
@@ -119,15 +143,15 @@ function drawMoon(ctx, view, w, h, focal) {
 
   const r = clamp(p.scale * 1.58, 15, 42)
   const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 3.2)
-  glow.addColorStop(0, `rgba(235, 242, 255, ${0.18 * fade})`)
-  glow.addColorStop(0.38, `rgba(135, 170, 225, ${0.075 * fade})`)
+  glow.addColorStop(0, `rgba(255, 255, 255, ${0.2 * fade})`)
+  glow.addColorStop(0.38, `rgba(255, 255, 255, ${0.07 * fade})`)
   glow.addColorStop(1, 'rgba(0, 0, 0, 0)')
   ctx.fillStyle = glow
   ctx.beginPath()
   ctx.arc(p.x, p.y, r * 3.2, 0, Math.PI * 2)
   ctx.fill()
 
-  ctx.fillStyle = `rgba(232, 238, 250, ${0.88 * fade})`
+  ctx.fillStyle = `rgba(245, 245, 245, ${0.9 * fade})`
   ctx.beginPath()
   ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
   ctx.fill()
@@ -179,7 +203,7 @@ function drawSea(ctx, view, w, h, focal, time, reduce) {
         ctx.lineTo(p.x, p.y)
       }
     }
-    ctx.strokeStyle = `rgba(205, 220, 235, ${lineAlpha})`
+    ctx.strokeStyle = `rgba(220, 220, 220, ${lineAlpha})`
     ctx.lineWidth = row < 9 ? 0.95 : 0.7
     ctx.stroke()
   }
@@ -205,7 +229,7 @@ function drawSea(ctx, view, w, h, focal, time, reduce) {
         ctx.lineTo(p.x, p.y)
       }
     }
-    ctx.strokeStyle = `rgba(148, 170, 190, ${0.032 * seaVisibility})`
+    ctx.strokeStyle = `rgba(190, 190, 190, ${0.03 * seaVisibility})`
     ctx.lineWidth = 0.7
     ctx.stroke()
   }
@@ -221,12 +245,12 @@ function drawHorizon(ctx, view, w, h, focal) {
 
   const glow = ctx.createLinearGradient(0, left.y - 30, 0, left.y + 44)
   glow.addColorStop(0, 'rgba(0, 0, 0, 0)')
-  glow.addColorStop(0.5, `rgba(145, 175, 210, ${alpha * 0.45})`)
+  glow.addColorStop(0.5, `rgba(210, 210, 210, ${alpha * 0.38})`)
   glow.addColorStop(1, 'rgba(0, 0, 0, 0)')
   ctx.fillStyle = glow
   ctx.fillRect(0, left.y - 30, w, 74)
 
-  ctx.strokeStyle = `rgba(205, 220, 240, ${alpha})`
+  ctx.strokeStyle = `rgba(220, 220, 220, ${alpha})`
   ctx.lineWidth = 0.8
   ctx.beginPath()
   ctx.moveTo(left.x, left.y)
@@ -296,7 +320,7 @@ export default function SpaceSky({ ready = true }) {
       view.x = Math.sin(time * 0.06) * 0.28
 
       drawBackground(ctx, w, h, view.pitch)
-      drawStars(ctx, stars, view, w, h, focal, time, reduce)
+      drawStars(ctx, stars, view, w, h, time, reduce)
       drawMoon(ctx, view, w, h, focal)
       drawHorizon(ctx, view, w, h, focal)
       drawSea(ctx, view, w, h, focal, time, reduce)
