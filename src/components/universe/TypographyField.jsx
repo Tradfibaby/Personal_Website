@@ -8,9 +8,9 @@ import { useEffect, useRef } from 'react'
    readout. Monochrome; matches the HUD field used elsewhere on the site. The reading column
    stays solid black, so the field lives in the margins and top/bottom around the content. */
 
-const MG = 80          // maze lattice spacing, px - the grid squares
+const MG = 112         // maze lattice spacing, px - the grid squares
 const REACH = 230      // cursor influence radius, px
-const MAZE = 130       // drifting segments kept alive
+const MAZE = 95        // drifting segments kept alive
 
 export default function TypographyField() {
   const canvasRef = useRef(null)
@@ -33,8 +33,8 @@ export default function TypographyField() {
       return {
         x1: c * MG, y1: r * MG,
         x2: (c + (horiz ? len : 0)) * MG, y2: (r + (horiz ? 0 : len)) * MG,
-        // shorter, varied lifespans so the field is constantly drawing in and out on its own
-        life: 0, max: 90 + Math.random() * 160,
+        // longer, varied lifespans so segments linger rather than constantly flickering
+        life: 0, max: 150 + Math.random() * 220,
       }
     }
     function buildMaze() {

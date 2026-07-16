@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EncryptedText } from '../components/ui/encrypted-text'
+import { ScrambleText } from '../components/ui/scramble-text'
 import HudGrid from '../components/universe/HudGrid'
 
 // the WebGL terrain intro loads as its own chunk, only on the first visit
@@ -57,6 +58,7 @@ export default function Home({ onNavReady }) {
   const [clock, setClock] = useState('')
   const navigate = useNavigate()
   const wrapRefs = useRef([])
+  const nameRefs = useRef([])
   const mobile = typeof window !== 'undefined' && window.innerWidth <= 768
   // The visitor's own location, derived from the browser (no API): city from the
   // IANA timezone, country from the locale region - e.g. "New York, United States".
@@ -141,7 +143,7 @@ export default function Home({ onNavReady }) {
         <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_FIELD</span>
         <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>UI_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
         <span className="hud-label" style={{ bottom: '1.4rem', left: '1.6rem' }}>LOCAL · {clock}</span>
-        <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>{place}</span>
+        <ScrambleText className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem', pointerEvents: 'auto' }} text={place} />
       </div>
 
       {/* The core wordmark */}
@@ -180,10 +182,11 @@ export default function Home({ onNavReady }) {
               className="u-node wireframe-card"
               style={{ '--accent': node.accent }}
               onClick={() => activate(node)}
+              onMouseEnter={() => nameRefs.current[i]?.scramble()}
             >
               <span className="wireframe-card-inner" aria-hidden="true" />
               <span className="u-node-head">
-                <span className="u-node-name">{node.name}</span>
+                <ScrambleText ref={(el) => (nameRefs.current[i] = el)} className="u-node-name" text={node.name} />
                 <span className="u-node-index">{node.index}</span>
               </span>
               <span className="u-node-desc">{node.desc}</span>

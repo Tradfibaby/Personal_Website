@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { TypewriterEffect } from './ui/typewriter-effect'
+import { ScrambleText } from './ui/scramble-text'
 
 const links = [
   { to: '/', label: 'home' },
@@ -52,7 +52,7 @@ export default function Nav({ navReady }) {
                 transition: 'color 0.15s',
               })}
             >
-              <TypewriterEffect text={label} enabled={linksVisible} />
+              <ScrambleText text={label} revealWhen={linksVisible} />
             </NavLink>
           ))}
         </div>

@@ -529,18 +529,20 @@ a {
 .p-tile {
   display: block;
   text-decoration: none;
-  border-top: 1px solid #1c1c1c;
-  padding-top: 1.4rem;
-  transition: border-color 0.3s ease;
+  background-color: #0d0d0d;
+  border: 1px solid #1c1c1c;
+  border-radius: 4px;
+  padding: 1.4rem;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 .p-tile:hover,
 .p-tile:focus-visible {
   border-color: #4a4a4a;
+  background-color: #131313;
 }
 .p-tile-name,
 .p-tile-tag {
   display: block;
-  background-color: var(--bg);
 }
 .p-tile-name {
   color: #999;
