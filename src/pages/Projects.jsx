@@ -6,7 +6,7 @@ import HudGrid from '../components/universe/HudGrid'
    through it as nodes. Each node leans away from the cursor for depth (parallax written
    straight to the DOM) and carries a slow idle drift, so the whole thing crawls gently. */
 
-const ACCENT = '200, 200, 208'
+const ACCENT = '200, 200, 200'
 
 // scatter positions round the field, matching the home layout - desktop (x/y/depth) and a
 // stacked mobile fallback (mx/my)
@@ -58,7 +58,7 @@ export default function Projects() {
 
       <div className="hud-chrome">
         <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ OPEN_SOURCE</span>
-        <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>REPO_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
+        <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>REPO_CTL · <span style={{ color: '#9a9a9a' }}>LIVE</span></span>
         <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>SEG {projects.length} / {projects.length}</span>
       </div>
 

@@ -88,7 +88,7 @@ export default function HudGrid() {
           if (dist < LINK) links.push({ x, y, a: f, d: dist })
         }
 
-        ctx.fillStyle = `rgba(225, 225, 230, ${a})`
+        ctx.fillStyle = `rgba(227, 227, 227, ${a})`
         ctx.fillRect(x - size / 2, y - size / 2, size, size)
       }
 
@@ -116,11 +116,11 @@ export default function HudGrid() {
         ctx.stroke()
 
         // focus reticle
-        ctx.strokeStyle = `rgba(235, 235, 240, ${0.6 * cur.active})`
+        ctx.strokeStyle = `rgba(236, 236, 236, ${0.6 * cur.active})`
         ctx.strokeRect(cur.x - 9, cur.y - 9, 18, 18)
 
         // coordinate readout
-        ctx.fillStyle = `rgba(150, 150, 158, ${0.7 * cur.active})`
+        ctx.fillStyle = `rgba(152, 152, 152, ${0.7 * cur.active})`
         ctx.font = "10px 'Space Mono', monospace"
         ctx.textBaseline = 'top'
         const cx = String(Math.round(cur.x)).padStart(4, '0')
