@@ -33,6 +33,23 @@ const SOCIALS = [
 
 let hasAnimated = false
 
+// Best-effort "city, country" from the browser, no network call. The city comes
+// from the IANA timezone (e.g. "America/New_York" -> "New York") and the country
+// from the locale region (e.g. "en-US" -> "United States").
+function getVisitorPlace() {
+  if (typeof Intl === 'undefined') return ''
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    const city = tz.split('/').pop().replace(/_/g, ' ')
+    const locale = typeof navigator !== 'undefined' ? navigator.language : 'en'
+    const region = new Intl.Locale(locale).maximize().region
+    const country = region ? new Intl.DisplayNames(['en'], { type: 'region' }).of(region) : ''
+    return [city, country].filter(Boolean).join(', ')
+  } catch {
+    return ''
+  }
+}
+
 export default function Home({ onNavReady }) {
   const [ready, setReady] = useState(hasAnimated)
   const [showLoader, setShowLoader] = useState(!hasAnimated)
@@ -41,8 +58,9 @@ export default function Home({ onNavReady }) {
   const navigate = useNavigate()
   const wrapRefs = useRef([])
   const mobile = typeof window !== 'undefined' && window.innerWidth <= 768
-  // the visitor's own timezone, e.g. "Europe/London" - real, no config needed
-  const timezone = typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : ''
+  // The visitor's own location, derived from the browser (no API): city from the
+  // IANA timezone, country from the locale region - e.g. "New York, United States".
+  const place = getVisitorPlace()
 
   useEffect(() => {
     if (hasAnimated) onNavReady?.()
@@ -123,7 +141,7 @@ export default function Home({ onNavReady }) {
         <span className="hud-label" style={{ top: '1.4rem', left: '1.6rem' }}>◻ TRADFIBABY_FIELD</span>
         <span className="hud-label" style={{ top: '1.4rem', right: '1.6rem' }}>UI_CTL · <span style={{ color: '#8a8aa0' }}>LIVE</span></span>
         <span className="hud-label" style={{ bottom: '1.4rem', left: '1.6rem' }}>LOCAL · {clock}</span>
-        <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>{timezone}</span>
+        <span className="hud-label" style={{ bottom: '1.4rem', right: '1.6rem' }}>{place}</span>
       </div>
 
       {/* The core wordmark */}
