@@ -290,14 +290,24 @@ const LINK_ALPHA = 0.5     // the app's links.opacity, fading linearly to nothin
 const PUSH_COUNT = 4       // nodes added per click, matching the app's push quantity
 const LINK_BANDS = 7       // links are batched into this many opacity buckets, one stroke each
 
-/* Hover repulse. The app displaces a node by up to ~100px at the cursor, which opens a
-   real hole in the web that travels with the pointer. The accumulating force this file
-   used before topped out at force/(1-relax) = 24px - a nudge, not a parting. Modelled
-   here as a target offset the node eases toward, measured from its undisplaced position
-   so the hole stays a stable circle rather than oscillating. */
+/* Hover repulse, as tsparticles' Repulser actually does it:
+
+     repulseFactor = clamp(easeOutQuad(1 - dist/radius) * speed * factor, 0, maxSpeed)
+     particle.position.addTo(normVec)
+
+   The push goes onto the position itself and nothing ever restores it. That is the whole
+   feel of it - you plough a furrow through the web and it stays ploughed, the nodes
+   travelling with the cursor instead of healing behind it. The drift and the bounds
+   re-even the field out over the next few seconds.
+
+   With the v2 defaults (speed 1, factor 100, maxSpeed 50) the push is flat-out inside 70%
+   of the radius and only tapers over the outer 30%, so PUSH is the clamp and the easing
+   term is twice that before clamping. `duration: 0.4` in the app's config does nothing
+   here - in v2 that only applies to click and div repulse, not hover. */
 const REPULSE_DIST = 200   // the app's hover radius
-const REPULSE_MAX = 92     // px of displacement right under the cursor
-const RELAX = 0.88         // per-60hz-frame easing, so a node settles in ~0.4s: the app's duration
+const REPULSE_PUSH = 40    // px per 60hz frame, the clamp the app spends most of the radius at
+
+const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v)
 
 /* One dot, pre-rendered once: a lit core fading into its own halo. Drawn per frame this
    would be ctx.shadowBlur, which is the single most expensive thing a 2d canvas can do -
@@ -347,8 +357,6 @@ const ParticleField = memo(function ParticleField() {
       return {
         x,
         y,
-        ox: 0,
-        oy: 0,
         vx: Math.cos(heading) * DRIFT,
         vy: Math.sin(heading) * DRIFT,
         r: 1 + Math.random() * 1.6,
@@ -399,39 +407,35 @@ const ParticleField = memo(function ParticleField() {
     const draw = (dt = 1) => {
       ctx.clearRect(0, 0, w, h)
 
-      const ease = 1 - RELAX ** dt   // fraction of the way to the target this frame
+      const r2 = REPULSE_DIST * REPULSE_DIST
       for (const d of dots) {
         if (!still) {
           d.x += d.vx * dt
           d.y += d.vy * dt
-
-          // bounce rather than wrap: a node that teleports drags every link it holds
-          // across the screen in one frame, and the whole web visibly snaps
-          if (d.x < 0) { d.x = -d.x; d.vx = -d.vx }
-          else if (d.x > w) { d.x = 2 * w - d.x; d.vx = -d.vx }
-          if (d.y < 0) { d.y = -d.y; d.vy = -d.vy }
-          else if (d.y > h) { d.y = 2 * h - d.y; d.vy = -d.vy }
         }
 
-        /* Where the cursor wants this node: hard away from it up close, nothing at the
-           rim. Measured from the node's own position, not its displaced one, so the hole
-           is a stable circle instead of a feedback loop that hunts around the pointer. */
-        let tx = 0, ty = 0
+        // the cursor shoves nodes clear and leaves them there, as the app does
         const cx = d.x - cursor.x
         const cy = d.y - cursor.y
         const c2 = cx * cx + cy * cy
-        if (c2 < REPULSE_DIST * REPULSE_DIST && c2 > 0.01) {
+        if (c2 < r2 && c2 > 0.01) {
           const dist = Math.sqrt(c2)
-          const near = 1 - dist / REPULSE_DIST
-          const mag = REPULSE_MAX * near * near
-          tx = (cx / dist) * mag
-          ty = (cy / dist) * mag
+          const mag = Math.min(REPULSE_PUSH, 2 * REPULSE_PUSH * (1 - c2 / r2)) * dt
+          d.x += (cx / dist) * mag
+          d.y += (cy / dist) * mag
         }
-        d.ox += (tx - d.ox) * ease
-        d.oy += (ty - d.oy) * ease
 
-        d.px = d.x + d.ox
-        d.py = d.y + d.oy
+        // bounce rather than wrap: a node that teleports drags every link it holds
+        // across the screen in one frame, and the whole web visibly snaps. Applied after
+        // the shove too, so a node driven off the edge is turned back rather than lost.
+        if (d.x < 0) { d.x = -d.x; d.vx = Math.abs(d.vx) }
+        else if (d.x > w) { d.x = 2 * w - d.x; d.vx = -Math.abs(d.vx) }
+        if (d.y < 0) { d.y = -d.y; d.vy = Math.abs(d.vy) }
+        else if (d.y > h) { d.y = 2 * h - d.y; d.vy = -Math.abs(d.vy) }
+
+        // a hard shove can throw a node past the far wall in one frame; park it inside
+        d.px = d.x = clamp(d.x, 0, w)
+        d.py = d.y = clamp(d.y, 0, h)
       }
 
       /* Every link used to be its own strokeStyle assignment and its own stroke() - a few
@@ -486,6 +490,10 @@ const ParticleField = memo(function ParticleField() {
       cursor.x = e.clientX - rect.left
       cursor.y = e.clientY - rect.top
     }
+    /* Park the cursor off-canvas the moment it stops being real. The shove is applied
+       every frame the cursor is in range and is never undone, so a stale position - a
+       finger lifted, or a touch-drag the browser took over for a scroll - would keep
+       excavating the same hole indefinitely. */
     const onPointerLeave = () => {
       cursor.x = -1e4
       cursor.y = -1e4
@@ -496,6 +504,8 @@ const ParticleField = memo(function ParticleField() {
     host.addEventListener('pointerdown', onPointerDown)
     host.addEventListener('pointermove', onPointerMove)
     host.addEventListener('pointerleave', onPointerLeave)
+    host.addEventListener('pointerup', onPointerLeave)
+    host.addEventListener('pointercancel', onPointerLeave)
 
     if (still) draw()
     else raf = requestAnimationFrame(loop)
@@ -506,6 +516,8 @@ const ParticleField = memo(function ParticleField() {
       host.removeEventListener('pointerdown', onPointerDown)
       host.removeEventListener('pointermove', onPointerMove)
       host.removeEventListener('pointerleave', onPointerLeave)
+      host.removeEventListener('pointerup', onPointerLeave)
+      host.removeEventListener('pointercancel', onPointerLeave)
     }
   }, [])
 
