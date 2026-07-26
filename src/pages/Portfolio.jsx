@@ -271,12 +271,33 @@ function OwnFunHero() {
   )
 }
 
-const LINK_DIST = 165      // long enough that the links close into a web, not a scatter of stars
+/* The app's tsparticles config, resolved to the numbers it actually runs at.
+
+   Density: `{ value: 80, density: { enable: true, area: 800 } }` is not 80 nodes -
+   tsparticles scales it as value * (w * h) / (1000 * area), which is one node per
+   10,000 css px of viewport. On a 1440x800 window that is 115, where this file used
+   to seed 170. Combined with the over-long link radius it drew ~2.6x the app's links,
+   which is the haze that reads as "more background".
+   Drift: `move.speed: 2` resolves to speed/2 = 1 css px per 60hz frame, on a random
+   heading. This file drifted at ~0.11 - nine times slower, and slow enough that a node
+   takes nine frames to cross one pixel, so it shimmers against the antialiasing
+   instead of gliding. That is the other half of "not smooth". */
+const DENSITY = 10000      // one node per this many css px of hero
+const NODE_CAP = 190       // no equivalent in the app; a ceiling for very large windows
+const DRIFT = 1.0          // css px per 60hz frame, from the app's move.speed: 2
+const LINK_DIST = 150      // the app's links.distance
+const LINK_ALPHA = 0.5     // the app's links.opacity, fading linearly to nothing at LINK_DIST
 const PUSH_COUNT = 4       // nodes added per click, matching the app's push quantity
-const REPULSE_DIST = 200   // the app's hover radius: the web bends away from the cursor
-const REPULSE_FORCE = 2.4  // px per 60hz frame at the cursor, easing to nothing at the radius
-const RELAX = 0.9          // how fast a shoved node drifts home once the cursor moves on
 const LINK_BANDS = 7       // links are batched into this many opacity buckets, one stroke each
+
+/* Hover repulse. The app displaces a node by up to ~100px at the cursor, which opens a
+   real hole in the web that travels with the pointer. The accumulating force this file
+   used before topped out at force/(1-relax) = 24px - a nudge, not a parting. Modelled
+   here as a target offset the node eases toward, measured from its undisplaced position
+   so the hole stays a stable circle rather than oscillating. */
+const REPULSE_DIST = 200   // the app's hover radius
+const REPULSE_MAX = 92     // px of displacement right under the cursor
+const RELAX = 0.88         // per-60hz-frame easing, so a node settles in ~0.4s: the app's duration
 
 /* One dot, pre-rendered once: a lit core fading into its own halo. Drawn per frame this
    would be ctx.shadowBlur, which is the single most expensive thing a 2d canvas can do -
@@ -319,15 +340,20 @@ const ParticleField = memo(function ParticleField() {
     const bands = Array.from({ length: LINK_BANDS }, () => new Path2D())
 
     // ox/oy is how far the cursor has shoved a node off its drift; it relaxes back to zero
-    const spawn = (x, y) => ({
-      x,
-      y,
-      ox: 0,
-      oy: 0,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      r: 1 + Math.random() * 1.6,
-    })
+    // a fixed speed on a random heading, as the app's `direction: "none"` gives, rather
+    // than two independent components - those cluster the speeds around zero
+    const spawn = (x, y) => {
+      const heading = Math.random() * Math.PI * 2
+      return {
+        x,
+        y,
+        ox: 0,
+        oy: 0,
+        vx: Math.cos(heading) * DRIFT,
+        vy: Math.sin(heading) * DRIFT,
+        r: 1 + Math.random() * 1.6,
+      }
+    }
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -341,7 +367,7 @@ const ParticleField = memo(function ParticleField() {
 
       sprite = makeDotSprite(dpr)
 
-      const count = Math.min(170, Math.round((w * h) / 5600))
+      const count = Math.min(NODE_CAP, Math.round((w * h) / DENSITY))
       ceiling = count + 90
 
       // a resize should carry the mesh over, rescaled - reseeding it restarts the web
@@ -373,13 +399,11 @@ const ParticleField = memo(function ParticleField() {
     const draw = (dt = 1) => {
       ctx.clearRect(0, 0, w, h)
 
-      const relax = RELAX ** dt
+      const ease = 1 - RELAX ** dt   // fraction of the way to the target this frame
       for (const d of dots) {
         if (!still) {
           d.x += d.vx * dt
           d.y += d.vy * dt
-          d.ox *= relax
-          d.oy *= relax
 
           // bounce rather than wrap: a node that teleports drags every link it holds
           // across the screen in one frame, and the whole web visibly snaps
@@ -389,16 +413,22 @@ const ParticleField = memo(function ParticleField() {
           else if (d.y > h) { d.y = 2 * h - d.y; d.vy = -d.vy }
         }
 
-        // shoulder the nodes aside as the cursor passes, then let them settle back
-        const cx = d.x + d.ox - cursor.x
-        const cy = d.y + d.oy - cursor.y
+        /* Where the cursor wants this node: hard away from it up close, nothing at the
+           rim. Measured from the node's own position, not its displaced one, so the hole
+           is a stable circle instead of a feedback loop that hunts around the pointer. */
+        let tx = 0, ty = 0
+        const cx = d.x - cursor.x
+        const cy = d.y - cursor.y
         const c2 = cx * cx + cy * cy
         if (c2 < REPULSE_DIST * REPULSE_DIST && c2 > 0.01) {
           const dist = Math.sqrt(c2)
-          const force = REPULSE_FORCE * (1 - dist / REPULSE_DIST) * dt
-          d.ox += (cx / dist) * force
-          d.oy += (cy / dist) * force
+          const near = 1 - dist / REPULSE_DIST
+          const mag = REPULSE_MAX * near * near
+          tx = (cx / dist) * mag
+          ty = (cy / dist) * mag
         }
+        d.ox += (tx - d.ox) * ease
+        d.oy += (ty - d.oy) * ease
 
         d.px = d.x + d.ox
         d.py = d.y + d.oy
@@ -426,7 +456,7 @@ const ParticleField = memo(function ParticleField() {
 
       ctx.lineWidth = 1
       for (let b = 0; b < LINK_BANDS; b++) {
-        ctx.strokeStyle = `rgba(0, 214, 214, ${(0.34 * (b + 0.5)) / LINK_BANDS})`
+        ctx.strokeStyle = `rgba(0, 214, 214, ${(LINK_ALPHA * (b + 0.5)) / LINK_BANDS})`
         ctx.stroke(bands[b])
       }
 
