@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, memo } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { portfolio, ritenParts, ritenMacro } from '../data/portfolio'
 import TypographyField from '../components/universe/TypographyField'
@@ -159,9 +159,13 @@ function OwnFunHero() {
     }
   }, [])
 
-  // the cue only belongs on screen while the hero does
+  // the cue only belongs on screen while the hero does. Scroll fires far faster than it
+  // is worth re-rendering for, so the fade is quantised and settled values are dropped.
   useEffect(() => {
-    const onScroll = () => setCue(Math.max(0, 1 - window.scrollY / 180))
+    const onScroll = () => {
+      const next = Math.round(Math.max(0, 1 - window.scrollY / 180) * 20) / 20
+      setCue(prev => (prev === next ? prev : next))
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -270,19 +274,49 @@ function OwnFunHero() {
 const LINK_DIST = 165      // long enough that the links close into a web, not a scatter of stars
 const PUSH_COUNT = 4       // nodes added per click, matching the app's push quantity
 const REPULSE_DIST = 200   // the app's hover radius: the web bends away from the cursor
-const REPULSE_FORCE = 2.4  // px per frame at the cursor, easing to nothing at the radius
+const REPULSE_FORCE = 2.4  // px per 60hz frame at the cursor, easing to nothing at the radius
 const RELAX = 0.9          // how fast a shoved node drifts home once the cursor moves on
+const LINK_BANDS = 7       // links are batched into this many opacity buckets, one stroke each
 
-/* own.fun's login background: a dense teal mesh, drifting and re-triangulating itself. */
-function ParticleField() {
+/* One dot, pre-rendered once: a lit core fading into its own halo. Drawn per frame this
+   would be ctx.shadowBlur, which is the single most expensive thing a 2d canvas can do -
+   as a sprite it is a plain drawImage. Sized so the halo reaches 3.4x the core radius. */
+const SPRITE_CORE = 6
+const SPRITE_SPAN = 3.4
+
+function makeDotSprite(dpr) {
+  const half = SPRITE_CORE * SPRITE_SPAN
+  const c = document.createElement('canvas')
+  c.width = c.height = Math.ceil(half * 2 * dpr)
+  const g = c.getContext('2d')
+  g.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+  const grad = g.createRadialGradient(half, half, 0, half, half, half)
+  grad.addColorStop(0, 'rgba(140, 250, 250, 0.95)')
+  grad.addColorStop(1 / SPRITE_SPAN, 'rgba(80, 240, 240, 0.85)')
+  grad.addColorStop(0.55, 'rgba(0, 255, 255, 0.22)')
+  grad.addColorStop(1, 'rgba(0, 255, 255, 0)')
+
+  g.fillStyle = grad
+  g.beginPath()
+  g.arc(half, half, half, 0, Math.PI * 2)
+  g.fill()
+  return c
+}
+
+/* own.fun's login background: a dense teal mesh, drifting and re-triangulating itself.
+   Memoised: the sign above it flickers on a 200ms timer, and the mesh owns its own frame
+   loop, so none of that should reach here. */
+const ParticleField = memo(function ParticleField() {
   const ref = useRef(null)
 
   useEffect(() => {
     const canvas = ref.current
     const ctx = canvas.getContext('2d')
     const still = prefersStill()
-    let raf, w = 0, h = 0, dots = [], ceiling = 0
+    let raf, w = 0, h = 0, dots = [], ceiling = 0, sprite = null
     const cursor = { x: -1e4, y: -1e4 }
+    const bands = Array.from({ length: LINK_BANDS }, () => new Path2D())
 
     // ox/oy is how far the cursor has shoved a node off its drift; it relaxes back to zero
     const spawn = (x, y) => ({
@@ -297,15 +331,30 @@ function ParticleField() {
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const prevW = w, prevH = h
       w = canvas.offsetWidth
       h = canvas.offsetHeight
+      if (w === prevW && h === prevH && sprite) return   // mobile fires resize on scroll
       canvas.width = w * dpr
       canvas.height = h * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
+      sprite = makeDotSprite(dpr)
+
       const count = Math.min(170, Math.round((w * h) / 5600))
       ceiling = count + 90
-      dots = Array.from({ length: count }, () => spawn(Math.random() * w, Math.random() * h))
+
+      // a resize should carry the mesh over, rescaled - reseeding it restarts the web
+      if (dots.length && prevW && prevH) {
+        for (const d of dots) {
+          d.x *= w / prevW
+          d.y *= h / prevH
+        }
+        if (dots.length > count) dots.length = count
+        while (dots.length < count) dots.push(spawn(Math.random() * w, Math.random() * h))
+      } else {
+        dots = Array.from({ length: count }, () => spawn(Math.random() * w, Math.random() * h))
+      }
     }
 
     // clicking seeds the web where you tapped, as the app's push does
@@ -320,20 +369,25 @@ function ParticleField() {
       if (dots.length > ceiling) dots.splice(0, dots.length - ceiling)
     }
 
-    const draw = () => {
+    // dt is in 60hz frames, so the drift reads the same on a 60hz panel and a 120hz one
+    const draw = (dt = 1) => {
       ctx.clearRect(0, 0, w, h)
 
+      const relax = RELAX ** dt
       for (const d of dots) {
         if (!still) {
-          d.x += d.vx
-          d.y += d.vy
-          d.ox *= RELAX
-          d.oy *= RELAX
+          d.x += d.vx * dt
+          d.y += d.vy * dt
+          d.ox *= relax
+          d.oy *= relax
+
+          // bounce rather than wrap: a node that teleports drags every link it holds
+          // across the screen in one frame, and the whole web visibly snaps
+          if (d.x < 0) { d.x = -d.x; d.vx = -d.vx }
+          else if (d.x > w) { d.x = 2 * w - d.x; d.vx = -d.vx }
+          if (d.y < 0) { d.y = -d.y; d.vy = -d.vy }
+          else if (d.y > h) { d.y = 2 * h - d.y; d.vy = -d.vy }
         }
-        if (d.x < 0) d.x += w
-        if (d.x > w) d.x -= w
-        if (d.y < 0) d.y += h
-        if (d.y > h) d.y -= h
 
         // shoulder the nodes aside as the cursor passes, then let them settle back
         const cx = d.x + d.ox - cursor.x
@@ -341,7 +395,7 @@ function ParticleField() {
         const c2 = cx * cx + cy * cy
         if (c2 < REPULSE_DIST * REPULSE_DIST && c2 > 0.01) {
           const dist = Math.sqrt(c2)
-          const force = REPULSE_FORCE * (1 - dist / REPULSE_DIST)
+          const force = REPULSE_FORCE * (1 - dist / REPULSE_DIST) * dt
           d.ox += (cx / dist) * force
           d.oy += (cy / dist) * force
         }
@@ -350,35 +404,44 @@ function ParticleField() {
         d.py = d.y + d.oy
       }
 
-      ctx.lineWidth = 1
+      /* Every link used to be its own strokeStyle assignment and its own stroke() - a few
+         thousand of those a frame is what the mesh was actually spending its time on. The
+         links are collected into a handful of opacity bands instead, one stroke each. */
+      // Path2D has no reset, so the bands are rebuilt each frame
+      for (let b = 0; b < LINK_BANDS; b++) bands[b] = new Path2D()
+
       for (let i = 0; i < dots.length; i++) {
+        const a = dots[i]
         for (let j = i + 1; j < dots.length; j++) {
-          const a = dots[i], b = dots[j]
+          const b = dots[j]
           const dx = a.px - b.px, dy = a.py - b.py
           const d2 = dx * dx + dy * dy
           if (d2 >= LINK_DIST * LINK_DIST) continue   // skip the sqrt for the pairs that miss
           const near = 1 - Math.sqrt(d2) / LINK_DIST
-          ctx.strokeStyle = `rgba(0, 214, 214, ${0.34 * near})`
-          ctx.beginPath()
-          ctx.moveTo(a.px, a.py)
-          ctx.lineTo(b.px, b.py)
-          ctx.stroke()
+          const band = bands[Math.min(LINK_BANDS - 1, (near * LINK_BANDS) | 0)]
+          band.moveTo(a.px, a.py)
+          band.lineTo(b.px, b.py)
         }
       }
 
-      ctx.fillStyle = 'rgba(80, 240, 240, 0.9)'
-      ctx.shadowColor = 'rgba(0, 255, 255, 0.6)'
-      ctx.shadowBlur = 6
-      for (const d of dots) {
-        ctx.beginPath()
-        ctx.arc(d.px, d.py, d.r, 0, Math.PI * 2)
-        ctx.fill()
+      ctx.lineWidth = 1
+      for (let b = 0; b < LINK_BANDS; b++) {
+        ctx.strokeStyle = `rgba(0, 214, 214, ${(0.34 * (b + 0.5)) / LINK_BANDS})`
+        ctx.stroke(bands[b])
       }
-      ctx.shadowBlur = 0
+
+      for (const d of dots) {
+        const half = d.r * SPRITE_SPAN
+        ctx.drawImage(sprite, d.px - half, d.py - half, half * 2, half * 2)
+      }
     }
 
-    const loop = () => {
-      draw()
+    let last = 0
+    const loop = now => {
+      // clamped so a tab left in the background does not resume with one giant step
+      const dt = last ? Math.min((now - last) / 16.667, 3) : 1
+      last = now
+      draw(dt)
       raf = requestAnimationFrame(loop)
     }
 
@@ -423,7 +486,7 @@ function ParticleField() {
       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
     />
   )
-}
+})
 
 function ScrollyFilm({ item }) {
   const prefersReduced = typeof window !== 'undefined'
