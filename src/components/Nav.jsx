@@ -6,6 +6,7 @@ const links = [
   { to: '/writing', label: 'writing' },
   { to: '/portfolio', label: 'portfolio' },
   { to: '/open-source', label: 'open source' },
+  { to: '/utilities', label: 'utilities' },
 ]
 
 export default function Nav({ navReady }) {
@@ -39,7 +40,7 @@ export default function Nav({ navReady }) {
         }}>
           <img src="/favicon.svg" alt="t." style={{ width: '16px', height: '16px' }} />
         </NavLink>
-        <div style={{ display: 'flex', gap: '2rem' }}>
+        <div style={{ display: 'flex', gap: 'clamp(0.85rem, 3vw, 2rem)', flexWrap: 'wrap', justifyContent: 'flex-end', rowGap: '0.35rem' }}>
           {links.map(({ to, label }) => (
             <NavLink
               key={to}

@@ -723,6 +723,143 @@ a {
   margin-top: 0.15rem;
 }
 
+/* Utility index and local tools */
+.utility-page {
+  padding-top: 4rem;
+  position: relative;
+  z-index: 1;
+}
+.utility-header {
+  margin-bottom: 2.2rem;
+}
+.utility-kicker {
+  color: #555;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  background-color: var(--bg);
+  display: inline-block;
+  padding: 0.1rem 0;
+}
+.utility-header h1 {
+  color: #f0f0f0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 0.45rem;
+  background-color: var(--bg);
+  display: inline-block;
+  padding: 0.1rem 0;
+}
+.utility-header p:last-child {
+  color: #666;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  max-width: 44rem;
+  background-color: var(--bg);
+  display: block;
+}
+.utility-grid {
+  display: grid;
+  gap: 1rem;
+}
+.utility-card {
+  display: block;
+  position: relative;
+  padding: 1.15rem 1.2rem 1.25rem;
+  background-color: rgba(5, 5, 6, 0.82);
+  border: 1px solid #181818;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+.utility-card:hover,
+.utility-card:focus-visible {
+  border-color: #444;
+  background-color: rgba(12, 12, 13, 0.92);
+  transform: translateY(-2px);
+  outline: none;
+}
+.utility-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+.utility-card-name {
+  color: #e8e8e8;
+  font-size: 0.98rem;
+}
+.utility-card-mark {
+  color: #555;
+  font-size: 0.72rem;
+}
+.utility-card-desc {
+  display: block;
+  color: #777;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin-top: 0.85rem;
+}
+.utility-back {
+  display: inline-block;
+  color: #555;
+  font-size: 0.84rem;
+  margin-bottom: 1.7rem;
+  background-color: var(--bg);
+  padding: 0.1rem 0.3rem;
+  transition: color 0.15s ease;
+}
+.utility-back:hover,
+.utility-back:focus-visible {
+  color: #f0f0f0;
+  outline: none;
+}
+.utility-tool {
+  position: relative;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  background-color: rgba(5, 5, 6, 0.82);
+  border: 1px solid #181818;
+}
+.utility-field {
+  display: grid;
+  gap: 0.5rem;
+}
+.utility-field + .utility-field {
+  margin-top: 1rem;
+}
+.utility-field label {
+  color: #777;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+}
+.utility-field textarea {
+  width: 100%;
+  min-height: 9rem;
+  resize: vertical;
+  border: 1px solid #222;
+  background: #050505;
+  color: #f0f0f0;
+  font: inherit;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  padding: 0.85rem;
+  outline: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.utility-field textarea:focus {
+  border-color: #555;
+  background: #080808;
+}
+.utility-field textarea::placeholder {
+  color: #3f3f3f;
+}
+.utility-output {
+  min-height: 6.4rem;
+  color: #cfcfcf;
+  word-break: break-all;
+}
+
 /* riten's macro widgets: two up, three down. Six columns is the smallest grid that
    divides both ways, so the top pair span three each and the bottom trio span two. */
 .riten-macro-grid {

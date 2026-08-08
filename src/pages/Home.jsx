@@ -19,6 +19,7 @@ const NODES = [
   { key: 'writing',     index: '01', name: 'writing',     desc: 'essays & field notes',       accent: ACCENT, x: 77, y: 30, mx: 71, my: 38, depth: 30 },
   { key: 'portfolio',   index: '02', name: 'portfolio',   desc: "things i've built",          accent: ACCENT, x: 21, y: 70, mx: 29, my: 70, depth: 26 },
   { key: 'open-source', index: '03', name: 'open source', desc: 'code in the open',           accent: ACCENT, x: 79, y: 68, mx: 71, my: 70, depth: 18 },
+  { key: 'utilities',   index: '04', name: 'utilities',   desc: 'small local tools',          accent: ACCENT, x: 50, y: 82, mx: 50, my: 84, depth: 24 },
 ]
 
 const BIO = [

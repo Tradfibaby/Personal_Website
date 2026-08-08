@@ -6,6 +6,7 @@ import Writing from './pages/Writing'
 import Post from './pages/Post'
 import Projects from './pages/Projects'
 import Portfolio from './pages/Portfolio'
+import Utility from './pages/Utility'
 import CursorEffect from './components/ui/cursor-effect'
 
 // The character-grid cursor effect is the default background, but a few routes now carry their
@@ -31,6 +32,8 @@ export default function App() {
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/portfolio/:slug" element={<Portfolio />} />
           <Route path="/open-source" element={<Projects />} />
+          <Route path="/utilities" element={<Utility />} />
+          <Route path="/utilities/:slug" element={<Utility />} />
           <Route path="/projects" element={<Navigate to="/open-source" replace />} />
         </Routes>
       </main>
