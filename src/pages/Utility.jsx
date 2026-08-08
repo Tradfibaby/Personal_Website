@@ -3,8 +3,8 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 
 const utilities = [
   {
-    slug: 'hash',
-    name: 'hash',
+    slug: 'message-hash',
+    name: 'message-hash',
     description: 'sha-256 message hash',
   },
 ]
@@ -28,7 +28,7 @@ async function sha256(message) {
 export default function Utility() {
   const { slug } = useParams()
 
-  if (slug === 'hash') return <MessageHash />
+  if (slug === 'message-hash') return <MessageHash />
   if (slug) return <Navigate to="/utilities" replace />
 
   return <UtilityIndex />
@@ -89,9 +89,9 @@ function MessageHash() {
       <Link to="/utilities" className="utility-back" aria-label="back to utilities">← utilities</Link>
 
       <header className="utility-header">
-        <p className="utility-kicker">▪ utilities / hash</p>
-        <h1>message hash</h1>
-        <p>sha-256 digest for any message.</p>
+        <p className="utility-kicker">▪ utilities / message-hash</p>
+        <h1>SHA-256 message hash</h1>
+        <p>hash your message in 256.</p>
       </header>
 
       <div className="utility-tool wireframe-card">
