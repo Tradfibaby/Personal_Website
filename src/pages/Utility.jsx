@@ -38,7 +38,6 @@ function UtilityIndex() {
   return (
     <section className="utility-page">
       <header className="utility-header">
-        <p className="utility-kicker">▪ utilities</p>
         <h1>utilities</h1>
         <p>small tools i am building.</p>
       </header>
